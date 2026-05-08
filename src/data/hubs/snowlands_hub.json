@@ -1,0 +1,47 @@
+
+{
+  "schemaVersion": 1,
+  "id": "snowlands_hub",
+  "name": "Snowlands",
+  "type": "hub",
+  "background": "images/snowy-oiled.png",
+  "ambient": [
+    "The wind combs the ridge with a low moan.",
+    "Frost breath hangs in the air like ghosts.",
+    "Somewhere, a shutter claps once, then stills."
+  ],
+  "eventPools": {
+    "life": [
+      {
+        "id": "wolf_trail_spoor",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "wolf_trail",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "waylaid_wagon",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "merchant_wagon",
+          "nodeId": "start"
+        }
+      }
+    ],
+    "explore": [
+      {
+        "id": "abandoned_shrine",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "abandoned_shrine",
+          "nodeId": "start"
+        }
+      }
+    ],
+    "special": []
+  }
+}
