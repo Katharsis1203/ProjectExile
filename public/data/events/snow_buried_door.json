@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "snow_buried_door",
+  "name": "Snow Buried Door",
+  "type": "event",
+  "cardImage": "snow_buried_door.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Door Beneath the Drift",
+      "text": "Half-hidden beneath a mound of snow is a heavy wooden door built directly into the hillside.",
+      "image": "snow_buried_door.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open the door",
+          "next": "open"
+        },
+        {
+          "type": "simple",
+          "text": "Ignore it",
+          "next": "leave"
+        }
+      ]
+    },
+    "open": {
+      "id": "open",
+      "title": "Dark Interior",
+      "text": "The hinges groan loudly as the door opens inward into darkness. A stale draft spills from below.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Some Things Stay Closed",
+      "text": "You decide against disturbing whatever lies beneath the hill.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

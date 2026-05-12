@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "strange_tracks",
+  "name": "Strange Tracks",
+  "type": "event",
+  "cardImage": "strange_tracks.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Marks in the Snow",
+      "text": "A line of strange tracks crosses the snow ahead. They look almost human, but too long and uneven.",
+      "image": "strange_tracks.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the tracks",
+          "next": "follow"
+        },
+        {
+          "type": "simple",
+          "text": "Avoid them",
+          "next": "leave"
+        }
+      ]
+    },
+    "follow": {
+      "id": "follow",
+      "title": "Vanished",
+      "text": "The tracks abruptly stop in the middle of an empty clearing. Nothing else surrounds them.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Best Not To Know",
+      "text": "You leave the tracks behind, though the feeling of being followed lingers.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

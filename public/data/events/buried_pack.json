@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "buried_pack",
+  "name": "Buried Pack",
+  "type": "event",
+  "cardImage": "buried_pack.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Leather Under Snow",
+      "text": "A strip of dark leather pokes from beneath a wind-packed drift. It looks like part of a traveler's pack.",
+      "image": "buried_pack.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Dig it out",
+          "next": "dig"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it buried",
+          "next": "leave"
+        }
+      ]
+    },
+    "dig": {
+      "id": "dig",
+      "title": "Old Supplies",
+      "text": "You claw away the snow and uncover a stiff, frozen pack. Most of it is ruined, but a few things inside might still be useful.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Untouched",
+      "text": "You leave the pack where it lies. Whoever owned it is long past needing it.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

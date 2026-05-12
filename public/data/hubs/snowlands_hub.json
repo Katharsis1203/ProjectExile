@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "snowlands_hub",
+  "name": "Snowlands",
+  "type": "hub",
+  "image": "snowland2.png",
+  "background": "images/snowy-oiled.png",
+  "ambient": [
+    "The wind combs the ridge with a low moan.",
+    "Frost breath hangs in the air like ghosts.",
+    "Somewhere, a shutter claps once, then stills."
+  ],
+  "eventPools": {
+    "life": [
+      {
+        "id": "wolf_tracks_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "wolf_tracks",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "abandoned_wagon_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "abandoned_wagon",
+          "nodeId": "start"
+        }
+      }
+    ],
+    "explore": [
+  {
+    "id": "wolf_track_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "wolf_tracks", "nodeId": "start" }
+  },
+  {
+    "id": "abandoned_wagon_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "abandoned_wagon", "nodeId": "start" }
+  },
+  {
+    "id": "frozen_shrine_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "frozen_shrine", "nodeId": "start" }
+  },
+  {
+    "id": "blood_in_snow_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "blood_in_snow", "nodeId": "start" }
+  },
+  {
+    "id": "buried_pack_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "buried_pack", "nodeId": "start" }
+  },
+  {
+    "id": "distant_lantern_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "distant_lantern", "nodeId": "start" }
+  },
+  {
+    "id": "frozen_corpse_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "frozen_corpse", "nodeId": "start" }
+  },
+  {
+    "id": "ice_cracked_lake_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "ice_cracked_lake", "nodeId": "start" }
+  },
+  {
+    "id": "snow_buried_door_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "snow_buried_door", "nodeId": "start" }
+  },
+  {
+    "id": "strange_tracks_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "strange_tracks", "nodeId": "start" }
+  },
+  {
+    "id": "wind_chimes_entry",
+    "weight": 1,
+    "conditions": [],
+    "opens": { "eventFile": "wind_chimes", "nodeId": "start" }
+  }
+
+    ],
+    "special": []
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "blood_in_snow",
+  "name": "Blood in the Snow",
+  "type": "event",
+  "cardImage": "blood_in_snow.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Blood in the Snow",
+      "text": "A dark red trail cuts across the white snow, already beginning to freeze.",
+      "image": "blood_in_snow.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the trail",
+          "next": "follow"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it alone",
+          "next": "leave"
+        }
+      ]
+    },
+    "follow": {
+      "id": "follow",
+      "title": "Something Dragged",
+      "text": "The trail ends near a thicket where something heavy was pulled beneath the branches.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Better Not",
+      "text": "You step away from the trail and keep moving.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

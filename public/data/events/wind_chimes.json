@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "wind_chimes",
+  "name": "Wind Chimes",
+  "type": "event",
+  "cardImage": "wind_chimes.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Soft Ringing",
+      "text": "A faint chiming drifts through the cold air. Hanging from a dead tree are small metal chimes turning slowly in the wind.",
+      "image": "frozen_corpse.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Inspect the chimes",
+          "next": "inspect"
+        },
+        {
+          "type": "simple",
+          "text": "Leave quietly",
+          "next": "leave"
+        }
+      ]
+    },
+    "inspect": {
+      "id": "inspect",
+      "title": "Names Etched in Metal",
+      "text": "Each chime has a name scratched into it. Some are so worn they can barely be read anymore.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Fading Sound",
+      "text": "The chiming slowly disappears behind you as the snowstorm swallows the tree from sight.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

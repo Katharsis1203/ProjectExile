@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "wolf_tracks",
+  "name": "Wolf Tracks",
+  "type": "event",
+  "cardImage": "wolf_tracks.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Fresh Tracks",
+      "text": "Fresh wolf tracks cut through the snow ahead of you.",
+      "image": "frozen_corpse.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the tracks",
+          "next": "follow"
+        },
+        {
+          "type": "simple",
+          "text": "Avoid the area",
+          "next": "leave"
+        }
+      ]
+    },
+
+    "follow": {
+      "id": "follow",
+      "title": "The Den",
+      "text": "You eventually find the remains of a frozen campsite beside a wolf den.",
+      "choices": []
+    },
+
+    "leave": {
+      "id": "leave",
+      "title": "Safer Path",
+      "text": "You decide not to risk it and continue through the snow.",
+      "choices": []
+    }
+  }
+}

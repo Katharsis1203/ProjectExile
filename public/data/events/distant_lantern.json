@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "distant_lantern",
+  "name": "Distant Lantern",
+  "type": "event",
+  "cardImage": "distant_lantern.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Light in the White",
+      "text": "Far ahead, a weak yellow lantern sways through the snowfall. It moves slowly, then stops.",
+      "image": "distant_lantern.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Approach the light",
+          "next": "approach"
+        },
+        {
+          "type": "simple",
+          "text": "Keep your distance",
+          "next": "avoid"
+        }
+      ]
+    },
+    "approach": {
+      "id": "approach",
+      "title": "No One Holding It",
+      "text": "The lantern hangs from a crooked branch, still warm, though there are no footprints around it but your own.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "avoid": {
+      "id": "avoid",
+      "title": "A Bad Sign",
+      "text": "You give the lantern a wide berth. Its glow fades behind the falling snow, but you feel watched for some time after.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "abandoned_wagon",
+  "name": "Abandoned Wagon",
+  "type": "event",
+  "cardImage": "abandoned_wagon.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Broken Wheels",
+      "text": "A broken merchant wagon lies half buried beneath the snow.",
+      "image": "abandoned_wagon.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Search the wagon",
+          "next": "search"
+        },
+        {
+          "type": "simple",
+          "text": "Move on",
+          "next": "leave"
+        }
+      ]
+    },
+
+    "search": {
+      "id": "search",
+      "title": "Supplies",
+      "text": "You recover a few frozen supplies from beneath the wreckage.",
+      "choices": []
+    },
+
+    "leave": {
+      "id": "leave",
+      "title": "Keep Moving",
+      "text": "The silence around the wagon unsettles you. You leave quickly.",
+      "choices": []
+    }
+  }
+}

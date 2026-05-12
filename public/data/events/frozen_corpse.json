@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "frozen_corpse",
+  "name": "Frozen Corpse",
+  "type": "event",
+  "cardImage": "frozen_corpse.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Half-Buried Body",
+      "text": "A corpse lies half-buried in the snow, one arm reaching upward as if begging the sky for mercy.",
+      "image": "frozen_corpse.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Search the body",
+          "next": "search"
+        },
+        {
+          "type": "simple",
+          "text": "Say nothing and move on",
+          "next": "leave"
+        }
+      ]
+    },
+    "search": {
+      "id": "search",
+      "title": "Cold Fingers",
+      "text": "The corpse is frozen stiff. You find a small token clenched in its hand, but prying it loose feels almost like theft.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Snow Will Take Him",
+      "text": "You leave the dead to the cold. The wind begins covering him again before you are even gone.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

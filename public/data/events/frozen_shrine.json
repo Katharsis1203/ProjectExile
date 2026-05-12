@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "frozen_shrine",
+  "name": "Frozen Shrine",
+  "type": "event",
+  "cardImage": "frozen_shrine.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Forgotten Shrine",
+      "text": "A ruined stone shrine protrudes from the snowdrifts.",
+      "image": "frozen_shrine.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Enter the shrine",
+          "next": "inside"
+        },
+        {
+          "type": "simple",
+          "text": "Ignore it",
+          "next": "leave"
+        }
+      ]
+    },
+
+    "inside": {
+      "id": "inside",
+      "title": "Ancient Idol",
+      "text": "Inside rests a frost-covered idol worn smooth by time.",
+      "choices": []
+    },
+
+    "leave": {
+      "id": "leave",
+      "title": "Cold Winds",
+      "text": "You continue onward, leaving the shrine behind.",
+      "choices": []
+    }
+  }
+}

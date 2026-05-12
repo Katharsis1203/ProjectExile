@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "ice_cracked_lake",
+  "name": "Cracked Lake",
+  "type": "event",
+  "cardImage": "ice_cracked_lake.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "The Frozen Surface",
+      "text": "A frozen lake stretches before you, its surface split by long black cracks beneath the ice.",
+      "image": "ice_cracked_lake.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Cross the lake",
+          "next": "cross"
+        },
+        {
+          "type": "simple",
+          "text": "Walk around it",
+          "next": "leave"
+        }
+      ]
+    },
+    "cross": {
+      "id": "cross",
+      "title": "Groaning Ice",
+      "text": "The ice groans beneath your weight the entire way across. Something dark moves far below the frozen surface.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Longer Route",
+      "text": "You choose the safer path, though the journey around the lake costs you valuable daylight.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}

@@ -2,8 +2,9 @@ export type Event = {
     schemaVersion: number;
     id: string;
     type:"event";
-    title:string;
+    name:string;
     tags?:string[];
+    cardImage?: string | null;
     nodes:EventNode[];
 };
 
