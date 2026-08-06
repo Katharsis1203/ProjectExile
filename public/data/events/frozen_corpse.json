@@ -3,7 +3,7 @@
   "id": "frozen_corpse",
   "name": "Frozen Corpse",
   "type": "event",
-  "cardImage": "frozen_corpse.png",
+  "cardImage": "frozen_corpse2.png",
   "nodes": {
     "start": {
       "id": "start",

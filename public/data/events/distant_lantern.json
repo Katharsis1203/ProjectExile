@@ -3,7 +3,7 @@
   "id": "distant_lantern",
   "name": "Distant Lantern",
   "type": "event",
-  "cardImage": "distant_lantern.png",
+  "cardImage": "distant_lantern1.png",
   "nodes": {
     "start": {
       "id": "start",

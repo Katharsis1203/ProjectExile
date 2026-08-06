@@ -1,9 +1,10 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "abandoned_wagon",
   "name": "Abandoned Wagon",
   "type": "event",
   "cardImage": "abandoned_wagon.png",
+
   "nodes": {
     "start": {
       "id": "start",
@@ -12,9 +13,40 @@
       "image": "abandoned_wagon.png",
       "choices": [
         {
-          "type": "simple",
-          "text": "Search the wagon",
-          "next": "search"
+          "type": "checked",
+          "text": "Search the wagon carefully",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 7
+            },
+            {
+              "stat": "survival",
+              "difficulty": 6
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "success",
+                "threshold": 2,
+                "flavourText": "You notice the hidden compartment beneath the cracked floorboard.",
+                "next": "hidden_supplies"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You find what remains in the open, but the wagon still feels like it is hiding something.",
+                "next": "basic_supplies"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Your numb fingers find little but splinters and frozen cloth.",
+                "next": "failed_search"
+              }
+            ]
+          }
         },
         {
           "type": "simple",
@@ -24,18 +56,59 @@
       ]
     },
 
-    "search": {
-      "id": "search",
-      "title": "Supplies",
+    "hidden_supplies": {
+      "id": "hidden_supplies",
+      "title": "Hidden Supplies",
+      "text": "Inside the compartment are wrapped rations, a small purse of coin, and a blood-stiffened map.",
+      "image": "abandoned_wagon.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Take what you can and leave",
+          "endEvent": true
+        }
+      ]
+    },
+
+    "basic_supplies": {
+      "id": "basic_supplies",
+      "title": "Frozen Scraps",
       "text": "You recover a few frozen supplies from beneath the wreckage.",
-      "choices": []
+      "image": "abandoned_wagon.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Leave the wagon behind",
+          "endEvent": true
+        }
+      ]
+    },
+
+    "failed_search": {
+      "id": "failed_search",
+      "title": "Empty Wreck",
+      "text": "The wagon gives up nothing useful. The cold creeps deeper into your hands.",
+      "image": "abandoned_wagon.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Move on",
+          "endEvent": true
+        }
+      ]
     },
 
     "leave": {
       "id": "leave",
       "title": "Keep Moving",
       "text": "The silence around the wagon unsettles you. You leave quickly.",
-      "choices": []
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the road",
+          "endEvent": true
+        }
+      ]
     }
   }
 }

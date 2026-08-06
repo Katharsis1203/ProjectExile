@@ -3,8 +3,8 @@
   "id": "snowlands_hub",
   "name": "Snowlands",
   "type": "hub",
-  "image": "snowland2.png",
-  "background": "images/snowy-oiled.png",
+  "image": "forest.png",
+  "background": "images/snow.png",
   "ambient": [
     "The wind combs the ridge with a low moan.",
     "Frost breath hangs in the air like ghosts.",

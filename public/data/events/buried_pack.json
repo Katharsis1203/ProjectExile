@@ -3,7 +3,7 @@
   "id": "buried_pack",
   "name": "Buried Pack",
   "type": "event",
-  "cardImage": "buried_pack.png",
+  "cardImage": "buried_pack2.png",
   "nodes": {
     "start": {
       "id": "start",
