@@ -14,7 +14,7 @@ const categories: HubCategory[] = [
 
 export default function HubCategoryTabs() {
   return (
-    <div className="relative z-20 flex flex-col overflow-hidden border border-b-0 border-[rgba(70,58,44,0.15)] bg-[#f2e4c5]">
+    <div className="relative z-20 flex flex-col overflow-hidden border border-b-0 border-[rgba(70,58,44,0.15)] bg-transparent">
       {categories.map(({ title, image }) => (
         <button
           key={title}

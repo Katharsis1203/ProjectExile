@@ -11,7 +11,7 @@ export default function HubActionButton({ title, image, onClick }: HubActionButt
     <button
       type="button"
       onClick={onClick}
-      className="group relative h-20 w-full overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-[#f2e4c5] transition hover:brightness-110 last:border-b-0"
+      className="group relative h-20 w-full overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-transparent transition hover:brightness-110 last:border-b-0"
     >
       <img src={image} alt="" className="event-mask absolute inset-0 h-full w-full object-cover" />
 

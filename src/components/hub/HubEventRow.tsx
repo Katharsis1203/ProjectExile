@@ -1,7 +1,7 @@
 // src/components/hub/HubEventRow.tsx
 
 import HubEventCard from "./HubEventCard";
-import type { HubEventSlot } from "../../types/event";
+import type { Event, HubEventSlot } from "../../types/event";
 import type { LoadedHub } from "../../types/hub";
 
 type HubEventRowProps = {
@@ -14,15 +14,47 @@ type HubEventRowProps = {
   ) => void;
 };
 
-function getStableTilt(seed: string, index: number) {
-  let hash = 0;
+type RuntimeChoice = {
+  type?: string;
+  statChecks?: Array<{ stat?: string; difficulty?: number }>;
+};
 
-  for (const char of seed) {
-    hash = (hash << 5) - hash + char.charCodeAt(0);
-    hash |= 0;
+type RuntimeNode = {
+  text?: string;
+  choices?: RuntimeChoice[];
+};
+
+function getStartNode(event: Event): RuntimeNode | null {
+  const nodes = (event as unknown as {
+    nodes?: RuntimeNode[] | Record<string, RuntimeNode>;
+  }).nodes;
+
+  if (!nodes) return null;
+
+  if (Array.isArray(nodes)) {
+    return (
+      nodes.find((node) => (node as RuntimeNode & { id?: string }).id === "start") ??
+      nodes[0] ??
+      null
+    );
   }
 
-  return `${((Math.abs(hash) + index * 17) % 11) - 5}deg`;
+  return nodes.start ?? Object.values(nodes)[0] ?? null;
+}
+
+function getEventDetail(event: Event) {
+  const startNode = getStartNode(event);
+  const checkedChoice = startNode?.choices?.find(
+    (choice) => choice.type === "checked" && choice.statChecks?.length
+  );
+  const firstCheck = checkedChoice?.statChecks?.[0];
+
+  if (!firstCheck?.stat) return "Uncertain";
+
+  const stat = firstCheck.stat.charAt(0).toUpperCase() + firstCheck.stat.slice(1);
+  return typeof firstCheck.difficulty === "number"
+    ? `${stat} · ${firstCheck.difficulty}`
+    : stat;
 }
 
 export default function HubEventRow({
@@ -31,23 +63,23 @@ export default function HubEventRow({
   onPlayEvent,
 }: HubEventRowProps) {
   return (
-    <div className="flex min-h-0 h-full items-stretch justify-center">
+    <div className="flex h-full min-h-0 items-stretch justify-center">
       <style>{`
         @keyframes hub-event-deal-in {
           0% {
             opacity: 0;
-            transform: translate3d(60px, -180px, 0) rotate(-18deg) scale(0.72);
+            transform: translate3d(42px, -110px, 0) scale(0.86);
             filter: drop-shadow(0 24px 26px rgba(0, 0, 0, 0.45));
           }
 
           58% {
             opacity: 1;
-            transform: translate3d(-6px, 10px, 0) rotate(calc(var(--slot-tilt) + 3deg)) scale(1.03);
+            transform: translate3d(-4px, 6px, 0) scale(1.012);
           }
 
           100% {
             opacity: 1;
-            transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+            transform: translate3d(0, 0, 0) scale(1);
             filter: none;
           }
         }
@@ -60,41 +92,52 @@ export default function HubEventRow({
         }
 
         .hub-event-card-layer {
-          transform: rotate(var(--slot-tilt)) scale(1);
+          transform: translateY(0) scale(1);
         }
 
-        .group:hover .hub-event-card-layer {
-          transform: rotate(0deg) scale(1.04);
-          filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.45));
+        .group:hover .hub-event-card-layer,
+        .group:focus-visible .hub-event-card-layer {
+          transform: translateY(-7px) scale(1.018);
+          box-shadow:
+            0 16px 28px rgba(34, 40, 48, 0.24),
+            inset 0 0 0 1px rgba(255, 250, 237, 0.48);
         }
       `}</style>
 
-      <div className="flex min-h-0 h-full w-full gap-4 px-1 py-1">
+      <div className="flex h-full min-h-0 w-full gap-4 px-1 py-1">
         {eventSlots.map((slot, index) => {
           const event = slot.event
             ? loadedHub?.events[slot.event.opens.eventFile]
             : null;
-
-          const tilt = getStableTilt(
-            `${slot.id}-${event?.name ?? "empty"}`,
-            index
-          );
+          const startNode = event ? getStartNode(event) : null;
 
           return (
-            <div key={slot.id} className="flex min-h-0 flex-1 items-stretch justify-center">
+            <div
+              key={slot.id}
+              className="flex min-h-0 flex-1 items-stretch justify-center"
+            >
               {slot.event && event ? (
                 <HubEventCard
                   key={`${slot.id}-${event.name}-${event.cardImage ?? "no-image"}`}
-                  eventId={event.name}
+                  eventTitle={event.name}
                   eventImage={event.cardImage ?? null}
-                  tilt={tilt}
+                  categoryLabel={event.tags?.[0] ?? "Local lead"}
+                  hook={startNode?.text}
+                  detail={getEventDetail(event)}
                   animationDelay={index * 140}
                   onClick={(element) =>
                     onPlayEvent(slot.event!.opens.eventFile, element, slot.id)
                   }
                 />
               ) : (
-                <div className="h-full w-full" />
+                <div className="relative h-full w-full bg-[url('/images/parch2.png')] bg-[length:100%_100%] bg-center bg-no-repeat p-2.5 opacity-55">
+                  <div className="flex h-full items-center justify-center rounded-[10px] border border-dashed border-[#68563e]/30 bg-[rgba(236,222,190,0.42)] shadow-[inset_0_0_20px_rgba(78,60,37,0.08)]">
+                    <div className="text-center text-[#5f513f]/55">
+                      <div className="mx-auto mb-2 h-5 w-5 rounded-full border border-current opacity-60" />
+                      <p className="font-serif text-sm font-semibold">Undrawn lead</p>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           );

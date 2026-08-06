@@ -144,7 +144,7 @@
       "temperature": "-12°C"
     },
     "effects": {
-      "lighting": "day",
+      "lighting": "night",
       "weather": "none",
       "weatherIntensity": "heavy"
     }
