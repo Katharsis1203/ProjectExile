@@ -14,14 +14,14 @@ const categories: HubCategory[] = [
 
 export default function HubCategoryTabs() {
   return (
-    <div className="flex flex-col overflow-hidden border border-b-0 border-[rgba(70,58,44,0.15)]">
+    <div className="relative z-20 flex flex-col overflow-hidden border border-b-0 border-[rgba(70,58,44,0.15)] bg-[#f2e4c5]">
       {categories.map(({ title, image }) => (
         <button
           key={title}
           type="button"
           title={title}
           aria-label={title}
-          className="group relative flex h-[100px] w-full items-center justify-center overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-[rgba(250,238,210,0.9)] transition hover:brightness-105"
+          className="group relative flex h-[100px] w-full items-center justify-center overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-[#f2e4c5] transition hover:brightness-105"
         >
           <img
             src={image}

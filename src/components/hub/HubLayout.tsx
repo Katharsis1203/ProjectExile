@@ -1,6 +1,6 @@
 // src/components/hub/HubLayout.tsx
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { loadHub } from "../../engine/loadHub";
 import { loadNode } from "../../engine/loadNode";
 import type { EventPoolEntry, HubEventSlot } from "../../types/event";
@@ -36,6 +36,8 @@ type EventTransition = {
   fromScaleX: number;
   fromScaleY: number;
 } | null;
+
+type SceneLighting = "day" | "dawn" | "dusk" | "night" | "overcast";
 
 function getRandomUniqueEvents(pool: EventPoolEntry[], amount: number) {
   return [...pool].sort(() => Math.random() - 0.5).slice(0, amount);
@@ -89,6 +91,21 @@ function resolveCheckedChoice(choice: NodeChoice): NodeResolution & {
   };
 }
 
+function normaliseLighting(value: unknown): SceneLighting {
+  const lighting = typeof value === "string" ? value.toLowerCase() : "day";
+
+  switch (lighting) {
+    case "day":
+    case "dawn":
+    case "dusk":
+    case "night":
+    case "overcast":
+      return lighting;
+    default:
+      return "day";
+  }
+}
+
 export default function HubLayout() {
   const [loadedHub, setLoadedHub] = useState<LoadedHub | null>(null);
   const [eventSlots, setEventSlots] =
@@ -105,13 +122,21 @@ export default function HubLayout() {
     loadHub("snowlands_hub").then(setLoadedHub).catch(console.error);
   }, []);
 
-  function handleExplore() {
-    if (!loadedHub) return;
+  const sceneLighting = useMemo(() => {
+    const scene = loadedHub?.hub?.scene as
+      | {
+          tone?: string;
+          effects?: { lighting?: string };
+        }
+      | undefined;
 
-    const selectedEvents = getRandomUniqueEvents(
-      loadedHub.hub.eventPools.explore,
-      3
-    );
+    return normaliseLighting(scene?.effects?.lighting ?? scene?.tone);
+  }, [loadedHub]);
+
+  const showBirds = sceneLighting !== "night";
+
+  function handleDrawEvents(pool: EventPoolEntry[]) {
+    const selectedEvents = getRandomUniqueEvents(pool, 3);
 
     setEventSlots((slots) =>
       slots.map((slot, index) => ({
@@ -119,6 +144,16 @@ export default function HubLayout() {
         event: selectedEvents[index] ?? null,
       }))
     );
+  }
+
+  function handleExplore() {
+    if (!loadedHub) return;
+    handleDrawEvents(loadedHub.hub.eventPools.explore);
+  }
+
+  function handleLife() {
+    if (!loadedHub) return;
+    handleDrawEvents(loadedHub.hub.eventPools.life);
   }
 
   async function handlePlayEvent(
@@ -188,18 +223,26 @@ export default function HubLayout() {
   }
 
   return (
-    <div className="min-h-screen overflow-auto bg-[url('/images/snow.png')] bg-[length:100%_100%] text-white">
-      <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="h-225 w-337.5 shrink-0 p-4">
-          <div className="grid h-full grid-rows-[4fr_1fr] gap-1">
+    <div className={`hub-page-background hub-page-background--${sceneLighting} min-h-screen overflow-auto text-white`}>
+      <div aria-hidden="true" className={`hub-page-clouds hub-page-clouds--${sceneLighting}`} />
+      <div aria-hidden="true" className={`hub-page-skyglow hub-page-skyglow--${sceneLighting}`} />
+      {showBirds ? (
+        <div aria-hidden="true" className={`hub-page-birds hub-page-birds--${sceneLighting}`} />
+      ) : null}
+      <div aria-hidden="true" className="hub-page-grain" />
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+        <div className="h-225 w-337.5 shrink-0 px-4 py-2">
+          <div className="grid h-full grid-rows-[minmax(0,3.78fr)_minmax(0,1.02fr)] gap-2">
             <div className="flex gap-2">
               <HubAreaPanel
+                hub={loadedHub?.hub ?? null}
                 onExplore={handleExplore}
-                backgroundImage={loadedHub?.hub.image ?? null}
+                onLife={handleLife}
               />
 
-              <HubMainContent />
-              <HubSideBar />
+              <HubMainContent hub={loadedHub?.hub ?? null} />
+              <HubSideBar hub={loadedHub?.hub ?? null} />
             </div>
 
             <HubEventRow
