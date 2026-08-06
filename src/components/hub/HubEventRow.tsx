@@ -31,7 +31,7 @@ export default function HubEventRow({
   onPlayEvent,
 }: HubEventRowProps) {
   return (
-    <div className="flex h-full items-center justify-center mt-4">
+    <div className="flex min-h-0 h-full items-stretch justify-center">
       <style>{`
         @keyframes hub-event-deal-in {
           0% {
@@ -69,7 +69,7 @@ export default function HubEventRow({
         }
       `}</style>
 
-      <div className="mt-4 flex h-full w-full gap-4">
+      <div className="flex min-h-0 h-full w-full gap-4 px-1 py-1">
         {eventSlots.map((slot, index) => {
           const event = slot.event
             ? loadedHub?.events[slot.event.opens.eventFile]
@@ -81,7 +81,7 @@ export default function HubEventRow({
           );
 
           return (
-            <div key={slot.id} className="flex flex-1 items-center justify-center">
+            <div key={slot.id} className="flex min-h-0 flex-1 items-stretch justify-center">
               {slot.event && event ? (
                 <HubEventCard
                   key={`${slot.id}-${event.name}-${event.cardImage ?? "no-image"}`}

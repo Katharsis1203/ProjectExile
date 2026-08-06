@@ -32,74 +32,147 @@
       }
     ],
     "explore": [
-  {
-    "id": "wolf_track_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "wolf_tracks", "nodeId": "start" }
-  },
-  {
-    "id": "abandoned_wagon_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "abandoned_wagon", "nodeId": "start" }
-  },
-  {
-    "id": "frozen_shrine_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "frozen_shrine", "nodeId": "start" }
-  },
-  {
-    "id": "blood_in_snow_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "blood_in_snow", "nodeId": "start" }
-  },
-  {
-    "id": "buried_pack_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "buried_pack", "nodeId": "start" }
-  },
-  {
-    "id": "distant_lantern_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "distant_lantern", "nodeId": "start" }
-  },
-  {
-    "id": "frozen_corpse_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "frozen_corpse", "nodeId": "start" }
-  },
-  {
-    "id": "ice_cracked_lake_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "ice_cracked_lake", "nodeId": "start" }
-  },
-  {
-    "id": "snow_buried_door_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "snow_buried_door", "nodeId": "start" }
-  },
-  {
-    "id": "strange_tracks_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "strange_tracks", "nodeId": "start" }
-  },
-  {
-    "id": "wind_chimes_entry",
-    "weight": 1,
-    "conditions": [],
-    "opens": { "eventFile": "wind_chimes", "nodeId": "start" }
-  }
-
+      {
+        "id": "wolf_track_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "wolf_tracks",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "abandoned_wagon_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "abandoned_wagon",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "frozen_shrine_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "frozen_shrine",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "blood_in_snow_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "blood_in_snow",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "buried_pack_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "buried_pack",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "distant_lantern_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "distant_lantern",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "frozen_corpse_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "frozen_corpse",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "ice_cracked_lake_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "ice_cracked_lake",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "snow_buried_door_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "snow_buried_door",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "strange_tracks_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "strange_tracks",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "wind_chimes_entry",
+        "weight": 1,
+        "conditions": [],
+        "opens": {
+          "eventFile": "wind_chimes",
+          "nodeId": "start"
+        }
+      }
     ],
     "special": []
-  }
+  },
+  "description": "Ancient paths thread between ice-bound pines. Patrol tracks vanish near the ridge, and every return reveals what the cold—or the traveller—has changed.",
+  "scene": {
+    "image": "backy.png",
+    "focalPoint": "50% 58%",
+    "labels": {
+      "time": "Daylight",
+      "weather": "Heavy Snow",
+      "temperature": "-12°C"
+    },
+    "effects": {
+      "lighting": "day",
+      "weather": "none",
+      "weatherIntensity": "heavy"
+    }
+  },
+  "stats": [
+    {
+      "label": "Visibility",
+      "value": "Poor",
+      "percent": 35,
+      "tone": "neutral"
+    },
+    {
+      "label": "Familiarity",
+      "value": "18%",
+      "percent": 18,
+      "tone": "safe"
+    },
+    {
+      "label": "Danger",
+      "value": "Rising",
+      "percent": 62,
+      "tone": "danger"
+    },
+    {
+      "label": "Cold Exposure",
+      "value": "Severe",
+      "percent": 78,
+      "tone": "cold"
+    }
+  ]
 }
