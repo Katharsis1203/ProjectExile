@@ -136,7 +136,7 @@
   },
   "description": "Ancient paths thread between ice-bound pines. Patrol tracks vanish near the ridge, and every return reveals what the cold—or the traveller—has changed.",
   "scene": {
-    "image": "backy.png",
+    "image": "village.png",
     "focalPoint": "50% 58%",
     "labels": {
       "time": "Daylight",
@@ -145,7 +145,7 @@
     },
     "effects": {
       "lighting": "night",
-      "weather": "none",
+      "weather": "snow",
       "weatherIntensity": "heavy"
     }
   },
