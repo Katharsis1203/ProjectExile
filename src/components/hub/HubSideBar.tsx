@@ -47,7 +47,6 @@ export default function HubSideBar({ hub }: HubSideBarProps) {
               </div>
             ))}
           </div>
-
         </section>
       </div>
     </aside>

@@ -236,7 +236,6 @@ export default function HubLayout() {
           <div className="grid h-full grid-rows-[minmax(0,3.78fr)_minmax(0,1.02fr)] gap-2">
             <div className="flex gap-2">
               <HubAreaPanel
-                hub={loadedHub?.hub ?? null}
                 onExplore={handleExplore}
                 onLife={handleLife}
               />

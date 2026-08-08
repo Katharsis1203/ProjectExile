@@ -328,3 +328,241 @@
     radial-gradient(circle at 74% 62%, rgba(47, 35, 24, 0.26) 0 0.55px, transparent 0.9px);
   background-size: 6px 6px, 9px 9px;
 }
+
+/* Layered player avatar -------------------------------------------------- */
+.avatar-stage {
+  perspective: 820px;
+  transform-style: preserve-3d;
+}
+
+.avatar-stage__halo {
+  border-radius: 48% 48% 32% 32% / 42% 42% 24% 24%;
+  background:
+    radial-gradient(ellipse at 50% 43%, rgba(255, 249, 231, 0.76), rgba(224, 208, 177, 0.22) 57%, transparent 76%);
+  filter: blur(12px);
+  opacity: 0.92;
+}
+
+.avatar-stage__well {
+  border: 1px solid rgba(97, 77, 52, 0.17);
+  border-radius: 48% 48% 22px 22px / 35% 35% 18px 18px;
+  background:
+    radial-gradient(ellipse at 50% 34%, rgba(112, 124, 123, 0.14), transparent 49%),
+    linear-gradient(to bottom, rgba(229, 218, 190, 0.22), rgba(197, 181, 151, 0.07));
+  box-shadow:
+    inset 0 15px 24px rgba(64, 51, 37, 0.075),
+    inset 0 -12px 20px rgba(255, 250, 232, 0.3),
+    0 1px 0 rgba(255, 250, 232, 0.54);
+}
+
+.avatar-stage__back-shadow {
+  border-radius: 44%;
+  background: rgba(49, 39, 29, 0.23);
+  filter: blur(18px);
+  transform: translate3d(0, 12px, -18px) scaleX(0.82);
+  transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 360ms ease;
+  opacity: 0.64;
+}
+
+.avatar-stack {
+  transform-style: preserve-3d;
+  transform: rotateX(0.5deg);
+  transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.avatar-layer {
+  transform:
+    translate3d(var(--avatar-x), var(--avatar-y), var(--avatar-depth-z))
+    scale(var(--avatar-scale));
+  transform-origin: 50% 88%;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 249, 228, 0.5))
+    drop-shadow(0 var(--avatar-shadow-y) var(--avatar-shadow-blur) rgba(48, 38, 28, 0.25));
+  transition:
+    transform 390ms cubic-bezier(0.18, 0.82, 0.2, 1),
+    filter 390ms ease;
+  will-change: transform, filter;
+}
+
+.avatar-stage:hover .avatar-stack,
+.avatar-stage:focus .avatar-stack {
+  transform: translateY(-3px) rotateX(1deg) scale(1.018);
+}
+
+.avatar-stage:hover .avatar-layer,
+.avatar-stage:focus .avatar-layer {
+  transform:
+    translate3d(var(--avatar-x), calc(var(--avatar-y) - var(--avatar-lift)), calc(var(--avatar-depth-z) + 8px))
+    scale(calc(var(--avatar-scale) + 0.01));
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 249, 228, 0.58))
+    drop-shadow(0 calc(var(--avatar-shadow-y) + 3px) calc(var(--avatar-shadow-blur) + 3px) rgba(43, 34, 25, 0.31));
+}
+
+.avatar-stage:hover .avatar-stage__back-shadow,
+.avatar-stage:focus .avatar-stage__back-shadow {
+  transform: translate3d(0, 17px, -22px) scaleX(0.92);
+  opacity: 0.78;
+}
+
+.avatar-stage__rim {
+  pointer-events: none;
+  z-index: 70;
+  border-radius: 48% 48% 22px 22px / 35% 35% 18px 18px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 249, 228, 0.3),
+    inset 0 -9px 16px rgba(83, 64, 42, 0.075);
+}
+
+.avatar-stage__foreground {
+  pointer-events: none;
+  z-index: 80;
+  border-top: 1px solid rgba(103, 83, 58, 0.18);
+  border-radius: 50% 50% 12px 12px / 55% 55% 12px 12px;
+  background:
+    linear-gradient(to bottom, rgba(245, 235, 211, 0.08), rgba(240, 227, 198, 0.7) 38%, rgba(235, 220, 188, 0.9));
+  box-shadow:
+    0 -6px 12px rgba(57, 45, 32, 0.07),
+    inset 0 1px 0 rgba(255, 250, 236, 0.58);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-stack,
+  .avatar-layer,
+  .avatar-stage__back-shadow {
+    transition: none;
+  }
+
+  .avatar-stage:hover .avatar-stack,
+  .avatar-stage:focus .avatar-stack,
+  .avatar-stage:hover .avatar-layer,
+  .avatar-stage:focus .avatar-layer,
+  .avatar-stage:hover .avatar-stage__back-shadow,
+  .avatar-stage:focus .avatar-stage__back-shadow {
+    transform: none;
+  }
+}
+
+/* Single-image portrait avatar ------------------------------------------- */
+.avatar-portrait-stage {
+  box-shadow: 0 12px 28px rgba(53, 40, 30, 0.2);
+}
+
+.avatar-portrait-stage__shadow {
+  position: absolute;
+  inset: 10px 16px 16px;
+  border-radius: 20px;
+  filter: blur(16px);
+  opacity: 0.9;
+  transform: translateY(10px) scale(0.96);
+}
+
+.avatar-portrait-stage__shadow--violet {
+  background: radial-gradient(ellipse at 50% 35%, rgba(96, 72, 114, 0.32), rgba(49, 38, 57, 0.1) 62%, transparent 78%);
+}
+
+.avatar-portrait-stage__shadow--forest {
+  background: radial-gradient(ellipse at 50% 35%, rgba(79, 97, 84, 0.28), rgba(39, 52, 41, 0.08) 62%, transparent 78%);
+}
+
+.avatar-portrait-stage__shadow--night {
+  background: radial-gradient(ellipse at 50% 35%, rgba(68, 80, 116, 0.28), rgba(31, 38, 58, 0.08) 62%, transparent 78%);
+}
+
+.avatar-portrait-stage__shadow--ember {
+  background: radial-gradient(ellipse at 50% 35%, rgba(131, 89, 69, 0.28), rgba(75, 45, 31, 0.08) 62%, transparent 78%);
+}
+
+.avatar-portrait-stage__backdrop {
+  position: absolute;
+  inset: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 233, 0.24),
+    inset 0 18px 24px rgba(255, 249, 240, 0.06),
+    inset 0 -14px 18px rgba(79, 60, 40, 0.08);
+}
+
+.avatar-portrait-stage__backdrop--violet {
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255, 246, 233, 0.92), rgba(244, 230, 214, 0.48) 32%, transparent 50%),
+    linear-gradient(180deg, rgba(214, 198, 216, 0.96), rgba(237, 226, 216, 0.95) 50%, rgba(219, 203, 216, 0.96));
+}
+
+.avatar-portrait-stage__backdrop--forest {
+  background:
+    radial-gradient(circle at 50% 16%, rgba(248, 241, 224, 0.9), rgba(232, 225, 209, 0.44) 34%, transparent 50%),
+    linear-gradient(180deg, rgba(196, 204, 191, 0.96), rgba(236, 227, 211, 0.95) 52%, rgba(197, 204, 191, 0.96));
+}
+
+.avatar-portrait-stage__backdrop--night {
+  background:
+    radial-gradient(circle at 50% 16%, rgba(240, 235, 224, 0.82), rgba(220, 224, 235, 0.24) 32%, transparent 50%),
+    linear-gradient(180deg, rgba(171, 182, 209, 0.94), rgba(228, 223, 216, 0.95) 54%, rgba(163, 172, 195, 0.95));
+}
+
+.avatar-portrait-stage__backdrop--ember {
+  background:
+    radial-gradient(circle at 50% 16%, rgba(251, 236, 214, 0.88), rgba(234, 215, 194, 0.36) 32%, transparent 50%),
+    linear-gradient(180deg, rgba(214, 188, 176, 0.95), rgba(238, 225, 212, 0.95) 52%, rgba(210, 184, 167, 0.95));
+}
+
+.avatar-portrait-stage__wash {
+  position: absolute;
+  inset: 10px;
+  border-radius: 20px;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.18), transparent 22%, transparent 70%, rgba(91, 70, 50, 0.08)),
+    radial-gradient(circle at 22% 28%, rgba(255, 255, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 78% 72%, rgba(133, 112, 148, 0.08), transparent 34%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.avatar-portrait-stage__filigree {
+  position: absolute;
+  inset: 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  opacity: 0.38;
+  background-image:
+    radial-gradient(circle at 12% 16%, rgba(128, 102, 79, 0.18) 0 1.1px, transparent 1.3px),
+    radial-gradient(circle at 88% 18%, rgba(128, 102, 79, 0.15) 0 1px, transparent 1.25px),
+    radial-gradient(circle at 16% 84%, rgba(128, 102, 79, 0.14) 0 0.9px, transparent 1.2px),
+    radial-gradient(circle at 84% 82%, rgba(128, 102, 79, 0.16) 0 1px, transparent 1.3px);
+}
+
+.avatar-portrait-stage__image-wrap {
+  z-index: 10;
+  background: transparent;
+}
+
+.avatar-portrait-image {
+  position: relative;
+  z-index: 10;
+  filter:
+    saturate(0.98)
+    contrast(1.01)
+    brightness(1.01)
+    drop-shadow(0 10px 14px rgba(51, 39, 32, 0.16));
+}
+
+.avatar-portrait-stage__inner-ring {
+  pointer-events: none;
+  z-index: 20;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 236, 0.42),
+    inset 0 0 0 6px rgba(247, 236, 217, 0.08),
+    inset 0 -8px 18px rgba(78, 58, 39, 0.06);
+}
+
+.avatar-portrait-stage__frame {
+  pointer-events: none;
+  z-index: 30;
+  border: 1px solid rgba(99, 75, 53, 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 239, 0.22),
+    0 1px 0 rgba(255, 250, 240, 0.48),
+    0 16px 28px rgba(57, 43, 30, 0.12);
+}
