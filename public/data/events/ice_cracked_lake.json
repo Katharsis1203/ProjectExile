@@ -3,7 +3,7 @@
   "id": "ice_cracked_lake",
   "name": "Cracked Lake",
   "type": "event",
-  "cardImage": "ice_cracked_lake1.png",
+  "cardImage": "ice_cracked_lake.png",
   "nodes": {
     "start": {
       "id": "start",

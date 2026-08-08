@@ -21,7 +21,7 @@ export default function HubCategoryTabs() {
           type="button"
           title={title}
           aria-label={title}
-          className="group relative flex h-[100px] w-full items-center justify-center overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-[#f2e4c5] transition hover:brightness-105"
+          className="group relative flex h-[100px] w-full items-center justify-center overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-[transparent] transition hover:brightness-105"
         >
           <img
             src={image}

@@ -102,6 +102,99 @@ export default function HubEventRow({
             0 16px 28px rgba(34, 40, 48, 0.24),
             inset 0 0 0 1px rgba(255, 250, 237, 0.48);
         }
+
+        .hub-event-image-base {
+          filter: grayscale(0.82) saturate(0.42) brightness(1.02) contrast(0.98);
+          transition: filter 220ms ease;
+        }
+
+        .hub-event-ink-reveal {
+          overflow: visible;
+        }
+
+        .hub-event-image-colour-svg {
+          opacity: 0.98;
+        }
+
+        .hub-event-ink-blobs {
+          isolation: isolate;
+        }
+
+        .hub-event-blob {
+          transform-box: fill-box;
+          transform-origin: center;
+          transform: scale(0.04);
+          transition-property: transform;
+          transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: transform;
+        }
+
+        .hub-event-blob--1 {
+          transition-duration: 980ms;
+          transition-delay: 20ms;
+        }
+
+        .hub-event-blob--2 {
+          transition-duration: 1180ms;
+          transition-delay: 90ms;
+        }
+
+        .hub-event-blob--3 {
+          transition-duration: 1080ms;
+          transition-delay: 150ms;
+        }
+
+        .hub-event-blob--4 {
+          transition-duration: 1240ms;
+          transition-delay: 70ms;
+        }
+
+        .hub-event-blob--5 {
+          transition-duration: 1320ms;
+          transition-delay: 180ms;
+        }
+
+        .group:hover .hub-event-image-base,
+        .group:focus-visible .hub-event-image-base {
+          filter: grayscale(0.44) saturate(0.66) brightness(1.04) contrast(1);
+        }
+
+        .group:hover .hub-event-blob--1,
+        .group:focus-visible .hub-event-blob--1 {
+          transform: scale(8.2);
+        }
+
+        .group:hover .hub-event-blob--2,
+        .group:focus-visible .hub-event-blob--2 {
+          transform: scale(10.5);
+        }
+
+        .group:hover .hub-event-blob--3,
+        .group:focus-visible .hub-event-blob--3 {
+          transform: scale(9.2);
+        }
+
+        .group:hover .hub-event-blob--4,
+        .group:focus-visible .hub-event-blob--4 {
+          transform: scale(11);
+        }
+
+        .group:hover .hub-event-blob--5,
+        .group:focus-visible .hub-event-blob--5 {
+          transform: scale(12);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hub-event-blob {
+            transition: none;
+            transform: scale(12);
+          }
+
+          .group:hover .hub-event-card-layer,
+          .group:focus-visible .hub-event-card-layer {
+            transform: none;
+          }
+        }
       `}</style>
 
       <div className="flex h-full min-h-0 w-full gap-4 px-1 py-1">
