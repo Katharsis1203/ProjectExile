@@ -25,7 +25,8 @@ The world is intended to feel larger than any single character's journey. Skills
 
 Project Exile is also being designed with expansion in mind. New locations, characters, quests, encounters, professions, systems, and storylines should be able to grow around the existing world without requiring the game to be rebuilt around them.
 
-Current state: Playable vertical slice / active development. The Snowlands currently serves as the primary development and testing region, with the narrative framework, exploration hub, menu, save system, and foundational character mechanics in place. Broader progression, world content, and combat systems are still being developed.
+### Current state: 
+Playable vertical slice / active development. The Snowlands currently serves as the primary development and testing region, with the narrative framework, exploration hub, menu, save system, and foundational character mechanics in place. Broader progression, world content, and combat systems are still being developed.
 
 ## What is in the current build
 
