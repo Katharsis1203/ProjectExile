@@ -7,7 +7,7 @@ type PlayerResourceBarsProps = {
 const toneClasses: Record<PlayerResourceTone, string> = {
   health: "bg-[#8b4a45]",
   mana: "bg-[#536786]",
-  energy: "bg-[#6f7752]",
+  stamina: "bg-[#6f7752]",
   hunger: "bg-[#9a7544]",
 };
 

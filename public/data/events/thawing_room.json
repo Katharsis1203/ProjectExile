@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 2,
+  "id": "thawing_room",
+  "name": "The Thawing Room",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Recovery"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "The Thawing Room",
+      "text": "Because the cold has got into you, the bathhouse keeper waves you toward the small stone room behind the boilers. Steam hangs low over benches warmed from beneath. There is one place left beside the hottest wall.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Feed your resin-rich kindling to the stove",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "resin_kindling",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "resin_kindling",
+              "amount": -1
+            },
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": 18
+            },
+            {
+              "type": "resource",
+              "resource": "health",
+              "amount": 5
+            }
+          ],
+          "next": "rested"
+        },
+        {
+          "type": "checked",
+          "text": "Warm up without rushing it",
+          "statChecks": [
+            {
+              "stat": "endurance",
+              "difficulty": 9
+            },
+            {
+              "stat": "survival",
+              "difficulty": 8
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You strip the wet outer layers, warm hands and feet gradually, and let feeling return without pain.",
+                "next": "rested",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": 14
+                  },
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": 4
+                  }
+                ]
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You warm too quickly at first and have to back away from the wall until the dizziness passes.",
+                "next": "rested",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": 9
+                  },
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The heat feels so good that you stay too close, too fast. Nausea hits before comfort does.",
+                "next": "overheat",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": 4
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Give the warm place to someone worse off",
+          "next": "give_place"
+        },
+        {
+          "type": "simple",
+          "text": "Decline and keep moving",
+          "next": "decline"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "rested": {
+      "id": "rested",
+      "title": "Heat in the Bones",
+      "text": "After twenty minutes, the shaking stops. The keeper hands you watered tea and tells you not to mistake feeling better for being fully recovered.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "overheat": {
+      "id": "overheat",
+      "title": "Too Much, Too Fast",
+      "text": "You end up sitting on the cooler floor with your head between your knees while the keeper mutters about travellers who treat heat like ale.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "give_place": {
+      "id": "give_place",
+      "title": "Someone Colder",
+      "text": "You give the bench to an old carter whose beard is stiff with ice. He does not thank you until much later, when he finds you outside and presses a hot brick wrapped in cloth into your hands.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "decline": {
+      "id": "decline",
+      "title": "Cold Kept",
+      "text": "You thank the keeper and leave. The warmth from the doorway follows you for three steps.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

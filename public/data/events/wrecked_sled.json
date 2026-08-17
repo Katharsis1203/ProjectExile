@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 2,
+  "id": "wrecked_sled",
+  "name": "Wrecked Sled",
+  "type": "event",
+  "tags": [
+    "Road",
+    "Rescue"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Sled in the Ditch",
+      "text": "A freight sled has gone sideways off the road. One runner is snapped, sacks are scattered across the slope, and a man is pinned from the waist down beneath the frame. He is conscious enough to curse when he sees you.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Lift the frame while he pulls free",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 10
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The frame rises just enough. He drags himself clear and immediately checks whether his legs still answer him.",
+                "next": "rescued"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You shift the weight, but not cleanly. He comes free with a cry and cannot put weight on one ankle.",
+                "next": "injured",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -3
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The sled barely moves. The effort only settles it deeper into the drift.",
+                "next": "need_leverage",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": -3
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -8
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Search for leverage first",
+          "next": "leverage"
+        },
+        {
+          "type": "simple",
+          "text": "Leave him and the cargo",
+          "next": "leave"
+        }
+      ],
+      "image": "abandoned_wagon2.png"
+    },
+    "leverage": {
+      "id": "leverage",
+      "title": "A Better Angle",
+      "text": "A broken fence post lies under the snow nearby. With it as a lever, the problem becomes less about raw force and more about choosing where to place the fulcrum.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Set the lever and raise the sled",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 9
+            },
+            {
+              "stat": "strength",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The frame rises smoothly and the driver crawls free with little more than bruising.",
+                "next": "rescued"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The lever slips once, but the second attempt works.",
+                "next": "injured"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The rotten post splits in your hands.",
+                "next": "need_leverage"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "need_leverage": {
+      "id": "need_leverage",
+      "title": "Too Much Weight",
+      "text": "The driver stops cursing and starts giving terse instructions. There is an iron cargo bar lashed beneath the rear bench, if you can reach it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Use the cargo bar together",
+          "next": "rescued"
+        },
+        {
+          "type": "simple",
+          "text": "Tell him you cannot spare more time",
+          "next": "leave"
+        }
+      ]
+    },
+    "rescued": {
+      "id": "rescued",
+      "title": "Freight and Gratitude",
+      "text": "The driver sits in the snow flexing both knees. He offers you first choice from a torn sack: dried onions, lamp wicks, or a small packet of bitter tea. \"Take one before the road takes all of it,\" he says.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Accept a small share and help right the cargo",
+          "endEvent": true,
+          "effects": [
+            {
+              "type": "item",
+              "item": "bitter_tea",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "injured": {
+      "id": "injured",
+      "title": "A Limp Home",
+      "text": "His ankle is swelling, but he can stand with the sled rail as a crutch. The cargo will have to wait. He asks only that you walk with him until the first roofs are visible.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Escort him toward the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "A Voice Behind You",
+      "text": "You leave the ditch behind. For a while you can still hear him shouting for anyone on the road. Then the wind takes the sound.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "abandoned_wagon2.png"
+}

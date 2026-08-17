@@ -10,6 +10,6 @@ export const DEFAULT_EXILE_PORTRAIT: AvatarPortrait = {
   name: "The Exile",
   image: "portraits/exile_soft_portrait.png",
   imageAlt: "Portrait of the Exile",
-  imageFit: "cover",
+  imageFit: "contain",
   stageTone: "violet",
 };

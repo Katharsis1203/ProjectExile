@@ -89,10 +89,8 @@ export default function HubScenePanel({
   const isFoggy = weather === "fog";
 
   return (
-    <main className="flex min-w-0 items-center justify-center xl:col-start-2 xl:row-start-1">
+    <main className="hub-panel-elevation hub-panel-elevation--scene flex min-w-0 items-center justify-center xl:col-start-2 xl:row-start-1">
       <div className="relative h-full w-full">
-        <div className="pointer-events-none absolute inset-0 scale-[0.98] bg-[rgba(35,25,15,0.28)] blur-[24px]" />
-
         <section
           aria-busy={!hub && !loadError}
           className="relative flex h-full min-h-[440px] w-full flex-col bg-[url('/images/parchment.png')] bg-[length:100%_100%] bg-center bg-no-repeat p-5 text-[#2b2b2b] sm:min-h-[540px]"

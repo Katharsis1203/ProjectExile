@@ -4,6 +4,7 @@ import type { PlayerStatusEffect } from "../../types/player";
 
 type PlayerStatusEffectsProps = {
   effects: PlayerStatusEffect[];
+  variant?: "badges" | "rows";
 };
 
 type TooltipPosition = {
@@ -23,7 +24,13 @@ const toneRingClasses: Record<NonNullable<PlayerStatusEffect["tone"]>, string> =
   neutral: "border-[#77664f]/35 bg-[#e7ddca]/58",
 };
 
-function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
+function EffectItem({
+  effect,
+  variant,
+}: {
+  effect: PlayerStatusEffect;
+  variant: "badges" | "rows";
+}) {
   const tooltipId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -41,9 +48,8 @@ function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
       const idealLeft = rect.left + rect.width / 2;
       const left = Math.max(
         halfWidth + VIEWPORT_PADDING,
-        Math.min(window.innerWidth - halfWidth - VIEWPORT_PADDING, idealLeft)
+        Math.min(window.innerWidth - halfWidth - VIEWPORT_PADDING, idealLeft),
       );
-
       const hasRoomAbove = rect.top >= 118;
 
       setPosition({
@@ -63,33 +69,92 @@ function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
     };
   }, [isOpen]);
 
-  const tooltip = isOpen && position && typeof document !== "undefined"
-    ? createPortal(
-        <div
-          id={tooltipId}
-          role="tooltip"
-          className="pointer-events-none fixed z-[9999] w-[188px] rounded-[10px] border border-[#695742]/22 bg-[rgba(247,239,220,0.985)] px-3 py-2.5 text-left shadow-[0_12px_28px_rgba(31,23,16,0.30)] backdrop-blur-[2px]"
-          style={{
-            left: position.left,
-            top: position.top,
-            transform: position.placement === "above"
-              ? "translate(-50%, -100%)"
-              : "translate(-50%, 0)",
-          }}
+  const tooltip =
+    isOpen && position && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            id={tooltipId}
+            role="tooltip"
+            className="pointer-events-none fixed z-[9999] w-[188px] rounded-[10px] border border-[#695742]/22 bg-[rgba(247,239,220,0.985)] px-3 py-2.5 text-left shadow-[0_12px_28px_rgba(31,23,16,0.30)] backdrop-blur-[2px]"
+            style={{
+              left: position.left,
+              top: position.top,
+              transform:
+                position.placement === "above"
+                  ? "translate(-50%, -100%)"
+                  : "translate(-50%, 0)",
+            }}
+          >
+            <p className="font-serif text-[12px] font-bold leading-none text-[#30261d]">
+              {effect.name}
+            </p>
+            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[#6d5a45]/58">
+              {effect.duration}
+            </p>
+            <p className="mt-1.5 text-[10px] leading-[1.4] text-[#4e4032]/80">
+              {effect.effect}
+            </p>
+          </div>,
+          document.body,
+        )
+      : null;
+
+  const sharedHandlers = {
+    onMouseEnter: () => setIsOpen(true),
+    onMouseLeave: () => setIsOpen(false),
+    onFocus: () => setIsOpen(true),
+    onBlur: () => setIsOpen(false),
+    onClick: () => setIsOpen(true),
+    onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsOpen(false);
+      }
+    },
+  };
+
+  if (variant === "rows") {
+    return (
+      <div className="relative">
+        <button
+          ref={buttonRef}
+          type="button"
+          aria-label={`${effect.name}: ${effect.duration}. ${effect.effect}`}
+          aria-describedby={isOpen ? tooltipId : undefined}
+          aria-expanded={isOpen}
+          {...sharedHandlers}
+          className="group/effect flex w-full items-center gap-2 rounded-[8px] border border-transparent px-1 py-1 text-left transition-colors duration-150 hover:border-[#6f5b44]/12 hover:bg-[#8b7355]/[0.045] focus:outline-none focus-visible:border-[#6f5b44]/20 focus-visible:bg-[#8b7355]/[0.055]"
         >
-          <p className="font-serif text-[12px] font-bold leading-none text-[#30261d]">
-            {effect.name}
-          </p>
-          <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-[#6d5a45]/58">
-            {effect.duration}
-          </p>
-          <p className="mt-1.5 text-[10px] leading-[1.4] text-[#4e4032]/80">
-            {effect.effect}
-          </p>
-        </div>,
-        document.body
-      )
-    : null;
+          <span
+            className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-[8px] border shadow-[0_1px_3px_rgba(62,46,31,0.10),inset_0_0_0_1px_rgba(255,250,239,0.22)] ${toneRingClasses[effect.tone ?? "neutral"]}`}
+          >
+            <img
+              src={`/images/status-effects/${effect.icon}`}
+              alt=""
+              className="h-[21px] w-[21px] object-contain opacity-85"
+              draggable={false}
+            />
+          </span>
+
+          <span className="min-w-0 flex-1">
+            <span className="flex items-baseline justify-between gap-2">
+              <span className="truncate font-serif text-[11px] font-bold text-[#3b3025]">
+                {effect.name}
+              </span>
+              <span className="shrink-0 text-[8px] uppercase tracking-[0.06em] text-[#665541]/52">
+                {effect.duration}
+              </span>
+            </span>
+            <span className="mt-0.5 block truncate text-[9px] leading-3 text-[#514335]/62">
+              {effect.effect}
+            </span>
+          </span>
+        </button>
+
+        {tooltip}
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
@@ -99,17 +164,7 @@ function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
         aria-label={`${effect.name}: ${effect.duration}. ${effect.effect}`}
         aria-describedby={isOpen ? tooltipId : undefined}
         aria-expanded={isOpen}
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        onFocus={() => setIsOpen(true)}
-        onBlur={() => setIsOpen(false)}
-        onClick={() => setIsOpen(true)}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            event.preventDefault();
-            setIsOpen(false);
-          }
-        }}
+        {...sharedHandlers}
         className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-[9px] border shadow-[0_2px_5px_rgba(62,46,31,0.12),inset_0_0_0_1px_rgba(255,250,239,0.28)] transition duration-150 hover:-translate-y-0.5 hover:shadow-[0_5px_10px_rgba(62,46,31,0.16)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#76624a]/45 ${toneRingClasses[effect.tone ?? "neutral"]}`}
       >
         <img
@@ -125,17 +180,32 @@ function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
   );
 }
 
-export default function PlayerStatusEffects({ effects }: PlayerStatusEffectsProps) {
+export default function PlayerStatusEffects({
+  effects,
+  variant = "badges",
+}: PlayerStatusEffectsProps) {
   if (!effects.length) {
     return (
-      <p className="text-[10px] italic text-[#594b3b]/48">No active effects.</p>
+      <div className="flex min-h-[92px] items-center justify-center rounded-[8px] border border-dashed border-[#6c5942]/12 bg-[#7b664b]/[0.025] px-3 text-center">
+        <p className="text-[10px] italic text-[#594b3b]/48">No active effects.</p>
+      </div>
+    );
+  }
+
+  if (variant === "rows") {
+    return (
+      <div className="space-y-1">
+        {effects.map((effect) => (
+          <EffectItem key={effect.id} effect={effect} variant="rows" />
+        ))}
+      </div>
     );
   }
 
   return (
     <div className="flex flex-wrap items-center gap-2">
       {effects.map((effect) => (
-        <EffectBadge key={effect.id} effect={effect} />
+        <EffectItem key={effect.id} effect={effect} variant="badges" />
       ))}
     </div>
   );

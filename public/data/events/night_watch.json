@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 2,
+  "id": "night_watch",
+  "name": "Night Watch",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Duty"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Turn on the Wall",
+      "text": "The gate sergeant is short two people for the late watch. He offers a hot meal afterward if you take a two-hour turn above the north gate.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Keep an effective watch in the storm",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 11
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You keep your eyes moving despite the cold and notice a lantern blink twice beyond the ditch where no road runs.",
+                "next": "signal"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You remain alert, but the snow reduces the world to the gate, the ditch, and occasional movement that never resolves.",
+                "next": "quiet_watch"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Warmth leaks out through the stones and your attention narrows to the next chance to stamp feeling back into your toes.",
+                "next": "missed"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Decline the watch",
+          "next": "decline"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "signal": {
+      "id": "signal",
+      "title": "Two Blinks",
+      "text": "The light appears again: two quick flashes, a pause, then one. The sergeant sees nothing from his angle.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Report it immediately",
+          "next": "report"
+        },
+        {
+          "type": "checked",
+          "text": "Watch for a pattern before reporting",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 12
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "pattern",
+                "threshold": 1,
+                "flavourText": "The signal repeats only when a patrol lantern passes below the wall. Someone outside is timing the guard movement.",
+                "next": "report_pattern"
+              },
+              {
+                "id": "lost",
+                "threshold": 0,
+                "flavourText": "The light does not appear again.",
+                "next": "report"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "report_pattern": {
+      "id": "report_pattern",
+      "title": "A Useful Detail",
+      "text": "The sergeant sends two people out through the side gate and changes the patrol timing without explanation. He does not tell you what they find, but the next watch is doubled.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "report": {
+      "id": "report",
+      "title": "A Light in Bad Weather",
+      "text": "The sergeant notes the direction and sends word down the wall. Whether it was a signal, a traveller, or a reflection, he prefers knowing about it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "quiet_watch": {
+      "id": "quiet_watch",
+      "title": "Nothing Happens",
+      "text": "Nothing dramatic occurs. No attack, no thief, no omen. You do the work, finish your turn, and eat a bowl of stew that tastes better for being earned.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "missed": {
+      "id": "missed",
+      "title": "A Long Two Hours",
+      "text": "The sergeant catches you staring at the brazier instead of the road. He says nothing until the shift ends, then gives you half the promised meal and all of the promised embarrassment.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "decline": {
+      "id": "decline",
+      "title": "Someone Else Takes the Wall",
+      "text": "You decline. A cooper's son is called up from the gatehouse instead, still fastening his coat as he climbs.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

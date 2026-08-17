@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 2,
+  "id": "courier_tube_return",
+  "name": "The Unopened Tube",
+  "type": "event",
+  "tags": [
+    "Follow-up",
+    "Hub Life"
+  ],
+  "cardImage": "../village.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Seal Recognised",
+      "text": "Near the gatehouse, a quartermaster notices the hub seal on the courier tube at your belt. Her expression changes before she asks where you found it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Hand over the sealed tube",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "sealed_courier_tube",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "sealed_courier_tube",
+              "amount": -1
+            },
+            {
+              "type": "item",
+              "item": "winter_scrip",
+              "amount": 2
+            }
+          ],
+          "next": "returned"
+        },
+        {
+          "type": "simple",
+          "text": "Say you are not ready to part with it",
+          "next": "keep"
+        }
+      ]
+    },
+    "returned": {
+      "id": "returned",
+      "title": "Courier Work Completed",
+      "text": "She checks the wax before breaking it, then exhales when she sees the mundane patrol orders inside. Two stamped pieces of winter scrip change hands. “For returning it intact,” she says. “The courier would have wanted the route finished.”",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "keep": {
+      "id": "keep",
+      "title": "Still in Your Keeping",
+      "text": "The quartermaster does not press. “Then keep it dry,” she says. “That seal means someone expected it to arrive.”",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  }
+}

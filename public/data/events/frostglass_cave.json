@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 2,
+  "id": "frostglass_cave",
+  "name": "Frostglass Cave",
+  "type": "event",
+  "tags": [
+    "Discovery",
+    "Wilderness"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Blue Light in the Cut",
+      "text": "A fracture in the hillside exposes a narrow cave glazed with blue ice. Sunlight caught in the walls makes the interior glow even though the entrance faces away from the sky.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Test the cave before entering",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 10
+            },
+            {
+              "stat": "perception",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The floor is stable, but a line of fresh scratches shows something heavy was dragged deeper inside.",
+                "next": "inside_alert"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The first chamber looks sound enough. Beyond it, the ice hides the floor.",
+                "next": "inside"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The beauty of the ice is more obvious than its hazards.",
+                "next": "inside"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Leave the cave untouched",
+          "next": "leave"
+        }
+      ],
+      "image": "snow_buried_door.png"
+    },
+    "inside_alert": {
+      "id": "inside_alert",
+      "title": "Scratches Under Glass",
+      "text": "The scratches continue to a pocket where the ice has formed around an old wooden chest. The lid is visible; the rest is frozen solid.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Free the chest without cracking the shelf",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 11
+            },
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You lever it loose in one piece. Inside are moulded blankets, a rusted knife, and a sealed tin of tea.",
+                "next": "cache"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The chest comes free as the shelf cracks. You save the tin before meltwater takes the rest.",
+                "next": "small_cache"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The shelf fractures and the chest slides into a blue fissure too narrow to follow.",
+                "next": "lost"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Leave the chest where it is",
+          "next": "leave"
+        }
+      ]
+    },
+    "inside": {
+      "id": "inside",
+      "title": "Glass Walls",
+      "text": "The cave narrows until your shoulders nearly touch both sides. Every breath returns in delayed whispers. Ahead, something wooden is trapped in the ice.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Go closer",
+          "next": "inside_alert"
+        },
+        {
+          "type": "simple",
+          "text": "Turn back",
+          "next": "leave"
+        }
+      ]
+    },
+    "cache": {
+      "id": "cache",
+      "title": "Old Winter Stores",
+      "text": "The tea tin is stamped with a merchant mark you have not seen in the hub. The cache may be decades old, but the seal still holds.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "small_cache": {
+      "id": "small_cache",
+      "title": "One Thing Saved",
+      "text": "The tin is dented but intact. Behind you, water begins ticking into the fissure one drop at a time.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "lost": {
+      "id": "lost",
+      "title": "Taken by the Crack",
+      "text": "The chest disappears below the ice with a hollow knock. The cave suddenly feels much deeper than it looked from outside.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Blue Light Behind You",
+      "text": "You leave the cave to keep its secrets. The blue light remains visible through the trees until the slope turns.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "snow_buried_door.png",
+  "cardColourImage": "snow_buried_door_colour.png"
+}

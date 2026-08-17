@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 2,
+  "id": "last_bowl",
+  "name": "The Last Bowl",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Hearth"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "The Last Bowl",
+      "text": "The communal kitchen is closing when you arrive. One bowl of barley stew remains on the counter. Before you can claim it, you notice an old trapper at the far bench pretending to nurse an empty cup.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Read the room before deciding",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "notice",
+                "threshold": 1,
+                "flavourText": "The trapper has been watching the bowl without once looking directly at it. The cook has noticed too and is waiting to see what you do.",
+                "next": "choice"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "The room seems ordinary enough: one bowl, several tired people, and a cook ready to scrub the pot.",
+                "next": "choice"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Buy the bowl for yourself",
+          "next": "self"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "choice": {
+      "id": "choice",
+      "title": "One Bowl, Two Hungers",
+      "text": "The stew is thin, but it is hot. The trapper rubs his hands together beneath the table. The cook says nothing.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Give the bowl to the trapper",
+          "next": "give"
+        },
+        {
+          "type": "simple",
+          "text": "Split it with him",
+          "next": "split"
+        },
+        {
+          "type": "simple",
+          "text": "Take it for yourself",
+          "next": "self"
+        }
+      ]
+    },
+    "give": {
+      "id": "give",
+      "title": "No Speech Needed",
+      "text": "The trapper looks annoyed for half a second, then hungry enough not to argue. He eats slowly. On the way out, he tells you which north trail has been drifting shut first this week.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "split": {
+      "id": "split",
+      "title": "Two Spoons",
+      "text": "The cook finds a second spoon without being asked. The trapper contributes half a heel of hard bread from his coat, making the meal only slightly less inadequate.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "self": {
+      "id": "self",
+      "title": "Heat in the Stomach",
+      "text": "You eat the stew while it is hot. No one condemns you. In the Snowlands, hunger is not a moral failing, only a fact.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

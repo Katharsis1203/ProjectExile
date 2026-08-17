@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 2,
+  "id": "roof_under_snow",
+  "name": "Roof Under Snow",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Work"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Roof Under Snow",
+      "text": "A widow named Edda is standing in the street staring up at her roof. The snow on the north slope is nearly waist-deep and one beam has begun to bow. Her ladder is buried behind the shed.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Clear the roof before the beam gives",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 10
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You work from the eaves inward, moving the weight evenly. The beam rises a finger's width as the last heavy slab slides off.",
+                "next": "saved"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You clear most of the load before the beam cracks. It holds, but the room beneath will need bracing.",
+                "next": "braced",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": -2
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The snow is heavier than it looks and the ladder shifts under you.",
+                "next": "slip",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -6
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -8
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Help her brace the room from inside instead",
+          "next": "brace_inside"
+        },
+        {
+          "type": "simple",
+          "text": "Tell her to fetch a carpenter",
+          "next": "leave"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "slip": {
+      "id": "slip",
+      "title": "A Bad Step",
+      "text": "The ladder kicks sideways. You catch the gutter with one hand while a sheet of snow comes down around you.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Recover without falling",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "hold",
+                "threshold": 1,
+                "flavourText": "You swing back onto the ladder and climb down with considerably more respect for the roof.",
+                "next": "braced"
+              },
+              {
+                "id": "fall",
+                "threshold": 0,
+                "flavourText": "You drop the last few feet into a drift, bruised more in pride than body.",
+                "next": "brace_inside"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "brace_inside": {
+      "id": "brace_inside",
+      "title": "Posts and Wedges",
+      "text": "Inside, the problem looks worse but simpler. Edda has timber, a saw, and no spare hands.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Brace the sagging beam",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 9
+            },
+            {
+              "stat": "strength",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You place two posts beneath the load and wedge them tight. The roof can wait for morning.",
+                "next": "saved"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The brace is ugly but sound enough for one night.",
+                "next": "braced"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The first post slips and gouges the floor. Edda wisely suggests waiting for the carpenter.",
+                "next": "leave"
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -5
+            }
+          ]
+        }
+      ]
+    },
+    "saved": {
+      "id": "saved",
+      "title": "A Roof Still Standing",
+      "text": "Edda presses a heel of cheese into your hand and refuses to take it back. The house creaks once as the wind shifts, then settles.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "braced": {
+      "id": "braced",
+      "title": "One Night Bought",
+      "text": "The roof is not fixed, but it will survive the night. In winter, sometimes that is the only victory available.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Someone Else's Ladder",
+      "text": "You leave Edda to find the carpenter. By evening, three neighbours are on the roof with shovels.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

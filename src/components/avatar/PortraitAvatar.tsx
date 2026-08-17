@@ -7,18 +7,21 @@ type PortraitAvatarProps = {
 };
 
 export default function PortraitAvatar({ portrait, className = "" }: PortraitAvatarProps) {
-  const imageFitClass = portrait.imageFit === "contain" ? "object-contain object-bottom" : "object-cover object-center";
+  const imageFitClass = portrait.imageFit === "cover"
+    ? "object-cover object-center"
+    : "object-contain object-center";
 
   return (
     <figure
-      className={`avatar-portrait-stage relative isolate mx-auto h-[238px] w-full max-w-[202px] overflow-hidden rounded-[26px] ${className}`}
+      className={`avatar-portrait-stage relative mx-auto h-[250px] w-full max-w-[204px] overflow-hidden rounded-[16px] ${className}`}
     >
-      <div aria-hidden="true" className={`avatar-portrait-stage__shadow avatar-portrait-stage__shadow--${portrait.stageTone ?? "violet"}`} />
-      <div aria-hidden="true" className={`avatar-portrait-stage__backdrop avatar-portrait-stage__backdrop--${portrait.stageTone ?? "violet"}`} />
+      <div
+        aria-hidden="true"
+        className={`avatar-portrait-stage__backdrop avatar-portrait-stage__backdrop--${portrait.stageTone ?? "violet"}`}
+      />
       <div aria-hidden="true" className="avatar-portrait-stage__wash" />
-      <div aria-hidden="true" className="avatar-portrait-stage__filigree" />
 
-      <div className="avatar-portrait-stage__image-wrap absolute inset-[10px] overflow-hidden rounded-[20px]">
+      <div className="avatar-portrait-stage__image-wrap absolute inset-[4px] overflow-hidden rounded-[13px]">
         <img
           src={`/images/avatar/${portrait.image}`}
           alt={portrait.imageAlt ?? ""}
@@ -27,8 +30,8 @@ export default function PortraitAvatar({ portrait, className = "" }: PortraitAva
         />
       </div>
 
-      <div aria-hidden="true" className="avatar-portrait-stage__inner-ring absolute inset-[10px] rounded-[20px]" />
-      <div aria-hidden="true" className="avatar-portrait-stage__frame absolute inset-0 rounded-[26px]" />
+      <div aria-hidden="true" className="avatar-portrait-stage__inner-ring absolute inset-[4px] rounded-[13px]" />
+      <div aria-hidden="true" className="avatar-portrait-stage__frame absolute inset-0 rounded-[16px]" />
     </figure>
   );
 }

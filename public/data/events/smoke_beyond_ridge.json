@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 2,
+  "id": "smoke_beyond_ridge",
+  "name": "Smoke Beyond the Ridge",
+  "type": "event",
+  "tags": [
+    "Rescue",
+    "Wilderness"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Smoke Beyond the Ridge",
+      "text": "A dark plume rises beyond the eastern ridge—too thick for a cooking fire, too steady for a house already lost. The wind carries a smell of wet timber and pitch.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Judge the smoke before approaching",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "judge",
+                "threshold": 1,
+                "flavourText": "The smoke is low and dirty: a smothered fire, probably enclosed.",
+                "next": "pit"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The wind tears the plume apart before you can read it.",
+                "next": "approach"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Approach directly",
+          "next": "approach"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it to whoever started it",
+          "next": "leave"
+        }
+      ],
+      "image": "distant_lantern1.png"
+    },
+    "pit": {
+      "id": "pit",
+      "title": "Collapsed Charcoal Pit",
+      "text": "Below the ridge, a charcoal mound has collapsed inward. A man is half inside the smoking pit, trying to dig toward someone trapped beneath the timber ribs.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Help pull the ribs apart",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 11
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "Together you lift enough weight to drag a soot-blackened woman from the pit, coughing but conscious.",
+                "next": "rescued"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You make room, but the smoke forces you back twice before she can crawl free.",
+                "next": "rescued_rough",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -2
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The timber shifts but does not open. Smoke is building faster than strength can solve the problem.",
+                "next": "smoke_problem",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": -4
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -8
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Look for another opening",
+          "next": "smoke_problem"
+        }
+      ]
+    },
+    "approach": {
+      "id": "approach",
+      "title": "A Fire Under Earth",
+      "text": "You find the collapsed charcoal pit from the downhill side. Someone is shouting inside the smoke while another person digs bare-handed at the timber.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Help them",
+          "next": "pit"
+        },
+        {
+          "type": "simple",
+          "text": "Run back for more people",
+          "next": "fetch_help"
+        }
+      ]
+    },
+    "smoke_problem": {
+      "id": "smoke_problem",
+      "title": "Air Before Strength",
+      "text": "A narrow vent trench runs around the mound. Clearing it might pull smoke away from the trapped space long enough to work.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Rig your rope as a hauling line",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "rope",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -4
+            }
+          ],
+          "next": "rescued"
+        },
+        {
+          "type": "checked",
+          "text": "Open the vent and go back in",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 9
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The smoke thins almost immediately. With clear air, the rescue becomes possible.",
+                "next": "rescued"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The draft helps, though every breath still tastes of tar.",
+                "next": "rescued_rough",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -2
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The trench is blocked deeper than it looked. You have to abandon the attempt and fetch help.",
+                "next": "fetch_help"
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -5
+            }
+          ]
+        }
+      ]
+    },
+    "rescued": {
+      "id": "rescued",
+      "title": "Blackened Faces",
+      "text": "The trapped woman can stand with help. The charcoal burners insist you take a wrapped heel of bread and a lump of resin-rich kindling before you leave.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true,
+          "effects": [
+            {
+              "type": "item",
+              "item": "bread_heel",
+              "amount": 1
+            },
+            {
+              "type": "item",
+              "item": "resin_kindling",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "rescued_rough": {
+      "id": "rescued_rough",
+      "title": "Alive, Barely",
+      "text": "She is breathing, but only just. The others carry her toward the hub between them while you follow with smoke in your lungs and soot in every seam.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "fetch_help": {
+      "id": "fetch_help",
+      "title": "More Hands",
+      "text": "You run for the nearest occupied house and return with rope, axes, and three people who know the charcoal burners by name. The rescue becomes a communal effort instead of a gamble.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Smoke Behind the Hill",
+      "text": "You move on. The plume is still rising when the ridge finally blocks it from sight.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "distant_lantern1.png"
+}

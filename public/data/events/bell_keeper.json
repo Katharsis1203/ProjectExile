@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 2,
+  "id": "bell_keeper",
+  "name": "The Bell-Keeper",
+  "type": "event",
+  "tags": [
+    "Follow-up",
+    "Mystery"
+  ],
+  "cardImage": "../village.png",
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Sound She Knows",
+      "text": "An elderly woman repairing votive cords outside the small shrine stops when the bronze bell shifts among your belongings. She asks to see it, but does not reach for it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Let her keep the drowned bell",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "drowned_bell",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "drowned_bell",
+              "amount": -1
+            },
+            {
+              "type": "item",
+              "item": "winter_scrip",
+              "amount": 3
+            }
+          ],
+          "next": "given"
+        },
+        {
+          "type": "simple",
+          "text": "Ask what she knows, but keep the bell",
+          "next": "keep"
+        }
+      ]
+    },
+    "given": {
+      "id": "given",
+      "title": "A Bell Returned to Dry Ground",
+      "text": "She turns it over twice before naming a chapel that vanished beneath a spring flood generations ago. She offers three pieces of winter scrip from the shrine box—not as payment, she insists, but because “things recovered from the dead should not leave the living poorer.”",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "keep": {
+      "id": "keep",
+      "title": "Names Beneath Verdigris",
+      "text": "She tells you the scratches around the rim are names of households, not prayers. Before you leave she warns that old ritual bells were sometimes made to answer places rather than people.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Keep the bell and return",
+          "endEvent": true
+        }
+      ]
+    }
+  }
+}

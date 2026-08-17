@@ -1,0 +1,27 @@
+.hub-panel-elevation {
+  isolation: isolate;
+}
+
+.hub-panel-elevation--player {
+  filter:
+    drop-shadow(0 2px 2px rgba(12, 18, 27, 0.34))
+    drop-shadow(0 7px 7px rgba(8, 13, 21, 0.27));
+}
+
+.hub-panel-elevation--scene {
+  filter:
+    drop-shadow(0 2px 3px rgba(12, 18, 27, 0.36))
+    drop-shadow(0 9px 9px rgba(8, 13, 21, 0.3));
+}
+
+.hub-panel-elevation--sidebar {
+  filter:
+    drop-shadow(0 2px 2px rgba(12, 18, 27, 0.34))
+    drop-shadow(0 7px 7px rgba(8, 13, 21, 0.27));
+}
+
+.hub-event-slot-elevation {
+  filter:
+    drop-shadow(0 2px 2px rgba(12, 18, 27, 0.3))
+    drop-shadow(0 6px 6px rgba(8, 13, 21, 0.24));
+}

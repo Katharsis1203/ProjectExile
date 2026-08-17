@@ -23,6 +23,9 @@ const LIGHTING_EFFECTS = new Set([
 const WEATHER_EFFECTS = new Set(["none", "snow", "fog"]);
 const WEATHER_INTENSITIES = new Set(["light", "medium", "heavy"]);
 const BLEND_MODES = new Set(["normal", "multiply", "screen", "overlay"]);
+const NUMERIC_CONDITION_OPERATORS = new Set(["lt", "lte", "eq", "gte", "gt"]);
+const CONDITION_TYPES = new Set(["playerResource", "playerStat", "statusEffect", "inventoryItem", "hubStat", "scene"]);
+const SCENE_CONDITION_FIELDS = new Set(["lighting", "weather", "weatherIntensity"]);
 
 export class ContentValidationError extends Error {
   constructor(source: string, message: string) {
@@ -175,7 +178,62 @@ function validateThresholdOutcome(
       `${bucketField}.flavourText`,
     );
     expectString(bucketRecord.next, source, `${bucketField}.next`);
+
+    if (bucketRecord.effects !== undefined) {
+      expectArray(bucketRecord.effects, source, `${bucketField}.effects`).forEach(
+        (effect, effectIndex) =>
+          validateEventEffect(effect, source, `${bucketField}.effects[${effectIndex}]`),
+      );
+    }
   });
+}
+
+function validateChoiceRequirement(
+  value: unknown,
+  source: string,
+  field: string,
+): void {
+  const requirement = expectRecord(value, source, field);
+  const type = expectString(requirement.type, source, `${field}.type`);
+
+  if (type !== "item") {
+    fail(source, `"${field}.type" must be "item".`);
+  }
+
+  expectString(requirement.item, source, `${field}.item`);
+
+  if (requirement.quantity !== undefined) {
+    const quantity = expectFiniteNumber(requirement.quantity, source, `${field}.quantity`);
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      fail(source, `"${field}.quantity" must be a positive integer.`);
+    }
+  }
+}
+
+function validateEventEffect(
+  value: unknown,
+  source: string,
+  field: string,
+): void {
+  const effect = expectRecord(value, source, field);
+  const type = expectString(effect.type, source, `${field}.type`);
+
+  if (type === "resource") {
+    expectString(effect.resource, source, `${field}.resource`);
+    expectFiniteNumber(effect.amount, source, `${field}.amount`);
+    return;
+  }
+
+  if (type === "item") {
+    expectString(effect.item, source, `${field}.item`);
+    const amount = expectFiniteNumber(effect.amount, source, `${field}.amount`);
+    if (!Number.isInteger(amount) || amount === 0) {
+      fail(source, `"${field}.amount" must be a non-zero integer for item effects.`);
+    }
+    return;
+  }
+
+  fail(source, `"${field}.type" must be "resource" or "item".`);
 }
 
 function validateChoice(
@@ -194,6 +252,19 @@ function validateChoice(
   expectOptionalString(choice.next, source, `${field}.next`);
   expectOptionalBoolean(choice.returnToHub, source, `${field}.returnToHub`);
   expectOptionalBoolean(choice.endEvent, source, `${field}.endEvent`);
+
+  if (choice.requirements !== undefined) {
+    expectArray(choice.requirements, source, `${field}.requirements`).forEach(
+      (requirement, index) =>
+        validateChoiceRequirement(requirement, source, `${field}.requirements[${index}]`),
+    );
+  }
+
+  if (choice.effects !== undefined) {
+    expectArray(choice.effects, source, `${field}.effects`).forEach((effect, index) =>
+      validateEventEffect(effect, source, `${field}.effects[${index}]`),
+    );
+  }
 
   if (type === "checked") {
     validateStatChecks(choice.statChecks, source, `${field}.statChecks`);
@@ -289,6 +360,65 @@ export function parseGameEvent(value: unknown, source: string): GameEvent {
   return { ...event, nodes } as GameEvent;
 }
 
+function validateEventCondition(
+  value: unknown,
+  source: string,
+  field: string,
+): void {
+  const condition = expectRecord(value, source, field);
+  const type = expectString(condition.type, source, `${field}.type`);
+
+  if (!CONDITION_TYPES.has(type)) {
+    fail(source, `"${field}.type" must be one of: ${[...CONDITION_TYPES].join(", ")}.`);
+  }
+
+  if (type === "playerResource") {
+    expectString(condition.resource, source, `${field}.resource`);
+    expectOptionalEnum(condition.operator, NUMERIC_CONDITION_OPERATORS, source, `${field}.operator`);
+    if (condition.operator === undefined) fail(source, `"${field}.operator" is required.`);
+    expectFiniteNumber(condition.value, source, `${field}.value`);
+    return;
+  }
+
+  if (type === "playerStat") {
+    expectString(condition.stat, source, `${field}.stat`);
+    expectOptionalEnum(condition.operator, NUMERIC_CONDITION_OPERATORS, source, `${field}.operator`);
+    if (condition.operator === undefined) fail(source, `"${field}.operator" is required.`);
+    expectFiniteNumber(condition.value, source, `${field}.value`);
+    return;
+  }
+
+  if (type === "inventoryItem") {
+    expectString(condition.item, source, `${field}.item`);
+    if (condition.quantity !== undefined) {
+      const quantity = expectFiniteNumber(condition.quantity, source, `${field}.quantity`);
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        fail(source, `"${field}.quantity" must be a positive integer.`);
+      }
+    }
+    expectOptionalBoolean(condition.present, source, `${field}.present`);
+    return;
+  }
+
+  if (type === "hubStat") {
+    expectString(condition.stat, source, `${field}.stat`);
+    expectOptionalEnum(condition.operator, NUMERIC_CONDITION_OPERATORS, source, `${field}.operator`);
+    if (condition.operator === undefined) fail(source, `"${field}.operator" is required.`);
+    expectFiniteNumber(condition.value, source, `${field}.value`);
+    return;
+  }
+
+  if (type === "statusEffect") {
+    expectString(condition.effect, source, `${field}.effect`);
+    expectOptionalBoolean(condition.present, source, `${field}.present`);
+    return;
+  }
+
+  expectOptionalEnum(condition.field, SCENE_CONDITION_FIELDS, source, `${field}.field`);
+  if (condition.field === undefined) fail(source, `"${field}.field" is required.`);
+  expectString(condition.equals, source, `${field}.equals`);
+}
+
 function validateEventPoolEntry(
   value: unknown,
   source: string,
@@ -302,7 +432,9 @@ function validateEventPoolEntry(
     fail(source, `"${field}.weight" cannot be negative.`);
   }
 
-  expectArray(entry.conditions, source, `${field}.conditions`);
+  expectArray(entry.conditions, source, `${field}.conditions`).forEach((condition, index) =>
+    validateEventCondition(condition, source, `${field}.conditions[${index}]`),
+  );
   const opens = expectRecord(entry.opens, source, `${field}.opens`);
   expectString(opens.eventFile, source, `${field}.opens.eventFile`);
   expectString(opens.nodeId, source, `${field}.opens.nodeId`);

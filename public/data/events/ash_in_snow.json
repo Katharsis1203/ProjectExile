@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 2,
+  "id": "ash_in_snow",
+  "name": "Ash in the Snow",
+  "type": "event",
+  "tags": [
+    "Mystery",
+    "Wilderness"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Ash That Should Be Cold",
+      "text": "Grey ash streaks the snow beside the trail. When you touch it with the back of a finger, the powder is still faintly warm. A camp nearby was abandoned minutes ago.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Read the camp sign",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 11
+            },
+            {
+              "stat": "perception",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "Three people left in a hurry, carrying weight. One circled behind before joining the others.",
+                "next": "watched"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "At least two people moved east. Their tracks are already softening.",
+                "next": "tracks"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The churned snow gives you more possibilities than answers.",
+                "next": "tracks"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Do not involve yourself",
+          "next": "leave"
+        }
+      ],
+      "image": "blood_in_snow.png"
+    },
+    "watched": {
+      "id": "watched",
+      "title": "The Fourth Set of Prints",
+      "text": "The person who circled behind stood among the pines long enough to watch the road. Their prints face the exact place where you are kneeling.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Pretend not to notice and spot the watcher",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 12
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "spot",
+                "threshold": 1,
+                "flavourText": "A dark sleeve moves once between two trunks uphill.",
+                "next": "watcher"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "You wait, but whatever watched the road has already withdrawn.",
+                "next": "tracks"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Call out that you mean no trouble",
+          "next": "call"
+        }
+      ]
+    },
+    "watcher": {
+      "id": "watcher",
+      "title": "Eyes Between the Trees",
+      "text": "A thin man steps out with an unloaded crossbow held visibly low. He says the camp belongs to charcoal burners who do not appreciate patrols, thieves, or questions—in that order.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Ask only whether the eastern path is safe",
+          "next": "answer"
+        },
+        {
+          "type": "simple",
+          "text": "Tell him you are leaving",
+          "next": "leave"
+        }
+      ]
+    },
+    "call": {
+      "id": "call",
+      "title": "No Answer, Then One",
+      "text": "For several heartbeats there is only wind. Then someone answers from uphill: \"Depends what trouble means to you.\"",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Say you are only passing through",
+          "next": "answer"
+        },
+        {
+          "type": "simple",
+          "text": "Back away without answering",
+          "next": "leave"
+        }
+      ]
+    },
+    "answer": {
+      "id": "answer",
+      "title": "Useful Hostility",
+      "text": "He tells you the eastern path is passable but warns of a washed-out footbridge. It is information given without friendliness, which may make it more reliable.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "tracks": {
+      "id": "tracks",
+      "title": "A Vanishing Camp",
+      "text": "You follow the freshest prints for a short distance before they split deliberately over hard ground. Whoever left did not want the camp connected to their destination.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Warm Ash, Cold Road",
+      "text": "You brush the ash from your glove and move on. By the time you look back, fresh snow is already covering it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "blood_in_snow.png",
+  "cardColourImage": "blood_in_snow_colour.png"
+}

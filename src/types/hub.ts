@@ -72,10 +72,49 @@ export type HubScene = {
   tone?: HubLightingEffect;
 };
 
+
+export type NumericConditionOperator = "lt" | "lte" | "eq" | "gte" | "gt";
+
+export type EventCondition =
+  | {
+      type: "playerResource";
+      resource: string;
+      operator: NumericConditionOperator;
+      value: number;
+    }
+  | {
+      type: "playerStat";
+      stat: string;
+      operator: NumericConditionOperator;
+      value: number;
+    }
+  | {
+      type: "statusEffect";
+      effect: string;
+      present?: boolean;
+    }
+  | {
+      type: "inventoryItem";
+      item: string;
+      quantity?: number;
+      present?: boolean;
+    }
+  | {
+      type: "hubStat";
+      stat: string;
+      operator: NumericConditionOperator;
+      value: number;
+    }
+  | {
+      type: "scene";
+      field: "lighting" | "weather" | "weatherIntensity";
+      equals: string;
+    };
+
 export type EventPoolEntry = {
   id: string;
   weight: number;
-  conditions: unknown[];
+  conditions: EventCondition[];
   opens: {
     eventFile: string;
     nodeId: string;

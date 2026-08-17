@@ -19,7 +19,7 @@ export default function HubActionButton({
       data-hub-action
       disabled={disabled}
       onClick={onClick}
-      className="group relative h-20 w-full overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-transparent focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#766144]/70 disabled:cursor-not-allowed disabled:opacity-55 last:border-b-0"
+      className="group relative h-[60px] w-full overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-transparent focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#766144]/70 disabled:cursor-not-allowed disabled:opacity-55 last:border-b-0"
     >
       <img
         src={image}

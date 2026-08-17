@@ -46,7 +46,7 @@ export default function HubEventRow({
 }: HubEventRowProps) {
   return (
     <section aria-label="Available leads" className="min-h-0">
-      <div className="grid min-h-0 w-full grid-cols-1 gap-4 px-1 py-1 sm:grid-cols-3 xl:h-full">
+      <div className="grid min-h-0 w-full grid-cols-1 gap-4 px-1 py-1 sm:grid-cols-3 xl:h-full xl:items-stretch">
         {eventSlots.map((entry, index) => {
           const event = entry ? events?.[entry.opens.eventFile] : null;
           const openingNode = event && entry ? getOpeningNode(event, entry) : null;
@@ -54,7 +54,7 @@ export default function HubEventRow({
           return (
             <div
               key={`event-slot-${index}`}
-              className="flex min-h-[220px] items-stretch justify-center xl:min-h-0"
+              className="hub-event-slot-elevation flex min-h-[220px] items-stretch justify-center xl:min-h-0"
             >
               {entry && event ? (
                 <HubEventCard

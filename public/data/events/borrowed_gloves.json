@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 2,
+  "id": "borrowed_gloves",
+  "name": "Borrowed Gloves",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Character"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Borrowed Gloves",
+      "text": "A stable girl catches you near the trough and asks, with practiced casualness, whether you have an old pair of gloves you no longer need. Her own are patched through at two fingertips.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Notice what she is not saying",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "notice",
+                "threshold": 1,
+                "flavourText": "The exposed fingertips are pale and waxy rather than merely red. She has been working with early frostbite.",
+                "next": "frostbite"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "The request sounds simple enough: gloves wear out quickly around reins, buckles, and frozen water.",
+                "next": "choice"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Offer your spare gloves if you have them",
+          "next": "give"
+        },
+        {
+          "type": "simple",
+          "text": "Say you do not",
+          "next": "refuse"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "frostbite": {
+      "id": "frostbite",
+      "title": "More Than Worn Cloth",
+      "text": "When you ask to see her hand, she tries to laugh it off. Feeling has only partly returned to two fingers since morning.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Wrap her hands with your clean bandage",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "bandage",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "bandage",
+              "amount": -1
+            }
+          ],
+          "next": "helped"
+        },
+        {
+          "type": "checked",
+          "text": "Show her how to warm them safely",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 8
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "good",
+                "threshold": 1,
+                "flavourText": "You stop her from rubbing the skin and get the hand wrapped in dry wool instead.",
+                "next": "helped"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Your advice is more confident than precise. The cook overhears and sends her to the herb-wife.",
+                "next": "herbwife"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Send her straight to the herb-wife",
+          "next": "herbwife"
+        }
+      ]
+    },
+    "choice": {
+      "id": "choice",
+      "title": "A Small Request",
+      "text": "She waits, clearly prepared for either answer.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Give her a spare pair",
+          "next": "give"
+        },
+        {
+          "type": "simple",
+          "text": "Offer to patch hers tonight",
+          "next": "patch"
+        },
+        {
+          "type": "simple",
+          "text": "Refuse",
+          "next": "refuse"
+        }
+      ]
+    },
+    "give": {
+      "id": "give",
+      "title": "Hands Inside Wool",
+      "text": "The gloves are too large, which seems to delight her. She curls both hands into fists and says she will return them when the thaw comes, as if that were a reasonable date.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "patch": {
+      "id": "patch",
+      "title": "Needle Work",
+      "text": "You take the gloves and spend part of the evening reinforcing the fingers with scraps of leather. The result is ugly and warmer than before.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "helped": {
+      "id": "helped",
+      "title": "Warmth, Slowly",
+      "text": "Colour begins returning to her fingers. She promises, reluctantly, to finish the shift indoors.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "herbwife": {
+      "id": "herbwife",
+      "title": "Someone Who Knows Better",
+      "text": "The herb-wife takes one look and starts issuing orders. The stable girl shoots you an accusing glance, but she keeps the hand in the warm wrap.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "refuse": {
+      "id": "refuse",
+      "title": "No Spare Pair",
+      "text": "You tell her you cannot help. She nods as if she expected that and returns to breaking ice from the trough.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 2,
+  "id": "bell_beneath_ice",
+  "name": "Bell Beneath Ice",
+  "type": "event",
+  "tags": [
+    "Mystery",
+    "Wilderness"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Bell Under the Lake",
+      "text": "Crossing the edge of a frozen pond, you hear a single dull chime beneath your boots. Not cracking ice: metal. A second sound follows, farther out and deeper.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Listen for the source",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 12
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "hear",
+                "threshold": 1,
+                "flavourText": "The note repeats whenever the wind presses the ice. Something suspended below is striking stone.",
+                "next": "chain"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "The echoes slide under the ice until you cannot tell where they begin.",
+                "next": "uncertain"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Leave the lake alone",
+          "next": "leave"
+        }
+      ],
+      "image": "ice_cracked_lake.png"
+    },
+    "chain": {
+      "id": "chain",
+      "title": "A Chain in the Ice",
+      "text": "Near a web of old cracks you find three black links frozen into the surface. The chain descends through cloudy ice. Whatever hangs below is close enough to reach if you can widen the hole without shattering the shelf.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Cut the ice and haul it up",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 11
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The chain rises steadily. A small bronze bell emerges, green with age and wrapped in rotted red cord.",
+                "next": "bell"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You wrench the bell free, but the shelf fractures around your knees and water surges over the ice.",
+                "next": "wet_escape",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -3
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The chain jerks once, the ice breaks outward, and you drop to one knee in black water.",
+                "next": "breakthrough",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -10
+                  },
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": -5
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -7
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Mark the place and leave it",
+          "next": "leave"
+        }
+      ]
+    },
+    "bell": {
+      "id": "bell",
+      "title": "The Drowned Bell",
+      "text": "The bell is no larger than your fist. Names have been scratched around its rim, layer over layer, until none can be read cleanly. When you shake it, the sound is far brighter than what you heard beneath the lake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Wrap the bell and return",
+          "endEvent": true,
+          "effects": [
+            {
+              "type": "item",
+              "item": "drowned_bell",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "wet_escape": {
+      "id": "wet_escape",
+      "title": "Water at the Boots",
+      "text": "You scramble back onto solid ice with the bell in hand and water already stiffening around your boots. The prize feels suddenly less important than finding heat.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "breakthrough": {
+      "id": "breakthrough",
+      "title": "Black Water",
+      "text": "The cold is instant and brutal. You catch the edge before the ice can split farther.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Drag yourself free",
+          "statChecks": [
+            {
+              "stat": "endurance",
+              "difficulty": 12
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "up",
+                "threshold": 1,
+                "flavourText": "You kick until your hips clear the edge, then roll away from the hole gasping.",
+                "next": "survive"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Your arms begin to numb before you find enough purchase to crawl free.",
+                "next": "survive_bad",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -8
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -8
+            }
+          ]
+        }
+      ]
+    },
+    "survive": {
+      "id": "survive",
+      "title": "Breath Like Knives",
+      "text": "You make the shore soaked to the thigh and breathing steam. Nothing beneath the lake is worth a second attempt today.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "survive_bad": {
+      "id": "survive_bad",
+      "title": "A Costly Curiosity",
+      "text": "You reach shore only after abandoning your gloves to the water. The bell remains below. The cold follows you all the way back.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "uncertain": {
+      "id": "uncertain",
+      "title": "Echoes Without Shape",
+      "text": "You pace the edge for several minutes, but every chime seems to come from a different patch of ice. The lake refuses to give up its geometry.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Let It Ring",
+      "text": "You step away. The bell sounds once more beneath the ice after you reach the trees.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "ice_cracked_lake.png",
+  "cardColourImage": "ice_cracked_lake_colour.png"
+}

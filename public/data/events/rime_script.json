@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 2,
+  "id": "rime_script",
+  "name": "Rime Script",
+  "type": "event",
+  "tags": [
+    "Arcane",
+    "Mystery"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Writing in the Rime",
+      "text": "On the shaded wall of an abandoned shed, frost has formed in lines too regular to be natural. The patterns resemble letters only when you stop trying to read them directly.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Study the pattern without touching it",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 12
+            },
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The marks repeat in groups of six around a central gap, like instructions for arranging something rather than words.",
+                "next": "pattern"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The repetition is deliberate, but its purpose slips whenever you focus on a single symbol.",
+                "next": "touch_choice"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Your eyes water from staring. The marks seem to rearrange whenever you blink.",
+                "next": "touch_choice"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Scrape the frost away",
+          "next": "erase"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it alone",
+          "next": "leave"
+        }
+      ],
+      "image": "frozen_shrine.png"
+    },
+    "pattern": {
+      "id": "pattern",
+      "title": "Six Around One",
+      "text": "You trace the structure with your gaze: six marks, a pause, six more. The empty centre of each group aligns with nail holes in the timber. Something used to hang here.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Hang the drowned bell in the empty centre",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "drowned_bell",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "mana",
+              "amount": -12
+            },
+            {
+              "type": "item",
+              "item": "drowned_bell",
+              "amount": -1
+            },
+            {
+              "type": "item",
+              "item": "rime_attuned_bell",
+              "amount": 1
+            }
+          ],
+          "next": "bell_answer"
+        },
+        {
+          "type": "simple",
+          "text": "Press a warm coin to one of the empty centres",
+          "next": "coin"
+        },
+        {
+          "type": "simple",
+          "text": "Memorise the pattern and leave it intact",
+          "next": "memory"
+        }
+      ]
+    },
+    "touch_choice": {
+      "id": "touch_choice",
+      "title": "Cold That Notices You",
+      "text": "Standing this close, you feel a faint pressure behind the eyes—the same sensation as spending mana, except nothing has been cast.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Touch the rime with one fingertip",
+          "next": "touch",
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "mana",
+              "amount": -10
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Step away",
+          "next": "leave"
+        }
+      ]
+    },
+    "coin": {
+      "id": "coin",
+      "title": "A Ring of Clear Wood",
+      "text": "The frost recoils from the coin in six thin spokes. For an instant, the wood beneath shows a burned symbol: a door drawn as a square inside a circle. Then the rime closes over it again.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "memory": {
+      "id": "memory",
+      "title": "A Pattern Kept",
+      "text": "You repeat the sequence until you can picture it with your eyes closed. The frost remains undisturbed for whoever—or whatever—made it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "touch": {
+      "id": "touch",
+      "title": "Borrowed Cold",
+      "text": "The frost melts beneath your fingertip, then races back over the wet patch in branching lines. A sharp pulse runs up your arm and is gone before you can decide whether it was pain.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "erase": {
+      "id": "erase",
+      "title": "Ordinary Wood Beneath",
+      "text": "The frost flakes away easily. Beneath it is weathered timber and several old nail holes. Within seconds, new crystals begin forming at the edges of the cleared patch.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Unanswered Pattern",
+      "text": "You leave the wall as you found it. The pattern is still visible when you glance back from the road.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "bell_answer": {
+      "id": "bell_answer",
+      "title": "The Bell Answers",
+      "text": "The bell hangs where the missing object once did. Frost threads across the bronze in six branching lines. It rings without moving—one clear note that leaves a square-within-a-circle etched into the metal before the rime goes still.",
+      "miscText": "Whatever the wall expected, the bell was close enough to be recognised.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Take the altered bell and return",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "frozen_shrine.png"
+}

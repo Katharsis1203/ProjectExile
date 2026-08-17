@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 2,
+  "id": "lost_patrol",
+  "name": "Lost Patrol",
+  "type": "event",
+  "tags": [
+    "Special",
+    "Rescue"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Flag in the Drift",
+      "text": "Through the whiteout, a strip of dark cloth jerks above the snow. It is a patrol pennant tied to a broken spear. Around it, the drift is churned by knees, hands, and at least one body being dragged.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Reconstruct where the patrol went",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 12
+            },
+            {
+              "stat": "survival",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The drag marks lead downslope, but one set of prints breaks away toward a stand of firs. Someone separated from the group alive.",
+                "next": "split"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You can follow the drag trail confidently, but the storm has erased anything finer.",
+                "next": "drag"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The marks are collapsing under fresh snow even while you look at them.",
+                "next": "drag"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Take the pennant back and do not follow",
+          "next": "pennant"
+        }
+      ],
+      "image": "blood_in_snow.png"
+    },
+    "split": {
+      "id": "split",
+      "title": "Two Trails",
+      "text": "The firs are closer; the drag trail is clearer. You may have time to investigate one before the storm erases the other.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the lone prints",
+          "next": "survivor"
+        },
+        {
+          "type": "simple",
+          "text": "Follow the dragged body",
+          "next": "drag"
+        }
+      ]
+    },
+    "survivor": {
+      "id": "survivor",
+      "title": "Under the Fir Boughs",
+      "text": "A young patrol scout lies wedged beneath low branches, one boot missing and both hands wrapped inside his coat. He is awake but confused.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Get him moving toward shelter",
+          "statChecks": [
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            },
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You warm his feet, orient him, and keep him walking without letting him rush.",
+                "next": "escort"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "He can walk, but only with your arm around him.",
+                "next": "escort"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "He tries to stand, collapses, and begins shivering violently.",
+                "next": "carry"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "carry": {
+      "id": "carry",
+      "title": "Dead Weight in a Storm",
+      "text": "He cannot walk. Carrying him through knee-deep snow will be brutal.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Carry him to the road",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 11
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 12
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You reach the road exhausted but with the scout still conscious.",
+                "next": "escort"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You make the road in stages, stopping whenever your legs begin to shake.",
+                "next": "escort"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "After a dozen steps you know you will both be stranded if you continue.",
+                "next": "shelter_here"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "shelter_here": {
+      "id": "shelter_here",
+      "title": "Shelter in Place",
+      "text": "You pack snow against the firs as a windbreak and share what warmth you can until the squall eases. It is slow, miserable work, but he is still talking when visibility returns.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "escort": {
+      "id": "escort",
+      "title": "One Returned",
+      "text": "The first patrolman at the gate recognizes him before you can speak. Questions begin immediately: where are the others, what happened, who did you see? You have few answers, but one person came back alive.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "drag": {
+      "id": "drag",
+      "title": "What Was Dragged",
+      "text": "The trail ends at a shallow gully where a dead patrolman lies beneath a cloak. His companions moved him here to keep him from being lost under the open road, then continued without him. A satchel is tucked under his shoulder.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Bring the satchel and identification back",
+          "next": "return_dead"
+        },
+        {
+          "type": "simple",
+          "text": "Leave the body undisturbed and mark the gully",
+          "next": "mark"
+        }
+      ]
+    },
+    "return_dead": {
+      "id": "return_dead",
+      "title": "A Name Returned",
+      "text": "You take only what identifies him. The storm begins covering the gully again before you reach the road.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "mark": {
+      "id": "mark",
+      "title": "A Place to Find Again",
+      "text": "You stack three dark stones where the gully meets the road and leave the dead with his cloak closed.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "pennant": {
+      "id": "pennant",
+      "title": "A Warning Brought Home",
+      "text": "You take the broken pennant and turn back. Whatever happened to the patrol is still out there, but at least the hub will know where to start looking.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "blood_in_snow.png",
+  "cardColourImage": "blood_in_snow_colour.png"
+}

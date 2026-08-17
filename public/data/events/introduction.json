@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "id": "introduction",
+  "type": "event",
+  "name": "The Road Into Snow",
+  "tags": ["Introduction"],
+  "cardImage": null,
+  "nodes": {
+    "road_north": {
+      "id": "road_north",
+      "title": "The Road North",
+      "text": "Cold finds you before the Snowlands do. By late afternoon the road is little more than two pale ruts beneath fresh snow, climbing between black pines and low stone ridges. Somewhere ahead, smoke rises through the trees. Somewhere behind, the road that brought you here is already disappearing.",
+      "image": "distant_lantern.png",
+      "miscText": "The road behind you has already vanished beneath windblown snow.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Stop and take stock of what remains in your pack",
+          "next": "belongings"
+        },
+        {
+          "type": "simple",
+          "text": "Keep moving before the light fails",
+          "next": "last_mile"
+        }
+      ]
+    },
+    "belongings": {
+      "id": "belongings",
+      "title": "What You Carried",
+      "text": "The pack is lighter than it was when the journey began. A few practical things remain, along with the handful of possessions you refused to leave behind. In time, choices like this will establish the training, equipment and history you entered exile with.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Shoulder the pack and continue",
+          "next": "first_roofs"
+        }
+      ]
+    },
+    "last_mile": {
+      "id": "last_mile",
+      "title": "The Last Mile",
+      "text": "You put your head down and follow the road. The wind carries the smell of woodsmoke, wet wool and something cooking over an open hearth. The signs of habitation come slowly: a cut stump, a buried fence, then lantern-light wavering between the trees.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the lights",
+          "next": "first_roofs"
+        }
+      ]
+    },
+    "first_roofs": {
+      "id": "first_roofs",
+      "title": "The First Roofs",
+      "text": "The forest opens without ceremony. Snow-covered roofs gather in the hollow below, chimneys leaning smoke into the evening air. Pinehollow is smaller than the stories made it sound, but it is warm, inhabited, and for the moment it is somewhere you can stop walking.",
+      "miscText": "For the first time in days, there are lamps ahead instead of stars.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Enter Pinehollow",
+          "endEvent": true
+        }
+      ]
+    }
+  }
+}

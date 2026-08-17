@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 2,
+  "id": "crows_over_ravine",
+  "name": "Crows Over the Ravine",
+  "type": "event",
+  "tags": [
+    "Wilderness",
+    "Discovery"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Crows Over the Ravine",
+      "text": "A knot of black crows circles below the road where the land falls away into a narrow ravine. Something red catches between the trees at the bottom.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Find a safe way down",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "safe",
+                "threshold": 1,
+                "flavourText": "You find an old animal track zig-zagging through the rocks.",
+                "next": "bottom"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The obvious descent is steeper than it first looked.",
+                "next": "steep"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Ignore the crows",
+          "next": "leave"
+        }
+      ],
+      "image": "frozen_corpse2.png"
+    },
+    "steep": {
+      "id": "steep",
+      "title": "Loose Stone",
+      "text": "The slope breaks under every second step. A direct descent is possible, but one slip would carry you to the bottom faster than you intend.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Climb down carefully",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 10
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You lower yourself from root to root and reach the ravine floor without incident.",
+                "next": "bottom"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You slide the last few metres and arrive bruised but upright.",
+                "next": "bottom",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -3
+                  }
+                ]
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "A foothold tears loose. You stop the fall only by catching a root with both hands.",
+                "next": "turn_back",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -7
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -6
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Turn back",
+          "next": "turn_back"
+        }
+      ]
+    },
+    "bottom": {
+      "id": "bottom",
+      "title": "The Red Scarf",
+      "text": "The crows are feeding on a dead mule, not a person. A bright red scarf is tied around its harness, and beneath the saddlebag you find a courier tube stamped with the hub seal. The wax cap is intact.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Take the sealed tube back unopened",
+          "next": "sealed",
+          "effects": [
+            {
+              "type": "item",
+              "item": "sealed_courier_tube",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Open the tube here",
+          "next": "open_tube"
+        }
+      ]
+    },
+    "sealed": {
+      "id": "sealed",
+      "title": "A Courier's Work Unfinished",
+      "text": "You leave the wax untouched. Whatever is inside has already survived a ravine and the crows; it can survive the walk back.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "open_tube": {
+      "id": "open_tube",
+      "title": "Routine Orders",
+      "text": "Inside is no conspiracy—just a patrol rota, a requisition for lamp oil, and a complaint about missing winter boots. Somehow the ordinary nature of it makes the dead mule feel sadder.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "turn_back": {
+      "id": "turn_back",
+      "title": "Not Worth a Broken Neck",
+      "text": "You climb back to the road. The crows settle again as soon as you are gone.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Black Wings",
+      "text": "You continue on. The circling birds remain visible for a long time against the white ravine.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "frozen_corpse2.png"
+}

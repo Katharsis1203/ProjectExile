@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 2,
+  "id": "hungers_bargain",
+  "name": "Hunger's Bargain",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Work"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Meal for a Task",
+      "text": "The kitchen porter at the Pine & Mug catches you looking toward the stew pot. \"Full bowl,\" he says, \"if you help me move something the cook refuses to touch.\" He points toward the rear cold room.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Eat the bread heel you are carrying instead",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "bread_heel",
+              "quantity": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "bread_heel",
+              "amount": -1
+            },
+            {
+              "type": "resource",
+              "resource": "hunger",
+              "amount": -18
+            }
+          ],
+          "next": "own_food"
+        },
+        {
+          "type": "simple",
+          "text": "Ask what the task is",
+          "next": "task"
+        },
+        {
+          "type": "simple",
+          "text": "Accept without asking",
+          "next": "carcass"
+        },
+        {
+          "type": "simple",
+          "text": "Decline",
+          "next": "decline"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "task": {
+      "id": "task",
+      "title": "A Frozen Carcass",
+      "text": "A deer carcass delivered yesterday has frozen to the floorboards where meltwater ran beneath it. It needs to be moved to the butcher's block before the kitchen opens.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Free and move the carcass",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 10
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You pry it loose and shoulder the weight in one unpleasant movement.",
+                "next": "meal"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "It takes several attempts and leaves your coat smelling of venison, but the carcass reaches the block.",
+                "next": "meal"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The frozen hide does not move; your boots do. You nearly put yourself on the floor beside it.",
+                "next": "another_way",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -3
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -8
+            }
+          ]
+        },
+        {
+          "type": "checked",
+          "text": "Inspect it before touching anything",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "notice",
+                "threshold": 1,
+                "flavourText": "One hindquarter is discoloured around an old wound and smells wrong even in the cold.",
+                "next": "bad_meat"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "It looks like an ordinary frozen deer.",
+                "next": "carcass"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Refuse after seeing it",
+          "next": "decline"
+        }
+      ]
+    },
+    "carcass": {
+      "id": "carcass",
+      "title": "Dead Weight",
+      "text": "The carcass is heavier than pride suggested it would be.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Drag it to the block",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "move",
+                "threshold": 1,
+                "flavourText": "You get it moving inch by inch until the porter can help with the final lift.",
+                "next": "meal"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "It remains exactly where it began, now with your boot marks around it.",
+                "next": "another_way"
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -6
+            }
+          ]
+        }
+      ]
+    },
+    "bad_meat": {
+      "id": "bad_meat",
+      "title": "Not All of It Is Food",
+      "text": "You show the porter the spoiled wound. His face changes immediately. The cook comes back, cuts away a large section, and quietly doubles the meal she gives you.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Eat while it is hot",
+          "endEvent": true
+        }
+      ]
+    },
+    "another_way": {
+      "id": "another_way",
+      "title": "Use the Floor, Not Your Back",
+      "text": "The porter finally brings hot water and an iron scraper. Between the two of you, the ice bond releases with far less heroism and far more sense.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Finish the job and take the promised meal",
+          "next": "meal",
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -3
+            }
+          ]
+        }
+      ]
+    },
+    "meal": {
+      "id": "meal",
+      "title": "A Fair Bargain",
+      "text": "The stew is thick, hot, and worth every unpleasant minute in the cold room. The porter even finds you a second piece of bread.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true,
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "hunger",
+              "amount": -22
+            }
+          ]
+        }
+      ]
+    },
+    "decline": {
+      "id": "decline",
+      "title": "Still Hungry",
+      "text": "You decide the bargain is not worth it. The smell from the kitchen follows you back into the common room.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "own_food": {
+      "id": "own_food",
+      "title": "Something Already Earned",
+      "text": "The bread is dense enough to fight back when you tear it, but it is food and it is yours. The edge comes off your hunger without owing anyone a favour.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

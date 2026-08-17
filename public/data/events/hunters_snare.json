@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "id": "hunters_snare",
+  "name": "Hunter's Snare",
+  "type": "event",
+  "tags": [
+    "Wilderness",
+    "Choice"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Wire Under Fur",
+      "text": "A fox hangs twisted in a wire snare beside the trail, alive and exhausted. The trap is professionally set and marked with a strip of blue cloth.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Free the fox without being bitten",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "free",
+                "threshold": 1,
+                "flavourText": "You pin the loop with a stick, loosen the wire, and give the fox room to choose its escape.",
+                "next": "released"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The fox panics as soon as you touch the wire and snaps at your glove.",
+                "next": "panic"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Kill it quickly and end its suffering",
+          "next": "kill"
+        },
+        {
+          "type": "simple",
+          "text": "Leave the hunter's trap alone",
+          "next": "leave"
+        }
+      ],
+      "image": "wolf_tracks.png"
+    },
+    "panic": {
+      "id": "panic",
+      "title": "Teeth and Wire",
+      "text": "The animal is too frightened to understand help. You can still cut the snare, but you will have to control its head first.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Hold it long enough to cut the wire",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 9
+            },
+            {
+              "stat": "endurance",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You take a shallow bite through the glove, but the wire comes free.",
+                "next": "released"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "The wire breaks after a struggle. The fox limps away and you are left with torn leather.",
+                "next": "released"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The fox twists harder and the wire cuts deeper. You stop before making it worse.",
+                "next": "leave"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Back away",
+          "next": "leave"
+        }
+      ]
+    },
+    "released": {
+      "id": "released",
+      "title": "Blue Cloth",
+      "text": "The fox vanishes between the pines. The blue marker remains tied to the stake. Whoever owns the trap will know someone interfered.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Leave the marker in place",
+          "next": "marker"
+        },
+        {
+          "type": "simple",
+          "text": "Take the marker down",
+          "next": "no_marker"
+        }
+      ]
+    },
+    "marker": {
+      "id": "marker",
+      "title": "A Visible Choice",
+      "text": "You leave the strip of blue cloth fluttering where the trap was. The hunter will find an empty snare and know it was deliberate.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "no_marker": {
+      "id": "no_marker",
+      "title": "No Claim Left",
+      "text": "You pocket the marker and kick snow over the stake. By morning, the trap site will look abandoned.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "kill": {
+      "id": "kill",
+      "title": "A Clean End",
+      "text": "You make it quick. The fox goes still. The blue cloth snaps once in the wind above it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Not Your Snare",
+      "text": "You walk on. The wire gives a faint metallic sound behind you when the fox struggles again.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "wolf_tracks.png"
+}

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 2,
+  "id": "tallow_and_salt",
+  "name": "Tallow and Salt",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Work"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Tallow and Salt",
+      "text": "Orren the chandler has three open barrels in his workroom and a problem: one shipment of tallow has begun to sour, and the salt meant to preserve it was stored damp. He offers coin for an hour of competent hands.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Sort what can still be saved",
+          "statChecks": [
+            {
+              "stat": "survival",
+              "difficulty": 9
+            },
+            {
+              "stat": "perception",
+              "difficulty": 9
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You separate the clean fat from the rancid edges and find the dampest salt before it contaminates the rest.",
+                "next": "good_work"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "Most of the stock can be saved, though Orren catches two pieces you would have kept.",
+                "next": "fair_work"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The smell makes everything seem equally suspect. Orren takes over before more is lost.",
+                "next": "poor_work"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Decline the work",
+          "next": "decline"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "good_work": {
+      "id": "good_work",
+      "title": "Useful Hands",
+      "text": "Orren stops hovering after the first quarter hour. By the end, he is talking while he works: wax prices, lamp shortages, which households are buying more candles than usual.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Ask about the unusual candle orders",
+          "next": "rumour"
+        },
+        {
+          "type": "simple",
+          "text": "Take the pay and leave",
+          "next": "paid"
+        }
+      ]
+    },
+    "fair_work": {
+      "id": "fair_work",
+      "title": "An Honest Hour",
+      "text": "You save enough stock to make the work worthwhile. Orren pays what he promised, minus nothing, and says that alone distinguishes him from half the town.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "poor_work": {
+      "id": "poor_work",
+      "title": "Not Every Skill Transfers",
+      "text": "Orren waves away your apology. \"You stopped when you knew you were guessing. That puts you ahead of most apprentices.\" He gives you a smaller coin and a candle stub for the trouble.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "rumour": {
+      "id": "rumour",
+      "title": "Candles for Empty Rooms",
+      "text": "Orren says three dozen candles went to a house whose owner died last winter. The buyer paid in old silver and refused delivery. \"Came back twice to collect them himself,\" he adds.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "paid": {
+      "id": "paid",
+      "title": "Warm Wax, Small Coin",
+      "text": "You leave with the smell of tallow in your clothes and enough coin to make the hour worthwhile.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "decline": {
+      "id": "decline",
+      "title": "Another Pair of Hands",
+      "text": "Orren shrugs and calls for his niece. The work continues without you.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

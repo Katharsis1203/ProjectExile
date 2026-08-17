@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "id": "black_pine_hollow",
+  "name": "Black Pine Hollow",
+  "type": "event",
+  "tags": [
+    "Mystery",
+    "Discovery"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "The Hollow Black Pine",
+      "text": "A pine older than the surrounding forest rises beside the path, split by lightning and hollow from root to crown. Fresh snow around its trunk has been swept smooth by a branch or broom.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Examine the tree without disturbing it",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 11
+            },
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "You spot boot pressure under the swept snow and a wax smear inside the split trunk. This is a dead drop, not a shrine.",
+                "next": "dead_drop"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "Someone has handled the hollow recently, but the purpose is unclear.",
+                "next": "reach_in"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Nothing obvious explains why anyone would clear snow from a dead tree.",
+                "next": "reach_in"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Leave the strange tree alone",
+          "next": "leave"
+        }
+      ],
+      "image": "strange_tracks.png"
+    },
+    "dead_drop": {
+      "id": "dead_drop",
+      "title": "A Dead Drop",
+      "text": "Tucked behind loose bark is a narrow oilskin packet tied with grey thread. It is positioned to be collected without leaving obvious tracks.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open the packet",
+          "next": "open_packet"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it exactly where it is",
+          "next": "leave_intact"
+        }
+      ]
+    },
+    "reach_in": {
+      "id": "reach_in",
+      "title": "Blind Reach",
+      "text": "The hollow is deeper than your arm. Your fingers brush twine, then cold metal.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Feel out the contents carefully",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "safe",
+                "threshold": 1,
+                "flavourText": "You trace the object before pulling: a clasped packet pinned behind loose bark.",
+                "next": "dead_drop"
+              },
+              {
+                "id": "prick",
+                "threshold": 0,
+                "flavourText": "A hidden fishhook bites your fingertip. Whoever uses the hollow dislikes careless hands.",
+                "next": "hook"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Withdraw your hand",
+          "next": "leave"
+        }
+      ]
+    },
+    "open_packet": {
+      "id": "open_packet",
+      "title": "Names Without Context",
+      "text": "Inside are three scraps of paper: a list of surnames, two numbers beside each, and a charcoal sketch of the north gate. No explanation. The paper smells faintly of lamp oil.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Put it away and return",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave_intact": {
+      "id": "leave_intact",
+      "title": "Message for Someone Else",
+      "text": "You press the bark back into place. Knowing that the hollow is used may be more valuable than whatever is inside.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "hook": {
+      "id": "hook",
+      "title": "A Small Warning",
+      "text": "The hook is barbed and deliberately set. You free your finger and find a single grey thread tied to it—the same thread used by trappers to mark claimed ground.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Nothing Owed to the Tree",
+      "text": "You continue on. Behind you, the hollow remains dark enough to hide a hand, a letter, or a knife.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "strange_tracks.png"
+}

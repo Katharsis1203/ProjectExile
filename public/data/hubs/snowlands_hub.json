@@ -8,126 +8,261 @@
   "ambient": [
     "The wind combs the ridge with a low moan.",
     "Frost breath hangs in the air like ghosts.",
-    "Somewhere, a shutter claps once, then stills."
+    "Somewhere, a shutter claps once, then stills.",
+    "A bell sounds twice from somewhere beyond the roofs, then does not sound again.",
+    "Fresh snow softens the road until yesterday's tracks become shallow scars.",
+    "Smoke from the chimneys bends low beneath the weight of the weather."
   ],
   "eventPools": {
     "life": [
       {
-        "id": "wolf_tracks_entry",
-        "weight": 1,
-        "conditions": [],
+        "id": "courier_tube_return_entry",
+        "weight": 4.2,
+        "conditions": [
+          {
+            "type": "inventoryItem",
+            "item": "sealed_courier_tube",
+            "quantity": 1,
+            "present": true
+          }
+        ],
         "opens": {
-          "eventFile": "wolf_tracks",
+          "eventFile": "courier_tube_return",
           "nodeId": "start"
         }
       },
       {
-        "id": "abandoned_wagon_entry",
-        "weight": 1,
+        "id": "bell_keeper_entry",
+        "weight": 3.4,
+        "conditions": [
+          {
+            "type": "inventoryItem",
+            "item": "drowned_bell",
+            "quantity": 1,
+            "present": true
+          }
+        ],
+        "opens": {
+          "eventFile": "bell_keeper",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "tallow_and_salt_entry",
+        "weight": 3.0,
         "conditions": [],
         "opens": {
-          "eventFile": "abandoned_wagon",
+          "eventFile": "tallow_and_salt",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "roof_under_snow_entry",
+        "weight": 2.8,
+        "conditions": [],
+        "opens": {
+          "eventFile": "roof_under_snow",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "last_bowl_entry",
+        "weight": 2.6,
+        "conditions": [],
+        "opens": {
+          "eventFile": "last_bowl",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "missing_ledger_entry",
+        "weight": 2.4,
+        "conditions": [],
+        "opens": {
+          "eventFile": "missing_ledger",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "borrowed_gloves_entry",
+        "weight": 2.4,
+        "conditions": [],
+        "opens": {
+          "eventFile": "borrowed_gloves",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "night_watch_entry",
+        "weight": 2.2,
+        "conditions": [],
+        "opens": {
+          "eventFile": "night_watch",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "hungers_bargain_entry",
+        "weight": 2.0,
+        "conditions": [
+          {
+            "type": "playerResource",
+            "resource": "hunger",
+            "operator": "gte",
+            "value": 30
+          }
+        ],
+        "opens": {
+          "eventFile": "hungers_bargain",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "thawing_room_entry",
+        "weight": 1.5,
+        "conditions": [
+          {
+            "type": "statusEffect",
+            "effect": "chilled",
+            "present": true
+          }
+        ],
+        "opens": {
+          "eventFile": "thawing_room",
           "nodeId": "start"
         }
       }
     ],
     "explore": [
       {
-        "id": "wolf_tracks_entry",
-        "weight": 1,
+        "id": "whiteout_cairn_entry",
+        "weight": 3.0,
         "conditions": [],
         "opens": {
-          "eventFile": "wolf_tracks",
+          "eventFile": "whiteout_cairn",
           "nodeId": "start"
         }
       },
       {
-        "id": "abandoned_wagon_entry",
-        "weight": 1,
+        "id": "wrecked_sled_entry",
+        "weight": 2.6,
         "conditions": [],
         "opens": {
-          "eventFile": "abandoned_wagon",
+          "eventFile": "wrecked_sled",
           "nodeId": "start"
         }
       },
       {
-        "id": "frozen_shrine_entry",
-        "weight": 1,
+        "id": "hunters_snare_entry",
+        "weight": 2.5,
         "conditions": [],
         "opens": {
-          "eventFile": "frozen_shrine",
+          "eventFile": "hunters_snare",
           "nodeId": "start"
         }
       },
       {
-        "id": "blood_in_snow_entry",
-        "weight": 1,
+        "id": "singing_ice_entry",
+        "weight": 2.3,
         "conditions": [],
         "opens": {
-          "eventFile": "blood_in_snow",
+          "eventFile": "singing_ice",
           "nodeId": "start"
         }
       },
       {
-        "id": "buried_pack_entry",
-        "weight": 1,
+        "id": "smoke_beyond_ridge_entry",
+        "weight": 2.2,
         "conditions": [],
         "opens": {
-          "eventFile": "buried_pack",
+          "eventFile": "smoke_beyond_ridge",
           "nodeId": "start"
         }
       },
       {
-        "id": "distant_lantern_entry",
-        "weight": 1,
+        "id": "crows_over_ravine_entry",
+        "weight": 2.0,
         "conditions": [],
         "opens": {
-          "eventFile": "distant_lantern",
+          "eventFile": "crows_over_ravine",
           "nodeId": "start"
         }
       },
       {
-        "id": "frozen_corpse_entry",
-        "weight": 1,
+        "id": "ash_in_snow_entry",
+        "weight": 1.9,
         "conditions": [],
         "opens": {
-          "eventFile": "frozen_corpse",
+          "eventFile": "ash_in_snow",
           "nodeId": "start"
         }
       },
       {
-        "id": "ice_cracked_lake_entry",
-        "weight": 1,
+        "id": "black_pine_hollow_entry",
+        "weight": 1.7,
         "conditions": [],
         "opens": {
-          "eventFile": "ice_cracked_lake",
+          "eventFile": "black_pine_hollow",
           "nodeId": "start"
         }
       },
       {
-        "id": "snow_buried_door_entry",
-        "weight": 1,
+        "id": "frostglass_cave_entry",
+        "weight": 1.6,
         "conditions": [],
         "opens": {
-          "eventFile": "snow_buried_door",
+          "eventFile": "frostglass_cave",
           "nodeId": "start"
         }
       },
       {
-        "id": "strange_tracks_entry",
-        "weight": 1,
+        "id": "bell_beneath_ice_entry",
+        "weight": 1.4,
         "conditions": [],
         "opens": {
-          "eventFile": "strange_tracks",
+          "eventFile": "bell_beneath_ice",
           "nodeId": "start"
         }
       },
       {
-        "id": "wind_chimes_entry",
-        "weight": 1,
-        "conditions": [],
+        "id": "lost_patrol_entry",
+        "weight": 1.1,
+        "conditions": [
+          {
+            "type": "hubStat",
+            "stat": "Visibility",
+            "operator": "lte",
+            "value": 40
+          },
+          {
+            "type": "scene",
+            "field": "weather",
+            "equals": "snow"
+          }
+        ],
         "opens": {
-          "eventFile": "wind_chimes",
+          "eventFile": "lost_patrol",
+          "nodeId": "start"
+        }
+      },
+      {
+        "id": "rime_script_entry",
+        "weight": 0.8,
+        "conditions": [
+          {
+            "type": "playerResource",
+            "resource": "mana",
+            "operator": "gte",
+            "value": 40
+          },
+          {
+            "type": "statusEffect",
+            "effect": "focused",
+            "present": true
+          }
+        ],
+        "opens": {
+          "eventFile": "rime_script",
           "nodeId": "start"
         }
       }

@@ -3,11 +3,34 @@ export type StatCheck = {
   difficulty: number;
 };
 
+export type ItemChoiceRequirement = {
+  type: "item";
+  item: string;
+  quantity?: number;
+};
+
+export type ChoiceRequirement = ItemChoiceRequirement;
+
+export type ResourceEventEffect = {
+  type: "resource";
+  resource: string;
+  amount: number;
+};
+
+export type ItemEventEffect = {
+  type: "item";
+  item: string;
+  amount: number;
+};
+
+export type EventEffect = ResourceEventEffect | ItemEventEffect;
+
 export type OutcomeBucket = {
   id: string;
   threshold: number;
   flavourText?: string;
   next: string;
+  effects?: EventEffect[];
 };
 
 export type ThresholdOutcome = {
@@ -18,6 +41,8 @@ type BaseEventChoice = {
   text: string;
   returnToHub?: boolean;
   endEvent?: boolean;
+  requirements?: ChoiceRequirement[];
+  effects?: EventEffect[];
 };
 
 export type SimpleEventChoice = BaseEventChoice & {

@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 2,
+  "id": "whiteout_cairn",
+  "name": "Whiteout Cairn",
+  "type": "event",
+  "tags": [
+    "Wilderness",
+    "Navigation"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A Cairn in the White",
+      "text": "The snowfall thickens until road, ditch, and field become one pale blur. Ahead, a shoulder-high cairn emerges from the white, its top stone marked with three shallow cuts.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Read the cairn and choose a route",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 11
+            },
+            {
+              "stat": "survival",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "clear",
+                "threshold": 2,
+                "flavourText": "The cuts are not decoration: they point toward a lee-side track used when the ridge road disappears.",
+                "next": "shelter"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You understand enough to avoid the exposed ridge, but not enough to know what waits along the lower track.",
+                "next": "lower_track"
+              },
+              {
+                "id": "lost",
+                "threshold": 0,
+                "flavourText": "The marks blur beneath fresh snow. You commit to a direction more from instinct than certainty.",
+                "next": "wrong_turn"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Wait beside the cairn for the squall to ease",
+          "next": "wait"
+        }
+      ],
+      "image": "buried_pack2.png"
+    },
+    "shelter": {
+      "id": "shelter",
+      "title": "The Lee-Side Track",
+      "text": "Behind the cairn, a narrow cut descends between black pines. Halfway down you find an old shepherd shelter: dry, empty, and stocked with a fist-sized bundle of split kindling someone left for the next traveller.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Take a brief rest and move on",
+          "endEvent": true,
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": 8
+            },
+            {
+              "type": "item",
+              "item": "dry_kindling",
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "miscText": "Someone maintained this route recently."
+    },
+    "lower_track": {
+      "id": "lower_track",
+      "title": "A Safer Guess",
+      "text": "The lower track is sheltered from the worst of the wind. It bends farther than expected, but the snow underfoot is firm and old boot prints confirm that others have used it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return by the lower road",
+          "endEvent": true
+        }
+      ]
+    },
+    "wrong_turn": {
+      "id": "wrong_turn",
+      "title": "No Landmark Behind You",
+      "text": "The cairn vanishes almost immediately. Minutes later the ground steepens beneath your feet and the wind begins striking from the wrong side. You can force ahead or admit the mistake.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Push through until you find shelter",
+          "statChecks": [
+            {
+              "stat": "endurance",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "hold",
+                "threshold": 1,
+                "flavourText": "You keep your breathing measured and eventually reach the dark line of the pines.",
+                "next": "hard_won"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "Cold works into your hands faster than pride can justify.",
+                "next": "retreat",
+                "effects": [
+                  {
+                    "type": "resource",
+                    "resource": "health",
+                    "amount": -6
+                  },
+                  {
+                    "type": "resource",
+                    "resource": "stamina",
+                    "amount": -4
+                  }
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -8
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Turn back while you still can",
+          "next": "retreat"
+        }
+      ]
+    },
+    "hard_won": {
+      "id": "hard_won",
+      "title": "Hard-Won Shelter",
+      "text": "You reach the trees shaking with effort but still upright. The route was poor, but you have learned exactly how the ridge behaves in a whiteout.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true,
+          "effects": [
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -2
+            }
+          ]
+        }
+      ]
+    },
+    "retreat": {
+      "id": "retreat",
+      "title": "Back to Known Ground",
+      "text": "You retrace your steps until the cairn appears again like a ghost. The storm has taken time from you, but nothing worse.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "wait": {
+      "id": "wait",
+      "title": "Stone and Wind",
+      "text": "You crouch in the cairn's lee and let the worst of the squall pass overhead. The world slowly regains edges. It is not heroic, but it is sensible.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "buried_pack2.png"
+}

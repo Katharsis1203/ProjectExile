@@ -1,6 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { DEFAULT_PLAYER } from "../data/defaultPlayer";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  canSpendActivityEnergy,
+  loadActivityEnergy,
+  recoverActivityEnergy,
+  saveActivityEnergy,
+  spendActivityEnergy,
+} from "../engine/activityEnergy";
+import { areEventConditionsMet } from "../engine/eventConditions";
 import { drawWeightedEvents } from "../engine/eventSelection";
+import {
+  applyEventEffects,
+  areChoiceRequirementsMet,
+  discardInventoryItem,
+  describeChoiceRequirement,
+  getUnmetChoiceRequirements,
+  useInventoryItem,
+} from "../engine/playerState";
 import { resolveChoice } from "../engine/eventRules";
 import { normaliseLighting } from "../engine/sceneEffects";
 import { loadHub } from "../services/content/contentRepository";
@@ -10,11 +25,14 @@ import type {
   NodeResolution,
 } from "../types/event";
 import type { EventPoolEntry, LoadedHub } from "../types/hub";
+import type { AppliedEventEffect, PlayerState } from "../types/player";
 import HubEventRow from "../components/hub/HubEventRow";
 import HubPlayerPanel from "../components/hub/HubPlayerPanel";
 import HubScenePanel from "../components/hub/HubScenePanel";
 import HubSidebar from "../components/hub/HubSidebar";
+import "../components/hub/HubElevation.css";
 import NodePassage from "../components/node/NodePassage";
+import InventoryPage from "../components/inventory/InventoryPage";
 
 const EVENT_SLOT_COUNT = 3;
 const NODE_EXIT_DURATION_MS = 360;
@@ -29,7 +47,11 @@ type EventTransition = {
 type EventSession = {
   eventFile: string;
   node: EventNode;
+  lastKnownImage: string | null;
   resolution: NodeResolution | null;
+  appliedEffects: AppliedEventEffect[];
+  isComplete: boolean;
+  canAbort: boolean;
   transition: EventTransition;
   slotIndex: number;
   isClosing: boolean;
@@ -50,22 +72,35 @@ function getTransitionFromElement(element: HTMLElement): EventTransition {
   return {
     fromX: rect.left + rect.width / 2 - window.innerWidth / 2,
     fromY: rect.top + rect.height / 2 - window.innerHeight / 2,
-    fromScaleX: rect.width / 820,
+    fromScaleX: rect.width / 760,
     fromScaleY: rect.height / 720,
   };
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "An unknown content error occurred.";
+  return error instanceof Error
+    ? error.message
+    : "An unknown content error occurred.";
 }
 
-export default function HubPage() {
+type HubPageProps = {
+  player: PlayerState;
+  setPlayer: Dispatch<SetStateAction<PlayerState>>;
+  onReady?: () => void;
+};
+
+export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
+  const [activityEnergy, setActivityEnergy] = useState(() => loadActivityEnergy());
+  const activityEnergyRef = useRef(activityEnergy);
   const [hubContent, setHubContent] = useState<LoadedHub | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [eventSlots, setEventSlots] = useState(createEventSlots);
+  const eventSlotsRef = useRef(eventSlots);
   const [eventSession, setEventSession] = useState<EventSession | null>(null);
   const [interactionError, setInteractionError] = useState<string | null>(null);
+  const [inventoryOpen, setInventoryOpen] = useState(false);
+  const [inventoryEffects, setInventoryEffects] = useState<AppliedEventEffect[]>([]);
   const closeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -88,6 +123,41 @@ export default function HubPage() {
     };
   }, [loadAttempt]);
 
+  useEffect(() => {
+    if (hubContent || loadError) {
+      onReady?.();
+    }
+  }, [hubContent, loadError, onReady]);
+
+  useEffect(() => {
+    activityEnergyRef.current = activityEnergy;
+    saveActivityEnergy(activityEnergy);
+  }, [activityEnergy]);
+
+  useEffect(() => {
+    const recover = () => {
+      setActivityEnergy((current) => {
+        const next = recoverActivityEnergy(current, Date.now());
+        activityEnergyRef.current = next;
+        return next;
+      });
+    };
+
+    const timer = window.setInterval(recover, 1000);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") recover();
+    };
+
+    window.addEventListener("focus", recover);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", recover);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   useEffect(
     () => () => {
       if (closeTimerRef.current !== null) {
@@ -103,27 +173,133 @@ export default function HubPage() {
   );
   const showBirds = sceneLighting !== "night";
 
-  function handleDrawEvents(pool: readonly EventPoolEntry[]): void {
-    const selectedEvents = drawWeightedEvents(pool, EVENT_SLOT_COUNT);
-    setEventSlots(createEventSlots(selectedEvents));
+  function setEventHand(nextSlots: Array<EventPoolEntry | null>): void {
+    eventSlotsRef.current = nextSlots;
+    setEventSlots(nextSlots);
+  }
+
+  function getEventIdentity(entry: EventPoolEntry): string {
+    return `${entry.opens.eventFile}:${entry.opens.nodeId}`;
+  }
+
+  function handleDrawEvent(
+    pool: readonly EventPoolEntry[],
+    actionName: "Explore" | "Life",
+  ): void {
+    if (!hubContent) {
+      return;
+    }
+
+    const currentSlots = eventSlotsRef.current;
+    const emptySlotIndexes = currentSlots
+      .map((entry, index) => (entry === null ? index : -1))
+      .filter((index) => index >= 0);
+
+    if (emptySlotIndexes.length === 0) {
+      setInteractionError(
+        "Your hand is full. Play a lead before drawing another.",
+      );
+      return;
+    }
+
+    const heldEvents = new Set(
+      currentSlots
+        .filter((entry): entry is EventPoolEntry => entry !== null)
+        .map(getEventIdentity),
+    );
+    const selectedEvents = drawWeightedEvents(
+      pool,
+      emptySlotIndexes.length,
+      Math.random,
+      (entry) =>
+        !heldEvents.has(getEventIdentity(entry)) &&
+        areEventConditionsMet(entry.conditions, {
+          player,
+          hub: hubContent.hub,
+        }),
+    );
+
+    if (selectedEvents.length === 0) {
+      setInteractionError(
+        `There are no eligible ${actionName.toLowerCase()} leads to draw right now.`,
+      );
+      return;
+    }
+
+    if (!spendHubActionEnergy()) {
+      return;
+    }
+
+    const nextSlots = [...currentSlots];
+    selectedEvents.forEach((selectedEvent, index) => {
+      const slotIndex = emptySlotIndexes[index];
+      if (slotIndex !== undefined) {
+        nextSlots[slotIndex] = selectedEvent;
+      }
+    });
+    setEventHand(nextSlots);
     setInteractionError(null);
+  }
+
+  function spendHubActionEnergy(): boolean {
+    const result = spendActivityEnergy(activityEnergyRef.current);
+    activityEnergyRef.current = result.state;
+    setActivityEnergy(result.state);
+
+    if (!result.spent) {
+      setInteractionError(
+        "You have no Energy available. Explore and Life recover as Energy recharges.",
+      );
+      return false;
+    }
+
+    return true;
   }
 
   function handleExplore(): void {
     if (hubContent) {
-      handleDrawEvents(hubContent.hub.eventPools.explore);
+      handleDrawEvent(hubContent.hub.eventPools.explore, "Explore");
     }
   }
 
   function handleLife(): void {
     if (hubContent) {
-      handleDrawEvents(hubContent.hub.eventPools.life);
+      handleDrawEvent(hubContent.hub.eventPools.life, "Life");
     }
   }
 
   function handleRetryLoad(): void {
     setLoadError(null);
     setLoadAttempt((attempt) => attempt + 1);
+  }
+
+  function handleOpenInventory(): void {
+    setInventoryEffects([]);
+    setInteractionError(null);
+    setInventoryOpen(true);
+  }
+
+  function handleCloseInventory(): void {
+    setInventoryOpen(false);
+    setInventoryEffects([]);
+  }
+
+  function handleUseInventoryItem(itemId: string): void {
+    const applied = useInventoryItem(player, itemId);
+    if (applied.player === player || applied.appliedEffects.length === 0) {
+      return;
+    }
+    setPlayer(applied.player);
+    setInventoryEffects(applied.appliedEffects);
+  }
+
+  function handleDiscardInventoryItem(itemId: string): void {
+    const applied = discardInventoryItem(player, itemId);
+    if (applied.player === player || applied.appliedEffects.length === 0) {
+      return;
+    }
+    setPlayer(applied.player);
+    setInventoryEffects(applied.appliedEffects);
   }
 
   function handlePlayEvent(
@@ -145,7 +321,11 @@ export default function HubPage() {
     setEventSession({
       eventFile: entry.opens.eventFile,
       node: openingNode,
+      lastKnownImage: openingNode.image ?? null,
       resolution: null,
+      appliedEffects: [],
+      isComplete: false,
+      canAbort: true,
       transition: getTransitionFromElement(cardElement),
       slotIndex,
       isClosing: false,
@@ -161,7 +341,7 @@ export default function HubPage() {
     });
   }
 
-  function closeNode(): void {
+  function closeNode(consumeCard = false): void {
     if (!eventSession || eventSession.isClosing) {
       return;
     }
@@ -179,11 +359,13 @@ export default function HubPage() {
       : NODE_EXIT_DURATION_MS;
 
     closeTimerRef.current = window.setTimeout(() => {
-      setEventSlots((slots) =>
-        slots.map((entry, index) =>
-          index === playedSlotIndex ? null : entry,
-        ),
-      );
+      if (consumeCard) {
+        setEventHand(
+          eventSlotsRef.current.map((entry, index) =>
+            index === playedSlotIndex ? null : entry,
+          ),
+        );
+      }
       setEventSession(null);
       closeTimerRef.current = null;
       restoreHubFocus();
@@ -195,15 +377,44 @@ export default function HubPage() {
       return;
     }
 
-    if (choice.returnToHub || choice.endEvent) {
-      closeNode();
+    if (!areChoiceRequirementsMet(choice, player.inventory)) {
+      const missing = getUnmetChoiceRequirements(choice, player.inventory)
+        .map(describeChoiceRequirement)
+        .join(", ");
+      setInteractionError(`This choice requires: ${missing}.`);
       return;
     }
 
-    const result = resolveChoice(choice, DEFAULT_PLAYER.stats);
+    setInteractionError(null);
 
-    if (!result.next) {
-      closeNode();
+    const result = resolveChoice(choice, player.stats);
+    const applied = applyEventEffects(player, result.effects);
+
+    if (applied.player !== player) {
+      setPlayer(applied.player);
+    }
+
+    const resolution: NodeResolution = {
+      checks: result.checks,
+      ...(result.flavourText ? { flavourText: result.flavourText } : {}),
+    };
+    const hasOutcomeToShow =
+      applied.appliedEffects.length > 0 ||
+      result.checks.length > 0 ||
+      Boolean(result.flavourText);
+
+    if (choice.returnToHub || choice.endEvent || !result.next) {
+      if (hasOutcomeToShow) {
+        setEventSession({
+          ...eventSession,
+          resolution,
+          appliedEffects: applied.appliedEffects,
+          isComplete: true,
+          canAbort: false,
+        });
+      } else {
+        closeNode(true);
+      }
       return;
     }
 
@@ -221,12 +432,11 @@ export default function HubPage() {
     setEventSession({
       ...eventSession,
       node: nextNode,
-      resolution: {
-        checks: result.checks,
-        ...(result.flavourText
-          ? { flavourText: result.flavourText }
-          : {}),
-      },
+      lastKnownImage: nextNode.image ?? eventSession.lastKnownImage,
+      resolution,
+      appliedEffects: applied.appliedEffects,
+      isComplete: false,
+      canAbort: false,
     });
   }
 
@@ -252,20 +462,28 @@ export default function HubPage() {
 
       <div className="relative z-10 flex min-h-screen justify-center p-2 sm:p-4 xl:items-center">
         <div className="w-full max-w-[1350px] px-0 sm:px-4 xl:h-[clamp(720px,calc(100vh-2rem),900px)] xl:py-2">
-          <div className="grid gap-2 xl:h-full xl:grid-rows-[minmax(0,3.78fr)_minmax(0,1.02fr)]">
-            <div className="grid min-h-0 gap-2 xl:grid-cols-[1.15fr_3.35fr_1.25fr]">
+          <div className="grid gap-2 xl:h-full xl:grid-rows-[minmax(0,3.55fr)_minmax(0,1.15fr)]">
+            <div className="grid min-h-0 gap-2 xl:grid-cols-[1.15fr_3.35fr_1.25fr] xl:[&>*]:min-h-0">
               <HubScenePanel
                 hub={hubContent?.hub ?? null}
                 loadError={loadError}
                 onRetry={handleRetryLoad}
               />
               <HubPlayerPanel
-                player={DEFAULT_PLAYER}
-                disabled={!hubContent}
+                player={player}
+                activityEnergy={activityEnergy}
+                disabled={
+                  !hubContent ||
+                  !canSpendActivityEnergy(activityEnergy) ||
+                  eventSlots.every((entry) => entry !== null)
+                }
                 onExplore={handleExplore}
                 onLife={handleLife}
               />
-              <HubSidebar hub={hubContent?.hub ?? null} />
+              <HubSidebar
+                hub={hubContent?.hub ?? null}
+                onInventory={handleOpenInventory}
+              />
             </div>
 
             <HubEventRow
@@ -280,21 +498,38 @@ export default function HubPage() {
       {interactionError ? (
         <div
           role="alert"
-          className="fixed bottom-4 left-1/2 z-[110] max-w-[min(92vw,680px)] -translate-x-1/2 rounded-md border border-red-200/50 bg-red-950/90 px-4 py-3 text-sm text-red-50 shadow-xl"
+          className="fixed bottom-4 left-1/2 z-[140] max-w-[min(92vw,680px)] -translate-x-1/2 rounded-md border border-red-200/50 bg-red-950/90 px-4 py-3 text-sm text-red-50 shadow-xl"
         >
           {interactionError}
         </div>
       ) : null}
 
+      {inventoryOpen ? (
+        <InventoryPage
+          player={player}
+          recentEffects={inventoryEffects}
+          onUseItem={handleUseInventoryItem}
+          onDiscardItem={handleDiscardInventoryItem}
+          onClose={handleCloseInventory}
+        />
+      ) : null}
+
       {eventSession ? (
         <NodePassage
-          node={eventSession.node}
+          node={{
+            ...eventSession.node,
+            image: eventSession.lastKnownImage,
+          }}
           resolution={eventSession.resolution}
+          consequences={eventSession.appliedEffects}
+          isComplete={eventSession.isComplete}
+          allowReturn={eventSession.canAbort}
           transition={eventSession.transition}
           isClosing={eventSession.isClosing}
-          playerStats={DEFAULT_PLAYER.stats}
+          playerStats={player.stats}
+          playerInventory={player.inventory}
           onChoose={handleChoose}
-          onReturn={closeNode}
+          onReturn={() => closeNode(eventSession.isComplete)}
         />
       ) : null}
     </div>

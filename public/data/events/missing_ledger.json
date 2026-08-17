@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 2,
+  "id": "missing_ledger",
+  "name": "The Missing Ledger",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Mystery"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "The Missing Ledger",
+      "text": "Mara, who keeps the Pine & Mug, has misplaced the thin ledger she uses for debts too small to deserve the real book. She is certain it was on the common-room shelf before breakfast.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Search without turning the inn upside down",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "found",
+                "threshold": 1,
+                "flavourText": "A clean rectangle in the dust shows where the ledger sat. Below it, a chair leg has fresh scrape marks leading toward the stove.",
+                "next": "stove"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "The common room contains a hundred plausible hiding places and twice as many distractions.",
+                "next": "ask"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Ask who was in the room this morning",
+          "next": "ask"
+        },
+        {
+          "type": "simple",
+          "text": "Tell Mara it will turn up",
+          "next": "leave"
+        }
+      ],
+      "image": "../village.png"
+    },
+    "stove": {
+      "id": "stove",
+      "title": "Behind the Wood Box",
+      "text": "The ledger is wedged behind the wood box beside the stove. It could have fallen there—except a strip of cloth has been tucked over it to hide the cover.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Give it to Mara and mention the cloth",
+          "next": "return"
+        },
+        {
+          "type": "simple",
+          "text": "Glance at the last page before returning it",
+          "next": "peek"
+        }
+      ]
+    },
+    "ask": {
+      "id": "ask",
+      "title": "Morning Company",
+      "text": "Mara lists a cooper, two caravan hands, a washerwoman, and her own nephew. The nephew becomes offended before anyone accuses him.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Watch the reactions rather than the answers",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "tell",
+                "threshold": 1,
+                "flavourText": "The washerwoman looks toward the stove every time the ledger is mentioned.",
+                "next": "stove"
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "flavourText": "Everyone has a reason to look guilty when debts are involved.",
+                "next": "leave"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Drop the matter",
+          "next": "leave"
+        }
+      ]
+    },
+    "peek": {
+      "id": "peek",
+      "title": "Small Debts",
+      "text": "The last page is mostly ale, lamp oil, and borrowed blankets. One entry is different: no name, only \"north room — seven nights — paid in advance.\" The handwriting is Mara's.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return the ledger without comment",
+          "next": "quiet_return"
+        },
+        {
+          "type": "simple",
+          "text": "Ask Mara about the north room",
+          "next": "north_room"
+        }
+      ]
+    },
+    "return": {
+      "id": "return",
+      "title": "Something Deliberate",
+      "text": "Mara studies the cloth, says nothing, and puts the ledger under the bar instead of back on the shelf. \"Thank you,\" she says, in a tone that closes the subject.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "quiet_return": {
+      "id": "quiet_return",
+      "title": "A Secret Not Asked For",
+      "text": "You hand the book back closed. Mara checks the last page before thanking you, which tells you she knew exactly what was written there.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "north_room": {
+      "id": "north_room",
+      "title": "A Door Kept Shut",
+      "text": "Mara's expression hardens. \"If you want a room, I have six others.\" She takes the ledger and changes the subject.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "leave": {
+      "id": "leave",
+      "title": "Other People's Accounts",
+      "text": "You leave Mara to search her own common room. Small debts have a way of resurfacing even when ledgers do not.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "../village.png"
+}

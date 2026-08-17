@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 2,
+  "id": "singing_ice",
+  "name": "Singing Ice",
+  "type": "event",
+  "tags": [
+    "Wilderness",
+    "Hazard"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "The River Sings",
+      "text": "The frozen river ahead hums with long, whale-like notes as the current shifts beneath the ice. The normal crossing has drifted over, leaving no visible markers.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Use the sound to judge the ice",
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 11
+            },
+            {
+              "stat": "survival",
+              "difficulty": 11
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "full",
+                "threshold": 2,
+                "flavourText": "The deepest tones come from thick, stressed plates; the high ticking marks the dangerous seams. You plot a crooked but safe line.",
+                "next": "safe_cross"
+              },
+              {
+                "id": "partial",
+                "threshold": 1,
+                "flavourText": "You identify the worst areas, but one broad shelf still gives uncertain notes.",
+                "next": "uncertain_cross"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The river is all echoes. Every patch sounds dangerous once you listen too long.",
+                "next": "uncertain_cross"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Follow the bank instead",
+          "next": "long_way"
+        }
+      ],
+      "image": "wind_chimes.png"
+    },
+    "safe_cross": {
+      "id": "safe_cross",
+      "title": "A Crooked Path",
+      "text": "You cross in a series of careful angles. The ice complains but does not shift. Halfway over, you find an old pole frozen upright—the remains of last winter's marker.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "uncertain_cross": {
+      "id": "uncertain_cross",
+      "title": "The Broad Shelf",
+      "text": "The only reasonable route crosses a pale shelf where trapped bubbles run like strings of beads beneath your boots.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Cross quickly without losing balance",
+          "statChecks": [
+            {
+              "stat": "endurance",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "cross",
+                "threshold": 1,
+                "flavourText": "The shelf flexes once and holds. You do not stop until both boots reach snow again.",
+                "next": "safe_cross"
+              },
+              {
+                "id": "break",
+                "threshold": 0,
+                "flavourText": "A crack shoots between your feet and the shelf drops several inches.",
+                "next": "through"
+              }
+            ]
+          }
+        },
+        {
+          "type": "simple",
+          "text": "Backtrack and take the long way",
+          "next": "long_way"
+        }
+      ]
+    },
+    "through": {
+      "id": "through",
+      "title": "One Leg Through",
+      "text": "Your left leg punches through to the thigh. The current is shallow here, but the cold clamps around the muscle immediately.",
+      "choices": [
+        {
+          "type": "checked",
+          "text": "Get out before the hole widens",
+          "statChecks": [
+            {
+              "stat": "strength",
+              "difficulty": 10
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "out",
+                "threshold": 1,
+                "flavourText": "You throw your weight flat and drag the leg free.",
+                "next": "cold_exit"
+              },
+              {
+                "id": "fail",
+                "threshold": 0,
+                "flavourText": "The first pull breaks more ice. You have to crawl backward on your elbows before the leg comes loose.",
+                "next": "cold_exit"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "cold_exit": {
+      "id": "cold_exit",
+      "title": "A Wet Walk Home",
+      "text": "You reach the bank with one trouser leg already stiffening. The river keeps singing behind you as if nothing happened.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    },
+    "long_way": {
+      "id": "long_way",
+      "title": "The Long Bank",
+      "text": "You follow the river until the banks narrow around a timber footbridge. It costs time, but the planks do not sing beneath your feet.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "wind_chimes.png"
+}
