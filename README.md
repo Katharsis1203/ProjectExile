@@ -17,7 +17,7 @@
 
 ## About Project Exile
 
-### Project Exile is a browser-based, character-focused open-world text RPG currently being developed around its testing region, the Snowlands. It combines authored narrative, exploration and choice-driven passages with RPG systems such as character stats, skill checks, resources, inventory, relationships, and persistent saves.
+Project Exile is a browser-based, character-focused open-world text RPG currently being developed around its testing region, the Snowlands. It combines authored narrative, exploration and choice-driven passages with RPG systems such as character stats, skill checks, resources, inventory, relationships, and persistent saves.
 
 The goal is to combine a rich, carefully written narrative experience with highly variable playthroughs. Rather than defining a complete character at the beginning, Project Exile takes a slow-burn approach to progression. Early decisions establish elements such as training, possessions, and background, while personality, strengths, weaknesses, relationships, and more unusual traits emerge gradually through play.
 
