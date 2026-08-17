@@ -1,10 +1,10 @@
-// src/components/hub/HubEventCard.tsx
-
 import { useId } from "react";
+import "./HubEventCard.css";
 
 type HubEventCardProps = {
-  eventTitle: string;
-  eventImage: string | null;
+  title: string;
+  image: string | null;
+  colourImage: string | null;
   categoryLabel?: string;
   hook?: string;
   detail?: string;
@@ -12,19 +12,10 @@ type HubEventCardProps = {
   onClick: (element: HTMLElement) => void;
 };
 
-function getColourVariantFilename(filename: string) {
-  const extensionIndex = filename.lastIndexOf(".");
-
-  if (extensionIndex <= 0) {
-    return `${filename}_colour`;
-  }
-
-  return `${filename.slice(0, extensionIndex)}_colour${filename.slice(extensionIndex)}`;
-}
-
 export default function HubEventCard({
-  eventTitle,
-  eventImage,
+  title,
+  image,
+  colourImage,
   categoryLabel = "Local lead",
   hook,
   detail,
@@ -34,28 +25,30 @@ export default function HubEventCard({
   const svgId = useId().replace(/:/g, "");
   const maskId = `hub-event-mask-${svgId}`;
   const gooFilterId = `hub-event-goo-${svgId}`;
-
-  const eventImagePath = eventImage ? `/images/events/${eventImage}` : null;
-  const eventColourImagePath = eventImage
-    ? `/images/events/${getColourVariantFilename(eventImage)}`
-    : null;
+  const imagePath = image ? `/images/events/${image}` : null;
+  const colourImagePath = colourImage
+    ? `/images/events/${colourImage}`
+    : imagePath;
 
   return (
-    <button
-      type="button"
-      onClick={(event) => onClick(event.currentTarget)}
-      aria-label={`Open event: ${eventTitle}`}
-      className="group relative h-full w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200/90 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+    <article
+      className="hub-event-deal-in group relative h-full w-full"
+      style={{ animationDelay: `${animationDelay}ms` }}
     >
-      <article
-        className="hub-event-deal-in hub-event-card-layer relative h-full w-full overflow-hidden rounded-[12px] border border-[#62523f]/35 bg-[cornsilk] shadow-[0_7px_14px_rgba(38,43,50,0.18),inset_0_0_0_1px_rgba(255,250,237,0.42)] transition-[transform,box-shadow,filter] duration-250"
-        style={{ animationDelay: `${animationDelay}ms` }}
-      >
-        {eventImagePath ? (
+      <button
+        type="button"
+        data-event-card
+        onClick={(event) => onClick(event.currentTarget)}
+        aria-label={`Open event: ${title}`}
+        className="absolute inset-0 z-20 cursor-pointer rounded-[12px] border-0 bg-transparent p-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-200/90 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+      />
+
+      <div className="hub-event-card-layer relative h-full w-full overflow-hidden rounded-[12px] border border-[#62523f]/35 bg-[cornsilk] text-left shadow-[0_7px_14px_rgba(38,43,50,0.18),inset_0_0_0_1px_rgba(255,250,237,0.42)] transition-[transform,box-shadow,filter] duration-250">
+        {imagePath ? (
           <>
             <div
               className="hub-event-image-base absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url('${eventImagePath}')` }}
+              style={{ backgroundImage: `url('${imagePath}')` }}
             />
 
             <svg
@@ -66,7 +59,11 @@ export default function HubEventCard({
             >
               <defs>
                 <filter id={gooFilterId}>
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.7" result="blur" />
+                  <feGaussianBlur
+                    in="SourceGraphic"
+                    stdDeviation="1.7"
+                    result="blur"
+                  />
                   <feColorMatrix
                     in="blur"
                     mode="matrix"
@@ -76,9 +73,13 @@ export default function HubEventCard({
                   <feBlend in="SourceGraphic" in2="goo" />
                 </filter>
 
-                <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="userSpaceOnUse">
+                <mask id={maskId} maskUnits="userSpaceOnUse">
                   <rect x="0" y="0" width="100" height="100" fill="black" />
-                  <g className="hub-event-ink-blobs" filter={`url(#${gooFilterId})`} fill="white">
+                  <g
+                    className="hub-event-ink-blobs"
+                    filter={`url(#${gooFilterId})`}
+                    fill="white"
+                  >
                     <g className="hub-event-blob hub-event-blob--1">
                       <ellipse cx="33" cy="43" rx="8.5" ry="6.4" />
                     </g>
@@ -99,7 +100,7 @@ export default function HubEventCard({
               </defs>
 
               <image
-                href={eventColourImagePath ?? eventImagePath}
+                href={colourImagePath ?? imagePath}
                 width="100%"
                 height="100%"
                 preserveAspectRatio="xMidYMid slice"
@@ -129,7 +130,7 @@ export default function HubEventCard({
           </div>
 
           <h3 className="truncate font-serif text-lg font-bold leading-tight tracking-wide text-[#30261d] drop-shadow-[0_1px_0_rgba(255,249,234,0.7)]">
-            {eventTitle}
+            {title}
           </h3>
 
           {hook ? (
@@ -139,10 +140,10 @@ export default function HubEventCard({
           ) : null}
         </div>
 
-        <div className="pointer-events-none absolute right-3 top-3 z-10 translate-y-1 rounded-md border border-[#776349]/25 bg-[rgba(247,239,220,0.92)] px-2 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#493b2c]/0 opacity-0 shadow-sm backdrop-blur-[1px] transition-all duration-200 group-hover:translate-y-0 group-hover:text-[#493b2c]/90 group-hover:opacity-100">
+        <div className="pointer-events-none absolute right-3 top-3 z-10 translate-y-1 rounded-md border border-[#776349]/25 bg-[rgba(247,239,220,0.92)] px-2 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#493b2c]/0 opacity-0 shadow-sm backdrop-blur-[1px] transition-all duration-200 group-hover:translate-y-0 group-hover:text-[#493b2c]/90 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:text-[#493b2c]/90 group-focus-within:opacity-100">
           Open
         </div>
-      </article>
-    </button>
+      </div>
+    </article>
   );
 }

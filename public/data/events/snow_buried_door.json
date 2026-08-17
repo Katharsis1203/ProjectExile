@@ -4,6 +4,7 @@
   "name": "Snow Buried Door",
   "type": "event",
   "cardImage": "snow_buried_door.png",
+  "cardColourImage": "snow_buried_door_colour.png",
   "nodes": {
     "start": {
       "id": "start",

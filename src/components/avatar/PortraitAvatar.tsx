@@ -1,4 +1,5 @@
 import type { AvatarPortrait } from "../../types/avatar";
+import "./PortraitAvatar.css";
 
 type PortraitAvatarProps = {
   portrait: AvatarPortrait;
@@ -10,9 +11,7 @@ export default function PortraitAvatar({ portrait, className = "" }: PortraitAva
 
   return (
     <figure
-      className={`avatar-portrait-stage relative isolate mx-auto h-[238px] w-full max-w-[202px] overflow-hidden rounded-[26px] outline-none ${className}`}
-      tabIndex={0}
-      aria-label={`${portrait.name} portrait`}
+      className={`avatar-portrait-stage relative isolate mx-auto h-[238px] w-full max-w-[202px] overflow-hidden rounded-[26px] ${className}`}
     >
       <div aria-hidden="true" className={`avatar-portrait-stage__shadow avatar-portrait-stage__shadow--${portrait.stageTone ?? "violet"}`} />
       <div aria-hidden="true" className={`avatar-portrait-stage__backdrop avatar-portrait-stage__backdrop--${portrait.stageTone ?? "violet"}`} />

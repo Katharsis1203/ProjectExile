@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import type { AvatarLayer, PlayerAvatar } from "../../types/avatar";
+import "./LayeredAvatar.css";
 
 type LayeredAvatarProps = {
   avatar: PlayerAvatar;
@@ -37,9 +38,8 @@ export default function LayeredAvatar({ avatar, className = "" }: LayeredAvatarP
 
   return (
     <figure
-      className={`avatar-stage group/avatar relative isolate mx-auto h-[210px] w-full max-w-[195px] outline-none ${className}`}
-      tabIndex={0}
       aria-label={`${avatar.name} layered avatar`}
+      className={`avatar-stage group/avatar relative isolate mx-auto h-[210px] w-full max-w-[195px] ${className}`}
     >
       <div aria-hidden="true" className="avatar-stage__halo absolute inset-x-[9%] bottom-[12px] top-[18px]" />
       <div aria-hidden="true" className="avatar-stage__well absolute inset-x-[3px] bottom-[12px] top-[12px]" />

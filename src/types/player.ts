@@ -17,9 +17,10 @@ export type PlayerStatusEffect = {
   tone?: "cold" | "arcane" | "wound" | "neutral";
 };
 
-export type PlayerPanelState = {
+export type PlayerState = {
   name: string;
   title: string;
+  stats: Record<string, number>;
   resources: PlayerResource[];
   effects: PlayerStatusEffect[];
 };

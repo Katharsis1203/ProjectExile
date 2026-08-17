@@ -30,7 +30,6 @@ export type PlayerAvatar = {
   layers: AvatarLayer[];
 };
 
-
 export type AvatarPortrait = {
   id: string;
   name: string;

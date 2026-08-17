@@ -33,7 +33,7 @@
     ],
     "explore": [
       {
-        "id": "wolf_track_entry",
+        "id": "wolf_tracks_entry",
         "weight": 1,
         "conditions": [],
         "opens": {

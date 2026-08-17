@@ -4,6 +4,7 @@
   "name": "Cracked Lake",
   "type": "event",
   "cardImage": "ice_cracked_lake.png",
+  "cardColourImage": "ice_cracked_lake_colour.png",
   "nodes": {
     "start": {
       "id": "start",

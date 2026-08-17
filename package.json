@@ -1,12 +1,19 @@
 {
-  "name": "projectexile",
+  "name": "project-exile",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "typecheck": "tsc -b --pretty false",
+    "test": "node --test --experimental-test-isolation=none --experimental-strip-types tests/*.test.ts",
+    "validate:content": "node --test --experimental-test-isolation=none --experimental-strip-types tests/contentValidation.test.ts",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,12 +27,10 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "autoprefixer": "^10.5.0",
     "eslint": "^10.2.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
-    "postcss": "^8.5.12",
     "tailwindcss": "^4.2.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",

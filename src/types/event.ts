@@ -1,68 +1,67 @@
-export type Event = {
-    schemaVersion: number;
-    id: string;
-    type:"event";
-    name:string;
-    tags?:string[];
-    cardImage?: string | null;
-    nodes:EventNode[];
-};
-
-export type EventNode = {
-    id: string;
-    title: string;
-    text: string;
-    image?: string;
-    background?: string;
-    choices: EventChoice[];
-};
-
-export type EventChoice = SimpleChoice | CheckedChoice;
-
-export type SimpleChoice = {
-    type: "simple";
-    text: string;
-    next: string;
-};
-
-export type CheckedChoice = {
-    type:"checked";
-    text:string;
-    statChecks: StatCheck[];
-    weighted: WeightedOutcome;
-};
-
 export type StatCheck = {
   stat: string;
   difficulty: number;
 };
 
-export type WeightedOutcome = {
-  buckets: OutcomeBucket[];
-  weights: Record<string, Record<string, number>>;
-  tiebreak: "first" | "random";
-};
-
 export type OutcomeBucket = {
   id: string;
   threshold: number;
-  flavourText: string;
+  flavourText?: string;
   next: string;
 };
 
-// src/types/event.ts
-
-export type HubEventSlot = {
-  id: string;
-  event?: EventPoolEntry | null;
+export type ThresholdOutcome = {
+  buckets: OutcomeBucket[];
 };
 
-export type EventPoolEntry = {
+type BaseEventChoice = {
+  text: string;
+  returnToHub?: boolean;
+  endEvent?: boolean;
+};
+
+export type SimpleEventChoice = BaseEventChoice & {
+  type: "simple";
+  next?: string;
+};
+
+export type CheckedEventChoice = BaseEventChoice & {
+  type: "checked";
+  statChecks: StatCheck[];
+  weighted?: ThresholdOutcome;
+  next?: string;
+};
+
+export type EventChoice = SimpleEventChoice | CheckedEventChoice;
+
+export type EventNode = {
   id: string;
-  weight: number;
-  conditions: unknown[];
-  opens: {
-    eventFile: string;
-    nodeId: string;
-  };
+  title: string;
+  text: string;
+  image?: string | null;
+  background?: string | null;
+  miscText?: string;
+  choices: EventChoice[];
+};
+
+export type GameEvent = {
+  schemaVersion: number;
+  id: string;
+  type: "event";
+  name: string;
+  tags?: string[];
+  cardImage?: string | null;
+  cardColourImage?: string | null;
+  nodes: Record<string, EventNode>;
+};
+
+export type CheckResult = StatCheck & {
+  statValue: number;
+  roll: number;
+  success: boolean;
+};
+
+export type NodeResolution = {
+  checks: CheckResult[];
+  flavourText?: string;
 };

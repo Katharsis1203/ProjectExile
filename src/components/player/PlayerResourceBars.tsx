@@ -28,7 +28,15 @@ export default function PlayerResourceBars({ resources }: PlayerResourceBarsProp
               </span>
             </div>
 
-            <div className="relative h-[7px] overflow-hidden rounded-full border border-[#6a5945]/12 bg-[#75634d]/12 shadow-[inset_0_1px_2px_rgba(71,54,37,0.12)]">
+            <div
+              role="progressbar"
+              aria-label={resource.label}
+              aria-valuemin={0}
+              aria-valuemax={resource.max}
+              aria-valuenow={Math.max(0, Math.min(resource.max, resource.value))}
+              aria-valuetext={`${resource.value} of ${resource.max}`}
+              className="relative h-[7px] overflow-hidden rounded-full border border-[#6a5945]/12 bg-[#75634d]/12 shadow-[inset_0_1px_2px_rgba(71,54,37,0.12)]"
+            >
               <div
                 className={`h-full rounded-full ${toneClasses[resource.tone]} shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition-[width] duration-300`}
                 style={{ width: `${percent}%` }}

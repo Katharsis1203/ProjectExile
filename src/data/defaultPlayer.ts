@@ -1,13 +1,15 @@
-import type { PlayerPanelState } from "../types/player";
+import type { PlayerState } from "../types/player";
 
-/**
- * Temporary presentation state for the hub player panel.
- * Later this can be replaced by the actual player/game-state store without
- * changing the sidebar components.
- */
-export const DEFAULT_PLAYER_PANEL: PlayerPanelState = {
+/** Temporary local state until a persisted game-state store is introduced. */
+export const DEFAULT_PLAYER: PlayerState = {
   name: "The Exile",
   title: "the Wayfarer",
+  stats: {
+    strength: 7,
+    endurance: 8,
+    perception: 8,
+    survival: 6,
+  },
   resources: [
     { id: "health", label: "Health", value: 82, max: 100, tone: "health" },
     { id: "mana", label: "Mana", value: 58, max: 100, tone: "mana" },

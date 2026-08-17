@@ -1,104 +1,167 @@
-// src/components/node/NodePassage.tsx
-
-import type { CSSProperties } from "react";
-import type { NodeChoice, NodeData, NodeResolution } from "../../types/node";
+import {
+  useEffect,
+  useId,
+  useRef,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
+import { formatStatName, type PlayerStats } from "../../engine/eventRules";
+import type {
+  EventChoice,
+  EventNode,
+  NodeResolution,
+} from "../../types/event";
 import NodeChoiceButton from "./NodeChoiceButton";
+import "./NodePassage.css";
 
 type EventTransition = {
   fromX: number;
   fromY: number;
   fromScaleX: number;
   fromScaleY: number;
-} | null;
+};
 
 type NodePassageProps = {
-  node: NodeData;
+  node: EventNode;
   resolution: NodeResolution | null;
   transition: EventTransition;
   isClosing: boolean;
-  onChoose: (choice: NodeChoice) => void;
+  playerStats: PlayerStats;
+  onChoose: (choice: EventChoice) => void;
   onReturn: () => void;
-  getStatValue: (stat: string) => number;
 };
 
-function formatStat(stat: string) {
-  return stat.charAt(0).toUpperCase() + stat.slice(1);
-}
+const FOCUSABLE_SELECTOR = [
+  "button:not([disabled])",
+  "[href]",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
 
 export default function NodePassage({
   node,
   resolution,
   transition,
   isClosing,
+  playerStats,
   onChoose,
   onReturn,
-  getStatValue,
 }: NodePassageProps) {
-  const choices = node.choices ?? [];
+  const titleId = useId();
+  const descriptionId = useId();
+  const dialogRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const onReturnRef = useRef(onReturn);
+  const isClosingRef = useRef(isClosing);
+
+  useEffect(() => {
+    onReturnRef.current = onReturn;
+    isClosingRef.current = isClosing;
+  }, [isClosing, onReturn]);
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const focusHeading = window.requestAnimationFrame(() => {
+      headingRef.current?.focus();
+    });
+
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.key === "Escape" && !isClosingRef.current) {
+        event.preventDefault();
+        onReturnRef.current();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const focusableElements = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? [],
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements.at(-1);
+
+      if (!firstElement || !lastElement) {
+        event.preventDefault();
+        return;
+      }
+
+      if (
+        event.shiftKey &&
+        (document.activeElement === firstElement ||
+          document.activeElement === headingRef.current)
+      ) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(focusHeading);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+
+      if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) {
+        previouslyFocused.focus();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [node.id]);
+
+  function preventClosingInteraction(event: ReactKeyboardEvent): void {
+    if (isClosing) {
+      event.preventDefault();
+    }
+  }
 
   return (
-    <div className="fixed inset-0 z-[100] grid place-items-center bg-black/35 px-6 py-6 backdrop-blur-sm">
-      <style>{`
-        @keyframes node-enter {
-          from {
-            opacity: 0;
-            transform: translate3d(var(--node-from-x), var(--node-from-y), 0)
-              scale(var(--node-from-scale-x), var(--node-from-scale-y))
-              rotate(-4deg);
-          }
-
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-          }
-        }
-
-        @keyframes node-exit {
-          from {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-          }
-
-          to {
-            opacity: 0;
-            transform: translate3d(var(--node-from-x), var(--node-from-y), 0)
-              scale(var(--node-from-scale-x), var(--node-from-scale-y))
-              rotate(-4deg);
-          }
-        }
-
-        .node-page-enter {
-          animation: node-enter 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        .node-page-exit {
-          animation: node-exit 360ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-      `}</style>
-
-      <main
-        className={[
-          "relative max-h-[92vh] min-h-[720px] w-[min(820px,86vw)] overflow-y-auto bg-[url('/images/parchment.png')] bg-[length:100%_100%] bg-center bg-no-repeat px-10 pb-12 pt-11 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)]",
-          isClosing ? "node-page-exit" : "node-page-enter",
-        ].join(" ")}
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-black/35 p-2 backdrop-blur-sm sm:p-6">
+      <section
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+        onKeyDown={preventClosingInteraction}
+        className={`relative max-h-[92dvh] min-h-[min(720px,92dvh)] w-[min(820px,calc(100vw-1rem))] overflow-y-auto bg-[url('/images/parchment.png')] bg-[length:100%_100%] bg-center bg-no-repeat px-5 pb-8 pt-14 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)] sm:w-[min(820px,92vw)] sm:px-10 sm:pb-12 sm:pt-11 ${isClosing ? "node-page-exit" : "node-page-enter"}`}
         style={
           {
-            "--node-from-x": `${transition?.fromX ?? 0}px`,
-            "--node-from-y": `${transition?.fromY ?? 0}px`,
-            "--node-from-scale-x": transition?.fromScaleX ?? 0.35,
-            "--node-from-scale-y": transition?.fromScaleY ?? 0.25,
+            "--node-from-x": `${transition.fromX}px`,
+            "--node-from-y": `${transition.fromY}px`,
+            "--node-from-scale-x": transition.fromScaleX,
+            "--node-from-scale-y": transition.fromScaleY,
           } as CSSProperties
         }
       >
         <button
           type="button"
+          disabled={isClosing}
           onClick={onReturn}
-          className="absolute right-7 top-6 rounded-md border border-[#cdb890] bg-[#f6ead1] px-3 py-1 text-sm font-semibold transition hover:bg-[#fbf2df]"
+          className="absolute right-5 top-5 rounded-md border border-[#cdb890] bg-[#f6ead1] px-3 py-1 text-sm font-semibold transition hover:bg-[#fbf2df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f4d37] disabled:cursor-wait disabled:opacity-60 sm:right-7 sm:top-6"
         >
           Return
         </button>
 
-        <h1 className="mb-3 pr-24 text-4xl font-semibold tracking-tight">
+        <h1
+          ref={headingRef}
+          id={titleId}
+          tabIndex={-1}
+          className="mb-3 pr-24 text-3xl font-semibold tracking-tight outline-none sm:text-4xl"
+        >
           {node.title}
         </h1>
 
@@ -117,21 +180,23 @@ export default function NodePassage({
         ) : null}
 
         {resolution?.checks.length ? (
-          <div className="mb-2 rounded-sm bg-[rgba(255,248,235,0.72)] px-4 py-3">
+          <div
+            aria-live="polite"
+            className="mb-2 rounded-sm bg-[rgba(255,248,235,0.72)] px-4 py-3"
+          >
             <div className="mb-2 text-xs font-bold uppercase tracking-widest text-[#6f604f]">
               Checks
             </div>
 
             <div className="flex flex-wrap gap-4 text-sm font-bold">
-              {resolution.checks.map((check) => (
-                <span key={`${check.stat}-${check.difficulty}`}>
-                  {formatStat(check.stat)}{" "}
-                  <span
-                    className={
-                      check.success ? "text-green-700" : "text-red-700"
-                    }
-                  >
+              {resolution.checks.map((check, index) => (
+                <span key={`${check.stat}-${check.difficulty}-${index}`}>
+                  {formatStatName(check.stat)}{" "}
+                  <span className={check.success ? "text-green-700" : "text-red-700"}>
                     {check.success ? "Success" : "Fail"}
+                  </span>{" "}
+                  <span className="font-normal text-[#6f604f]">
+                    ({check.statValue} + {check.roll} vs {check.difficulty})
                   </span>
                 </span>
               ))}
@@ -151,29 +216,35 @@ export default function NodePassage({
           </div>
         ) : null}
 
-        <p className="mb-8 text-[1.05rem] leading-7 text-[#4c4032]">
+        <p id={descriptionId} className="mb-8 text-[1.05rem] leading-7 text-[#4c4032]">
           {node.text}
         </p>
 
         <div className="flex flex-col gap-3">
-          {choices.length ? (
-            choices.map((choice, index) => (
+          {node.choices.length > 0 ? (
+            node.choices.map((choice, index) => (
               <NodeChoiceButton
                 key={`${choice.text}-${index}`}
                 choice={choice}
-                getStatValue={getStatValue}
+                playerStats={playerStats}
+                disabled={isClosing}
                 onClick={() => onChoose(choice)}
               />
             ))
           ) : (
             <NodeChoiceButton
-              choice={{ text: "Return to the hub", returnToHub: true }}
-              getStatValue={getStatValue}
+              choice={{
+                type: "simple",
+                text: "Return to the hub",
+                returnToHub: true,
+              }}
+              playerStats={playerStats}
+              disabled={isClosing}
               onClick={onReturn}
             />
           )}
         </div>
-      </main>
+      </section>
     </div>
   );
 }

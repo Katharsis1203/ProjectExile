@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { PlayerStatusEffect } from "../../types/player";
 
@@ -24,6 +24,7 @@ const toneRingClasses: Record<NonNullable<PlayerStatusEffect["tone"]>, string> =
 };
 
 function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
+  const tooltipId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState<TooltipPosition | null>(null);
@@ -65,6 +66,7 @@ function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
   const tooltip = isOpen && position && typeof document !== "undefined"
     ? createPortal(
         <div
+          id={tooltipId}
           role="tooltip"
           className="pointer-events-none fixed z-[9999] w-[188px] rounded-[10px] border border-[#695742]/22 bg-[rgba(247,239,220,0.985)] px-3 py-2.5 text-left shadow-[0_12px_28px_rgba(31,23,16,0.30)] backdrop-blur-[2px]"
           style={{
@@ -95,10 +97,19 @@ function EffectBadge({ effect }: { effect: PlayerStatusEffect }) {
         ref={buttonRef}
         type="button"
         aria-label={`${effect.name}: ${effect.duration}. ${effect.effect}`}
+        aria-describedby={isOpen ? tooltipId : undefined}
+        aria-expanded={isOpen}
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setIsOpen(false)}
+        onClick={() => setIsOpen(true)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            setIsOpen(false);
+          }
+        }}
         className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-[9px] border shadow-[0_2px_5px_rgba(62,46,31,0.12),inset_0_0_0_1px_rgba(255,250,239,0.28)] transition duration-150 hover:-translate-y-0.5 hover:shadow-[0_5px_10px_rgba(62,46,31,0.16)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#76624a]/45 ${toneRingClasses[effect.tone ?? "neutral"]}`}
       >
         <img

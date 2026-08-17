@@ -1,4 +1,4 @@
-import type { Event, EventPoolEntry } from "./event";
+import type { GameEvent } from "./event";
 
 export type HubTagTone = "cold" | "danger" | "neutral" | "night";
 
@@ -69,7 +69,17 @@ export type HubScene = {
   timeOfDay?: string;
   weather?: string;
   temperature?: string;
-  tone?: "day" | "dusk" | "night";
+  tone?: HubLightingEffect;
+};
+
+export type EventPoolEntry = {
+  id: string;
+  weight: number;
+  conditions: unknown[];
+  opens: {
+    eventFile: string;
+    nodeId: string;
+  };
 };
 
 export type Hub = {
@@ -93,5 +103,5 @@ export type Hub = {
 
 export type LoadedHub = {
   hub: Hub;
-  events: Record<string, Event>;
+  events: Record<string, GameEvent>;
 };

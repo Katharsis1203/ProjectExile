@@ -4,6 +4,7 @@
   "name": "Blood in the Snow",
   "type": "event",
   "cardImage": "blood_in_snow.png",
+  "cardColourImage": "blood_in_snow_colour.png",
   "nodes": {
     "start": {
       "id": "start",
