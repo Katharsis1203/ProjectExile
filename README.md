@@ -15,13 +15,17 @@
 
 ---
 
-## About Project Exile
+##About Project Exile
 
-**Project Exile** is a browser-based narrative RPG currently being built around its testing development region, **the Snowlands**. It combines choice-driven passages with RPG systems, exploration, stat checks, resources, inventory, persistent saves, and a hub that gradually opens into a larger game.
+Project Exile is a browser-based, character-focused open-world text RPG currently being developed around its testing region, the Snowlands. It combines authored narrative, exploration and choice-driven passages with RPG systems such as character stats, skill checks, resources, inventory, relationships, and persistent saves.
 
-The goal is not to front-load a character sheet full of systems. Instead, the player learns the world and develops their character over time: early decisions establish their training and possessions, later choices expose personality, strengths and weaknesses, and further systems can emerge as the journey becomes more dangerous.
+The goal is to combine a rich, carefully written narrative experience with highly variable playthroughs. Rather than defining a complete character at the beginning, Project Exile takes a slow-burn approach to progression. Early decisions establish elements such as training, possessions, and background, while personality, strengths, weaknesses, relationships, and more unusual traits emerge gradually through play.
 
-> **Current state:** playable vertical slice / active development. The Snowlands hub, narrative events, menu and persistence systems are in place; broader progression and combat systems are still being expanded.
+The world is intended to feel larger than any single character's journey. Skills, previous choices, discoveries, possessions, relationships, and circumstances can change which opportunities appear and how situations can be approached. Two characters may pass through the same region while experiencing substantially different stories within it.
+
+Project Exile is also being designed with expansion in mind. New locations, characters, quests, encounters, professions, systems, and storylines should be able to grow around the existing world without requiring the game to be rebuilt around them.
+
+Current state: Playable vertical slice / active development. The Snowlands currently serves as the primary development and testing region, with the narrative framework, exploration hub, menu, save system, and foundational character mechanics in place. Broader progression, world content, and combat systems are still being developed.
 
 ## What is in the current build
 
