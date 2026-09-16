@@ -1,4 +1,4 @@
-import { getItemDefinition } from "../data/itemCatalog";
+import { getItemDefinition } from "../data/itemCatalog.ts";
 import type {
   ChoiceRequirement,
   EventChoice,
@@ -75,7 +75,7 @@ export function applyEventEffects(
     return { player, appliedEffects: [] };
   }
 
-  let nextResources = player.resources.map((resource) => ({ ...resource }));
+  const nextResources = player.resources.map((resource) => ({ ...resource }));
   const nextInventory: PlayerInventory = { ...player.inventory };
   const appliedEffects: AppliedEventEffect[] = [];
 
@@ -159,7 +159,7 @@ export function formatAppliedEffect(effect: AppliedEventEffect): string {
   return `${effect.name} ${sign}${effect.amount}`;
 }
 
-export function useInventoryItem(
+export function consumeInventoryItem(
   player: PlayerState,
   itemId: string,
 ): { player: PlayerState; appliedEffects: AppliedEventEffect[] } {

@@ -1,9 +1,9 @@
 # Project Exile
 
 Project Exile is a browser-based narrative game prototype built with React,
-TypeScript, Vite, and Tailwind CSS. The current slice presents the Snowlands
-hub, draws weighted event leads, and lets the player move through data-driven
-event nodes and stat checks.
+TypeScript, Vite, and Tailwind CSS. The current slice includes a title/save
+flow, a data-driven introduction, the Snowlands hub, weighted event leads,
+inventory actions, and persistent player consequences.
 
 ## Requirements
 
@@ -34,21 +34,28 @@ npm run check             # Run the complete verification suite
 
 ```text
 src/
-  components/             Presentational UI grouped by game area
+  app/                    Application screen and transition orchestration
   data/                   Temporary/default player and avatar state
-  engine/                 Pure selection, dice, and scene rules
-  pages/                  Page-level state and interaction orchestration
-  services/content/       Fetching, caching, and runtime content validation
+  engine/                 Pure game rules and reusable event-session workflow
+  features/               UI and orchestration grouped by product feature
+  infrastructure/         Content loading/validation and browser persistence
+  shared/                 Cross-feature hooks and URL utilities
+  styles/                 Application-wide styles and preferences
   types/                  Canonical domain models
 tests/                    Rule and content-graph tests
 public/data/              Author-authored hub and event documents
 public/images/            Runtime artwork
+art/source/unused/         Retained source/alternate artwork not shipped
 ```
 
-`HubPage` owns the current screen session. It delegates deterministic game
-rules to `src/engine`, while the content repository is the only boundary that
-turns untrusted JSON into typed game content. Components consume validated
-models and do not fetch or cast content themselves.
+Feature pages delegate deterministic behavior to `src/engine`. The content
+repository is the only boundary that turns untrusted JSON into typed game
+content, and persistence is isolated behind `src/infrastructure`. Components
+consume validated models and do not fetch or cast content themselves.
+
+Dependencies should point inward: features may use engine, data, types,
+infrastructure, and shared utilities; engine code must remain independent of
+React and browser presentation.
 
 ## Content authoring
 
@@ -74,13 +81,18 @@ validator checks supported schema versions, required fields, unique IDs,
 event/node links, and referenced runtime images.
 
 Pool entries support relative `weight` values. Selection is weighted without
-replacement. `conditions` are reserved for the future game-state evaluator;
-until that evaluator exists, current entries should keep an empty condition
-array.
+replacement. Conditions can inspect player resources and stats, status
+effects, inventory, hub stats, and scene state.
+
+Only assets required at runtime belong in `public/images`, because Vite copies
+that directory directly into every production build. Alternate and source
+artwork should live outside `public`; currently retained alternatives are kept
+under `art/source/unused`.
 
 ## Current scope
 
-This repository is still a vertical slice. The navigation tiles are marked as
-coming soon, player state is temporary local data, and event consequences are
-not yet persisted. Those boundaries are kept explicit so later systems can be
-added without coupling them to the hub presentation.
+This repository is still a vertical slice. Some navigation tiles are marked as
+coming soon, player defaults remain local data, and hub event hands are not yet
+restored across sessions. Save slots persist player state and major story
+location. Those boundaries remain explicit so later systems can be added
+without coupling them to the hub presentation.

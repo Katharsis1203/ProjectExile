@@ -39,6 +39,7 @@ export type ThresholdOutcome = {
 
 type BaseEventChoice = {
   text: string;
+  flavourText?: string;
   returnToHub?: boolean;
   endEvent?: boolean;
   requirements?: ChoiceRequirement[];

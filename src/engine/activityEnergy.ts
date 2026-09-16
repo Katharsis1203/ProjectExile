@@ -1,7 +1,7 @@
 import {
   ACTIVITY_ENERGY_CONFIG,
   ACTIVITY_ENERGY_RECHARGE_MS,
-} from "../data/activityEnergyConfig";
+} from "../data/activityEnergyConfig.ts";
 import type { ActivityEnergyState } from "../types/activityEnergy";
 
 type StoredActivityEnergy = {

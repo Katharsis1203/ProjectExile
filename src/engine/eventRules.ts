@@ -175,6 +175,7 @@ export function resolveChoice(
     return {
       checks: [],
       effects: [...(choice.effects ?? [])],
+      ...(choice.flavourText ? { flavourText: choice.flavourText } : {}),
       ...(choice.next ? { next: choice.next } : {}),
     };
   }
@@ -194,7 +195,9 @@ export function resolveChoice(
       ...(choice.effects ?? []),
       ...(bucket?.effects ?? []),
     ],
-    ...(bucket?.flavourText ? { flavourText: bucket.flavourText } : {}),
+    ...((bucket?.flavourText ?? choice.flavourText)
+      ? { flavourText: bucket?.flavourText ?? choice.flavourText }
+      : {}),
     ...(next ? { next } : {}),
   };
 }

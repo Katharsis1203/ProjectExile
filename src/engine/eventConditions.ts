@@ -4,7 +4,7 @@ import type {
   Hub,
   NumericConditionOperator,
 } from "../types/hub";
-import { normaliseLighting } from "./sceneEffects";
+import { normaliseLighting } from "./sceneEffects.ts";
 
 type ConditionContext = {
   player: PlayerState;

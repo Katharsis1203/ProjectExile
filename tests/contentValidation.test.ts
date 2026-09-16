@@ -11,7 +11,7 @@ import {
   ContentValidationError,
   parseGameEvent,
   parseHub,
-} from "../src/services/content/contentValidation.ts";
+} from "../src/infrastructure/content/contentValidation.ts";
 import type { GameEvent } from "../src/types/event.ts";
 
 const PUBLIC_DIRECTORY = fileURLToPath(new URL("../public", import.meta.url));
@@ -80,6 +80,7 @@ test("all bundled hub and event content is valid and internally connected", asyn
     "images/parch2.png",
     "images/sky.png",
     "images/night.png",
+    "images/backy.png",
     "images/alt/character-btn4.png",
     "images/alt/inventory-btn3.png",
     "images/alt/journal-btn4.png",

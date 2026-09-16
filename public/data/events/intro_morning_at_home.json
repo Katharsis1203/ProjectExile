@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 2,
+  "id": "intro_morning_at_home",
+  "name": "A Morning at Home",
+  "type": "event",
+  "cardImage": null,
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "Morning",
+      "text": "Morning light has begun to find its way through the curtains.\n\nYou wake slowly beneath sheets that had been considerably neater when you went to sleep.\n\nFor a few moments there is nothing demanding your attention.\n\nNo summons. No tutor. No attendant hovering at the bedside with some carefully worded reminder of where you ought already to be.\n\nOnly the quiet of your chambers and the vague awareness that the rest of the palace has been awake for some time.",
+      "image": "intro_morning.png",
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Get up.",
+          "flavourText": "You throw the covers aside before comfort has the opportunity to make a convincing argument.\n\nThere is a day waiting for you.",
+          "next": "the_room"
+        },
+        {
+          "type": "simple",
+          "text": "Stay where you are a little longer.",
+          "flavourText": "You close your eyes again.\n\nNot to sleep.\n\nSimply because there are few luxuries quite so satisfying as knowing you ought to get up and choosing not to.",
+          "next": "the_room"
+        },
+        {
+          "type": "simple",
+          "text": "Call for your attendant.",
+          "flavourText": "You reach for the bell beside the bed.\n\nThere is little reason to begin the morning by making everything more difficult than it needs to be.",
+          "next": "the_room"
+        }
+      ]
+    },
+    "the_room": {
+      "id": "the_room",
+      "title": "The Room",
+      "text": "By the time you are properly awake, sunlight has crept farther across the floor.\n\nYour chambers look much as they always do.\n\nBooks lie where you left them. A half-finished cup from the previous evening has somehow escaped collection. Fresh flowers have appeared on the table near the balcony doors without your noticing anyone bring them.\n\nSomeone has already opened the inner shutters.\n\nBeyond the closed balcony doors comes the distant murmur of the palace beginning its day.\n\nYou stretch.\n\nWhatever you decide to do with the morning, you should probably look presentable first.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Continue.",
+          "next": "the_mirror"
+        }
+      ]
+    },
+    "the_mirror": {
+      "id": "the_mirror",
+      "title": "The Mirror",
+      "text": "The mirror is less forgiving than the morning light.\n\nYour hair has made several decisions during the night without consulting you.\n\nBrushes, pins, powders and pigments occupy their usual places nearby.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Take your time with it.",
+          "flavourText": "There is nothing wrong with wanting to look good.\n\nHair first. Then the smaller details.\n\nNothing excessive, but enough that the finished result looks deliberate rather than merely acceptable.",
+          "next": "a_knock_at_the_door"
+        },
+        {
+          "type": "simple",
+          "text": "Make yourself respectable and leave it there.",
+          "flavourText": "A little effort is expected.\n\nThere is no need to dedicate half the morning to it.",
+          "next": "a_knock_at_the_door"
+        },
+        {
+          "type": "simple",
+          "text": "Leave most of it alone.",
+          "flavourText": "You correct the worst of your hair and decide the rest can remain as it is.\n\nAnyone distressed by the result is free to look elsewhere.",
+          "next": "a_knock_at_the_door"
+        }
+      ]
+    },
+    "a_knock_at_the_door": {
+      "id": "a_knock_at_the_door",
+      "title": "A Knock at the Door",
+      "text": "You have barely finished when someone knocks.\n\nAn attendant enters after receiving permission, carrying a tray of fruit, bread and a small pot of something hot.\n\nShe takes one look at the state of the room.\n\nThen at you.\n\nThen back at the room.\n\nThere is the faintest suggestion of judgement in the pause.\n\n\"You are awake.\"\n\nIt is delivered with such perfect neutrality that it somehow sounds accusatory.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "\"An impressive observation.\"",
+          "flavourText": "Her expression remains perfectly composed.\n\nAlmost.",
+          "next": "breakfast"
+        },
+        {
+          "type": "simple",
+          "text": "\"Good morning.\"",
+          "flavourText": "She bows her head and begins setting out breakfast.",
+          "next": "breakfast"
+        },
+        {
+          "type": "simple",
+          "text": "Say nothing and let her work.",
+          "flavourText": "There is no particular need to turn every morning interaction into conversation.",
+          "next": "breakfast"
+        }
+      ]
+    },
+    "breakfast": {
+      "id": "breakfast",
+      "title": "Breakfast",
+      "text": "Breakfast is light.\n\nYou eat near the open window while the attendant quietly restores some degree of order to the room behind you.\n\nThe palace is louder now.\n\nFootsteps pass beyond your door. Somewhere farther down the corridor someone is speaking far too energetically for this hour.\n\nYou catch fragments as servants move past.\n\nYour father is already occupied.\n\nThe council assembled early.\n\nSomeone has requested additional space in the training court.\n\nAnd apparently your magical tutor has already asked whether you intend to appear today.\n\nNone of this constitutes a summons.\n\nNot yet.\n\nYou finish the last of the fruit.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Continue.",
+          "next": "dressing"
+        }
+      ]
+    },
+    "dressing": {
+      "id": "dressing",
+      "title": "Dressing",
+      "text": "Clothing has already been laid out for you.\n\nThe selection is elegant, carefully matched and entirely appropriate for the King's daughter.\n\nWhich is precisely why someone else chose it.\n\nThere are alternatives in the wardrobe.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Wear what has been prepared.",
+          "flavourText": "It was chosen well.\n\nThere is little virtue in rejecting something simply because another person had the good sense to select it first.",
+          "next": "the_corridor"
+        },
+        {
+          "type": "simple",
+          "text": "Change part of it.",
+          "flavourText": "You keep the better pieces and discard the rest.\n\nSomething presentable without being unnecessarily elaborate.",
+          "next": "the_corridor"
+        },
+        {
+          "type": "simple",
+          "text": "Choose something easier to move in.",
+          "flavourText": "You ignore the prepared clothes altogether.\n\nThe alternative is simpler, closer fitting and considerably less likely to become irritating if the day turns active.\n\nIt will do.",
+          "next": "the_corridor"
+        }
+      ]
+    },
+    "the_corridor": {
+      "id": "the_corridor",
+      "title": "The Corridor",
+      "text": "Outside your chambers, the palace is fully awake.\n\nServants move between rooms carrying linens, documents and breakfast trays. Two officials stop speaking as you approach, bow, then resume their conversation once you have passed.\n\nA pair of younger relatives hurry across an adjoining corridor before someone calls after them.\n\nYou know these halls well enough to walk them without thinking.\n\nPast the inner court.\n\nAlong the colonnade.\n\nThen toward the doors overlooking the eastern gardens.\n\nNothing unusual has happened.\n\nThere is something pleasant about that.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Step outside.",
+          "next": "the_balcony"
+        }
+      ]
+    },
+    "the_balcony": {
+      "id": "the_balcony",
+      "title": "The Balcony",
+      "text": "You push open the doors.\n\nThe world expands.\n\nMorning lies across the city beyond the royal compound.\n\nPale buildings descend through terraces, courtyards and formal gardens. Water catches the light between columns. Ancient compounds sit behind high walls softened by trees cultivated over generations.\n\nBeyond them all rises the forest.\n\nNot a scattering of woodland around a city.\n\nThe forest.\n\nIt surrounds everything, swallowing the horizon in green.\n\nYou have stood here countless times.\n\nUsually you scarcely think about the view.\n\nIt is simply home.\n\nFor a while you rest your hands against the stone railing and watch the city below.\n\nEventually, the question of what to do with yourself returns.\n\nYour father is sitting with his councillors.\n\nThe training courts will be active by now.\n\nYour magical instruction remains available, whether or not your tutor's patience does.\n\nFor once, the morning is largely yours.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Decide how to spend the morning.",
+          "next": "choose_the_day"
+        }
+      ]
+    },
+    "choose_the_day": {
+      "id": "choose_the_day",
+      "title": "How Will You Spend the Morning?",
+      "text": "The choice is yours.",
+      "image": null,
+      "background": null,
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Join your father at council.",
+          "flavourText": "You have spent enough time hearing what will someday be expected of you.\n\nIt might be useful to watch how those expectations are actually fulfilled.",
+          "next": "council_branch"
+        },
+        {
+          "type": "simple",
+          "text": "Go to the training court.",
+          "flavourText": "There are few problems improved by neglecting practice.\n\nAnd considerably fewer instructors willing to accept that as an excuse.",
+          "next": "martial_branch"
+        },
+        {
+          "type": "simple",
+          "text": "Continue your magical studies.",
+          "flavourText": "Progress has an irritating habit of requiring effort.\n\nYour tutor would certainly agree.",
+          "next": "magic_branch"
+        }
+      ]
+    },
+    "council_branch": {
+      "id": "council_branch",
+      "title": "The Council",
+      "text": "The council branch begins here.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "martial_branch": {
+      "id": "martial_branch",
+      "title": "The Training Court",
+      "text": "The martial branch begins here.",
+      "image": null,
+      "background": null,
+      "choices": []
+    },
+    "magic_branch": {
+      "id": "magic_branch",
+      "title": "Magical Instruction",
+      "text": "The magic branch begins here.",
+      "image": null,
+      "background": null,
+      "choices": []
+    }
+  }
+}
