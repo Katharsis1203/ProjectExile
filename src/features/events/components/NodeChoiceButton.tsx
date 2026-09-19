@@ -33,10 +33,13 @@ export default function NodeChoiceButton({
     (requirement) => !isChoiceRequirementMet(requirement, playerInventory),
   );
   const isDisabled = disabled || missingRequirement;
+  const endsEvent = choice.endEvent || choice.returnToHub ||
+    (!choice.next && !(choice.type === "checked" && choice.weighted?.buckets.length));
 
   return (
     <button
       type="button"
+      data-click-sound={endsEvent ? "event-drop" : "passage-choice"}
       disabled={isDisabled}
       onClick={onClick}
       className={`group w-full rounded-md border px-3.5 py-2.5 text-left text-[0.94rem] shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f4d37] ${

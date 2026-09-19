@@ -1,3 +1,33 @@
+.node-passage-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.node-passage-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+@media (min-width: 900px) {
+  .node-passage-scroll > [data-wide-passage] {
+    width: min(960px, 92vw);
+  }
+
+  .node-narrative-columns {
+    column-count: 2;
+    column-gap: 2.5rem;
+    column-rule: 1px solid rgba(159, 139, 106, 0.3);
+    column-fill: balance;
+  }
+
+  .node-narrative-columns > p {
+    break-inside: avoid-column;
+    orphans: 3;
+    widows: 3;
+  }
+}
+
 @keyframes node-enter {
   from {
     opacity: 0;

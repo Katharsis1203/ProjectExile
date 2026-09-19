@@ -63,6 +63,9 @@ export default function IntroPage({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [interactionError, setInteractionError] = useState<string | null>(null);
   const [loadAttempt, setLoadAttempt] = useState(0);
+  const hasReachedEndpoint = Boolean(
+    session && (session.isComplete || session.node.choices.length === 0),
+  );
 
   useEffect(() => {
     if (session || loadError) {
@@ -198,7 +201,7 @@ export default function IntroPage({
           playerStats={player.stats}
           playerInventory={player.inventory}
           onChoose={handleChoose}
-          onReturn={session.isComplete ? onComplete : onBackToTitle}
+          onReturn={hasReachedEndpoint ? onComplete : onBackToTitle}
         />
       ) : null}
 

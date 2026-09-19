@@ -168,6 +168,7 @@ function SettingToggle({
 }
 
 export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
+  const [settingsTab, setSettingsTab] = useState<"general" | "audio">("general");
   const [view, setView] = useState<MenuView>("main");
   const [saves, setSaves] = useState(() => listSaveSlots());
   const [selectedSlot, setSelectedSlot] = useState<SaveSlotId>(() => {
@@ -528,7 +529,7 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
           ) : null}
 
           {view === "settings" ? (
-            <div className="title-submenu title-submenu--settings">
+            <div className="title-submenu title-submenu--settings" data-click-sound="settings">
               {renderPanelHeader(
                 "Preferences",
                 "Settings",
@@ -536,69 +537,129 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
               )}
 
               <div className="title-settings">
-                <div className="title-settings__row">
-                  <div>
-                    <strong>Text size</strong>
-                    <small>Story and interface text scale</small>
-                  </div>
-                  <SettingChoice
-                    value={settings.textSize}
-                    options={[
-                      { value: "small", label: "Small" },
-                      { value: "standard", label: "Standard" },
-                      { value: "large", label: "Large" },
-                    ]}
-                    onChange={(textSize) => updateSettings({ ...settings, textSize })}
-                  />
+                <div className="title-settings__choices mb-4" role="tablist" aria-label="Settings categories">
+                  {(["general", "audio"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      id={`settings-tab-${tab}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={settingsTab === tab}
+                      aria-controls={`settings-panel-${tab}`}
+                      tabIndex={settingsTab === tab ? 0 : -1}
+                      className={settingsTab === tab ? "is-selected" : ""}
+                      onClick={() => setSettingsTab(tab)}
+                      onKeyDown={(event) => {
+                        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                        event.preventDefault();
+                        const next = event.key === "Home" ? "general" : event.key === "End" ? "audio" : tab === "general" ? "audio" : "general";
+                        setSettingsTab(next);
+                        document.getElementById(`settings-tab-${next}`)?.focus();
+                      }}
+                    >
+                      {tab === "general" ? "General" : "Audio"}
+                    </button>
+                  ))}
                 </div>
 
-                <div className="title-settings__row">
-                  <div>
-                    <strong>Interface scale</strong>
-                    <small>Adjust the overall UI density</small>
-                  </div>
-                  <SettingChoice
-                    value={settings.interfaceScale}
-                    options={[
-                      { value: "compact", label: "Compact" },
-                      { value: "standard", label: "Standard" },
-                      { value: "large", label: "Large" },
-                    ]}
-                    onChange={(interfaceScale) => updateSettings({ ...settings, interfaceScale })}
-                  />
+                <div role="tabpanel" id="settings-panel-audio" aria-labelledby="settings-tab-audio" hidden={settingsTab !== "audio"}>
+                  {([
+                    ["musicVolume", "Music", "Background music level"],
+                    ["uiVolume", "UI clicks", "Menus, settings and other buttons"],
+                    ["eventHoverVolume", "Event hover", "Hovering over a hub event card"],
+                    ["eventDealVolume", "Event dealing", "New event cards appearing in the hub"],
+                    ["eventClickVolume", "Event opening", "Opening a hub event card"],
+                    ["eventDropVolume", "Event finishing", "Final choices and returning from a passage"],
+                    ["passageVolume", "Passage choices", "Choosing an action within a passage"],
+                  ] as const).map(([key, label, description]) => (
+                    <div key={key} className="title-settings__row">
+                      <div>
+                        <label htmlFor={`audio-${key}`}><strong>{label}</strong></label>
+                        <small>{description}</small>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          id={`audio-${key}`}
+                          type="range"
+                          min="0"
+                          max="100"
+                          step="1"
+                          value={settings[key]}
+                          aria-valuetext={`${settings[key]}%`}
+                          className="w-36 cursor-pointer accent-[#54402a]"
+                          onChange={(event) => updateSettings({ ...settings, [key]: Number(event.target.value) })}
+                        />
+                        <output htmlFor={`audio-${key}`} className="w-10 text-right text-sm tabular-nums">{settings[key]}%</output>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="title-settings__row">
-                  <div>
-                    <strong>Reduced motion</strong>
-                    <small>Shorten or remove large page and scene animations</small>
+                <div role="tabpanel" id="settings-panel-general" aria-labelledby="settings-tab-general" hidden={settingsTab !== "general"}>
+                  <div className="title-settings__row">
+                    <div>
+                      <strong>Text size</strong>
+                      <small>Story and interface text scale</small>
+                    </div>
+                    <SettingChoice
+                      value={settings.textSize}
+                      options={[
+                        { value: "small", label: "Small" },
+                        { value: "standard", label: "Standard" },
+                        { value: "large", label: "Large" },
+                      ]}
+                      onChange={(textSize) => updateSettings({ ...settings, textSize })}
+                    />
                   </div>
-                  <SettingToggle
-                    checked={settings.reducedMotion}
-                    onChange={(reducedMotion) => updateSettings({ ...settings, reducedMotion })}
-                  />
-                </div>
 
-                <div className="title-settings__row">
-                  <div>
-                    <strong>Snow effects</strong>
-                    <small>Show drifting snow layers in snowy scenes</small>
+                  <div className="title-settings__row">
+                    <div>
+                      <strong>Interface scale</strong>
+                      <small>Adjust the overall UI density</small>
+                    </div>
+                    <SettingChoice
+                      value={settings.interfaceScale}
+                      options={[
+                        { value: "compact", label: "Compact" },
+                        { value: "standard", label: "Standard" },
+                        { value: "large", label: "Large" },
+                      ]}
+                      onChange={(interfaceScale) => updateSettings({ ...settings, interfaceScale })}
+                    />
                   </div>
-                  <SettingToggle
-                    checked={settings.snowEffects}
-                    onChange={(snowEffects) => updateSettings({ ...settings, snowEffects })}
-                  />
-                </div>
 
-                <div className="title-settings__row">
-                  <div>
-                    <strong>High contrast</strong>
-                    <small>Strengthen panel borders and text contrast</small>
+                  <div className="title-settings__row">
+                    <div>
+                      <strong>Reduced motion</strong>
+                      <small>Shorten or remove large page and scene animations</small>
+                    </div>
+                    <SettingToggle
+                      checked={settings.reducedMotion}
+                      onChange={(reducedMotion) => updateSettings({ ...settings, reducedMotion })}
+                    />
                   </div>
-                  <SettingToggle
-                    checked={settings.highContrast}
-                    onChange={(highContrast) => updateSettings({ ...settings, highContrast })}
-                  />
+
+                  <div className="title-settings__row">
+                    <div>
+                      <strong>Snow effects</strong>
+                      <small>Show drifting snow layers in snowy scenes</small>
+                    </div>
+                    <SettingToggle
+                      checked={settings.snowEffects}
+                      onChange={(snowEffects) => updateSettings({ ...settings, snowEffects })}
+                    />
+                  </div>
+
+                  <div className="title-settings__row">
+                    <div>
+                      <strong>High contrast</strong>
+                      <small>Strengthen panel borders and text contrast</small>
+                    </div>
+                    <SettingToggle
+                      checked={settings.highContrast}
+                      onChange={(highContrast) => updateSettings({ ...settings, highContrast })}
+                    />
+                  </div>
                 </div>
 
                 <button

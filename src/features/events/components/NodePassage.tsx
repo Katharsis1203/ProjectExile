@@ -48,6 +48,11 @@ type NodePassageProps = {
   onReturn: () => void;
 };
 
+const TWO_COLUMN_WORD_THRESHOLD = 80;
+
+function isLongNarrative(text: string = ""): boolean {
+  return (text.match(/\S+/g)?.length ?? 0) >= TWO_COLUMN_WORD_THRESHOLD;
+}
 
 function FormattedNarrativeText({
   text,
@@ -66,7 +71,10 @@ function FormattedNarrativeText({
     .filter(Boolean);
 
   return (
-    <div id={id} className={className}>
+    <div
+      id={id}
+      className={`${className}${isLongNarrative(text) ? " node-narrative-columns" : ""}`}
+    >
       {paragraphs.map((paragraph, index) => (
         <p
           key={`${index}-${paragraph.slice(0, 24)}`}
@@ -96,6 +104,8 @@ export default function NodePassage({
   const descriptionId = useId();
   const dialogRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const hasLongNarrative = [node.text, node.miscText, resolution?.flavourText]
+    .some((text) => isLongNarrative(text));
   const [expandedCheck, setExpandedCheck] = useState<{
     passageKey: string;
     index: number;
@@ -124,15 +134,16 @@ export default function NodePassage({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/35 px-2 pb-2 pt-2 backdrop-blur-sm sm:px-6 sm:pb-4 sm:pt-3">
+    <div className="node-passage-scroll fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/35 px-2 pb-2 pt-2 backdrop-blur-sm sm:px-6 sm:pb-4 sm:pt-3">
       <section
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
+        data-wide-passage={hasLongNarrative || undefined}
         onKeyDown={preventClosingInteraction}
-        className={`relative max-h-[calc(100dvh-1rem)] min-h-[min(720px,calc(100dvh-1rem))] w-[min(760px,calc(100vw-1rem))] overflow-y-auto bg-[length:100%_100%] bg-center bg-no-repeat px-6 pb-9 pt-14 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)] sm:w-[min(760px,90vw)] sm:px-12 sm:pb-11 sm:pt-12 ${isClosing ? "node-page-exit" : "node-page-enter"}`}
+        className={`relative min-h-[min(680px,calc(100dvh-1rem))] w-[min(700px,calc(100vw-1rem))] bg-[length:100%_100%] bg-center bg-no-repeat px-8 pb-12 pt-16 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)] sm:w-[min(700px,88vw)] sm:px-14 sm:pb-14 sm:pt-14 ${isClosing ? "node-page-exit" : "node-page-enter"}`}
         style={
           {
             "--node-from-x": `${transition.fromX}px`,
@@ -148,7 +159,8 @@ export default function NodePassage({
             type="button"
             disabled={isClosing}
             onClick={onReturn}
-            className="absolute right-6 top-5 rounded-md border border-[#cdb890] bg-[#f6ead1] px-2.5 py-1 text-[13px] font-semibold transition hover:bg-[#fbf2df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f4d37] disabled:cursor-wait disabled:opacity-60 sm:right-9 sm:top-7"
+            data-click-sound="event-drop"
+            className="absolute right-8 top-6 rounded-md border border-[#cdb890] bg-[#f6ead1] px-2.5 py-1 text-[13px] font-semibold transition hover:bg-[#fbf2df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f4d37] disabled:cursor-wait disabled:opacity-60 sm:right-14 sm:top-7"
           >
             Return
           </button>
@@ -173,7 +185,7 @@ export default function NodePassage({
                 : getEventImageUrl(node.image)
             }
             alt={node.title}
-            className="mx-auto mb-4 max-h-[245px] w-[78%] rounded-md border border-[#9f8b6a] object-cover shadow-sm"
+            className="mb-6 max-h-[220px] w-full rounded-md border border-[#9f8b6a] object-cover shadow-sm"
           />
         ) : null}
 

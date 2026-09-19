@@ -1,5 +1,6 @@
-import { useId } from "react";
-import { getEventImageUrl } from "../../../shared/lib/publicAssetUrl";
+import { useId, useRef } from "react";
+import { getEventImageUrl, getPublicAssetUrl } from "../../../shared/lib/publicAssetUrl";
+import { useAudioVolume } from "../../../shared/hooks/useAudioVolume";
 import "./HubEventCard.css";
 
 type HubEventCardProps = {
@@ -10,6 +11,7 @@ type HubEventCardProps = {
   hook?: string;
   detail?: string;
   animationDelay: number;
+  dealSound: string;
   onClick: (element: HTMLElement) => void;
 };
 
@@ -21,8 +23,12 @@ export default function HubEventCard({
   hook,
   detail,
   animationDelay,
+  dealSound,
   onClick,
 }: HubEventCardProps) {
+  const dealAudioRef = useRef<HTMLAudioElement>(null);
+  const hasPlayedDealRef = useRef(false);
+  useAudioVolume(dealAudioRef, "eventDealVolume");
   const svgId = useId().replace(/:/g, "");
   const maskId = `hub-event-mask-${svgId}`;
   const gooFilterId = `hub-event-goo-${svgId}`;
@@ -35,7 +41,15 @@ export default function HubEventCard({
     <article
       className="hub-event-deal-in group relative h-full w-full"
       style={{ animationDelay: `${animationDelay}ms` }}
+      onAnimationStart={(event) => {
+        if (event.target !== event.currentTarget || event.animationName !== "hub-event-deal-in" || hasPlayedDealRef.current) return;
+        hasPlayedDealRef.current = true;
+        void dealAudioRef.current?.play().catch(() => {
+          // A blocked sound must not prevent the card from appearing.
+        });
+      }}
     >
+      <audio ref={dealAudioRef} src={getPublicAssetUrl(`audio/${dealSound}`)} preload="auto" />
       <button
         type="button"
         data-event-card

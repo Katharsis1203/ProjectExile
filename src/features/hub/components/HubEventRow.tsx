@@ -1,10 +1,12 @@
+import { useRef } from "react";
+import { useAudioVolume } from "../../../shared/hooks/useAudioVolume";
 import type {
   CheckedEventChoice,
   EventNode,
   GameEvent,
 } from "../../../types/event";
 import type { EventPoolEntry } from "../../../types/hub";
-import { getImageUrl } from "../../../shared/lib/publicAssetUrl";
+import { getImageUrl, getPublicAssetUrl } from "../../../shared/lib/publicAssetUrl";
 import HubEventCard from "./HubEventCard";
 
 type HubEventRowProps = {
@@ -45,8 +47,29 @@ export default function HubEventRow({
   events,
   onPlayEvent,
 }: HubEventRowProps) {
+  const hoverAudioRef = useRef<HTMLAudioElement>(null);
+  useAudioVolume(hoverAudioRef, "eventHoverVolume");
+
   return (
-    <section aria-label="Available leads" className="min-h-0">
+    <section
+      aria-label="Available leads"
+      className="min-h-0"
+      onPointerOver={(event) => {
+        if (event.pointerType === "touch" || !(event.target instanceof Element)) return;
+        const card = event.target.closest("[data-event-card]");
+        if (!card || card.matches(":disabled") ||
+          card.closest('[aria-disabled="true"], [inert]') ||
+          (event.relatedTarget instanceof Node && card.contains(event.relatedTarget))) return;
+
+        const audio = hoverAudioRef.current;
+        if (!audio) return;
+        audio.currentTime = 0;
+        void audio.play().catch(() => {
+          // Browsers may block sound until the first user interaction.
+        });
+      }}
+    >
+      <audio ref={hoverAudioRef} src={getPublicAssetUrl("audio/event-hover1.mp3")} preload="auto" />
       <div className="grid min-h-0 w-full grid-cols-1 gap-4 px-1 py-1 sm:grid-cols-3 xl:h-full xl:items-stretch">
         {eventSlots.map((entry, index) => {
           const event = entry ? events?.[entry.opens.eventFile] : null;
@@ -66,6 +89,7 @@ export default function HubEventRow({
                   categoryLabel={event.tags?.[0] ?? "Local lead"}
                   detail={getEventDetail(openingNode)}
                   animationDelay={index * 140}
+                  dealSound={index % 2 === 0 ? "event-deal1.mp3" : "event-deal2.mp3"}
                   onClick={(element) => onPlayEvent(entry, element, index)}
                   {...(openingNode?.text ? { hook: openingNode.text } : {})}
                 />

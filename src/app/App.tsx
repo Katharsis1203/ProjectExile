@@ -10,6 +10,8 @@ import {
   type SaveSlotId,
 } from "../infrastructure/persistence/gamePersistence";
 import HubPage from "../features/hub/HubPage";
+import BackgroundMusic from "./BackgroundMusic";
+import ClickSound from "./ClickSound";
 
 type AppScreen = "title" | "intro" | "hub";
 
@@ -188,6 +190,8 @@ export default function App() {
 
   return (
     <>
+      <BackgroundMusic />
+      <ClickSound />
       {content}
       <div
         aria-hidden="true"

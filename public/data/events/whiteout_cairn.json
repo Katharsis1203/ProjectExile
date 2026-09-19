@@ -11,7 +11,7 @@
     "start": {
       "id": "start",
       "title": "A Cairn in the White",
-      "text": "The snowfall thickens until road, ditch, and field become one pale blur. Ahead, a shoulder-high cairn emerges from the white, its top stone marked with three shallow cuts.",
+      "text": "The snowfall thickens until road, ditch, and field become one pale blur. Ahead, a shoulder-high cairn emerges from the white, its top stone marked with three shallow cuts.\n\nYou stop close enough to touch the stones. Ice fills the spaces between them, but the cuts on the uppermost slab have been cleared by hand. Whoever passed this way last thought the markings worth keeping visible. A scrap of red cord hangs beneath the slab, snapping sharply whenever the wind changes.\n\nTwo hollows lead away from the cairn. One climbs toward a ridge you can no longer see; the other slips between dark shapes that might be trees. Snow is already filling your footprints behind you. Before choosing either route, you brush the stone clean and try to make sense of what the previous traveller wanted you to know.",
       "choices": [
         {
           "type": "checked",
@@ -60,7 +60,7 @@
     "shelter": {
       "id": "shelter",
       "title": "The Lee-Side Track",
-      "text": "Behind the cairn, a narrow cut descends between black pines. Halfway down you find an old shepherd shelter: dry, empty, and stocked with a fist-sized bundle of split kindling someone left for the next traveller.",
+      "text": "Behind the cairn, a narrow cut descends between black pines. Halfway down you find an old shepherd shelter: dry, empty, and stocked with a fist-sized bundle of split kindling someone left for the next traveller.\n\nThe doorway is low enough that you must duck beneath its lintel. Inside, the wind becomes a distant scraping along the roof. A flat stone serves as a seat beside the cold hearth, and someone has swept the floor clear of needles. There are no blankets or provisions, but the walls hold back the weather.\n\nYou set your hands beneath your arms and wait for feeling to return. Through a gap beside the door, you can see the next marker tied to a branch farther down the slope. The route continues toward the settlement. For the first time since the snow thickened, you know where your next few steps will lead.",
       "choices": [
         {
           "type": "simple",
@@ -85,7 +85,7 @@
     "lower_track": {
       "id": "lower_track",
       "title": "A Safer Guess",
-      "text": "The lower track is sheltered from the worst of the wind. It bends farther than expected, but the snow underfoot is firm and old boot prints confirm that others have used it.",
+      "text": "The lower track is sheltered from the worst of the wind. It bends farther than expected, but the snow underfoot is firm and old boot prints confirm that others have used it.\n\nYou follow the prints beneath branches bowed low with snow. Whoever made them walked steadily, pausing only where a fallen trunk narrows the path. You step into the same shallow depressions and keep one hand against the trees whenever the wind sends another veil of white across your face.\n\nAfter a while, the track reaches a broken fence. Beyond it, the slope falls toward a road marked by dark wooden posts. It is a longer return than you intended, and you still cannot say what the third cut on the cairn meant. Even so, there is comfort in seeing a path made by people who expected to come back.",
       "choices": [
         {
           "type": "simple",
@@ -97,7 +97,7 @@
     "wrong_turn": {
       "id": "wrong_turn",
       "title": "No Landmark Behind You",
-      "text": "The cairn vanishes almost immediately. Minutes later the ground steepens beneath your feet and the wind begins striking from the wrong side. You can force ahead or admit the mistake.",
+      "text": "The cairn vanishes almost immediately. Minutes later the ground steepens beneath your feet and the wind begins striking from the wrong side. You can force ahead or admit the mistake.\n\nYou turn to look for your footprints. The nearest remain clear, but those farther back have softened into dents that could just as easily have been made by wind. Somewhere below, loose stones tumble together with a dry clicking sound. You cannot tell whether you disturbed them or something else is moving on the slope.\n\nA dark line appears ahead whenever the snow thins. It might be the edge of the forest, close enough to offer shelter if you can reach it. Behind you, the cairn should still be within walking distance. You pull your collar higher and weigh the effort of pressing on against the risk of losing the way back entirely.",
       "choices": [
         {
           "type": "checked",

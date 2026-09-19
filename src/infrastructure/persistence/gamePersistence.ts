@@ -24,6 +24,13 @@ export type TextSizeSetting = "small" | "standard" | "large";
 export type InterfaceScaleSetting = "compact" | "standard" | "large";
 
 export type GameSettings = {
+  musicVolume: number;
+  uiVolume: number;
+  eventClickVolume: number;
+  eventDropVolume: number;
+  eventDealVolume: number;
+  eventHoverVolume: number;
+  passageVolume: number;
   textSize: TextSizeSetting;
   interfaceScale: InterfaceScaleSetting;
   reducedMotion: boolean;
@@ -33,8 +40,16 @@ export type GameSettings = {
 
 const SAVE_PREFIX = "project-exile.save.v1.slot.";
 const SETTINGS_KEY = "project-exile.settings.v1";
+export const GAME_SETTINGS_CHANGED = "project-exile:settings-changed";
 
 export const DEFAULT_GAME_SETTINGS: GameSettings = {
+  musicVolume: 30,
+  uiVolume: 50,
+  eventClickVolume: 50,
+  eventDropVolume: 50,
+  eventDealVolume: 50,
+  eventHoverVolume: 50,
+  passageVolume: 30,
   textSize: "standard",
   interfaceScale: "standard",
   reducedMotion: false,
@@ -154,6 +169,34 @@ function normaliseSettings(value: unknown): GameSettings {
 
   const settings = value as Partial<GameSettings>;
   return {
+    musicVolume:
+      typeof settings.musicVolume === "number" && Number.isFinite(settings.musicVolume)
+        ? Math.min(100, Math.max(0, settings.musicVolume))
+        : DEFAULT_GAME_SETTINGS.musicVolume,
+    uiVolume:
+      typeof settings.uiVolume === "number" && Number.isFinite(settings.uiVolume)
+        ? Math.min(100, Math.max(0, settings.uiVolume))
+        : DEFAULT_GAME_SETTINGS.uiVolume,
+    eventClickVolume:
+      typeof settings.eventClickVolume === "number" && Number.isFinite(settings.eventClickVolume)
+        ? Math.min(100, Math.max(0, settings.eventClickVolume))
+        : DEFAULT_GAME_SETTINGS.eventClickVolume,
+    eventDropVolume:
+      typeof settings.eventDropVolume === "number" && Number.isFinite(settings.eventDropVolume)
+        ? Math.min(100, Math.max(0, settings.eventDropVolume))
+        : DEFAULT_GAME_SETTINGS.eventDropVolume,
+    eventDealVolume:
+      typeof settings.eventDealVolume === "number" && Number.isFinite(settings.eventDealVolume)
+        ? Math.min(100, Math.max(0, settings.eventDealVolume))
+        : DEFAULT_GAME_SETTINGS.eventDealVolume,
+    eventHoverVolume:
+      typeof settings.eventHoverVolume === "number" && Number.isFinite(settings.eventHoverVolume)
+        ? Math.min(100, Math.max(0, settings.eventHoverVolume))
+        : DEFAULT_GAME_SETTINGS.eventHoverVolume,
+    passageVolume:
+      typeof settings.passageVolume === "number" && Number.isFinite(settings.passageVolume)
+        ? Math.min(100, Math.max(0, settings.passageVolume))
+        : DEFAULT_GAME_SETTINGS.passageVolume,
     textSize:
       settings.textSize === "small" ||
       settings.textSize === "large" ||
@@ -201,6 +244,7 @@ export function applyGameSettings(settings: GameSettings): void {
   root.dataset.exileMotion = settings.reducedMotion ? "reduced" : "full";
   root.dataset.exileSnow = settings.snowEffects ? "on" : "off";
   root.dataset.exileContrast = settings.highContrast ? "high" : "standard";
+  window.dispatchEvent(new CustomEvent<GameSettings>(GAME_SETTINGS_CHANGED, { detail: settings }));
 }
 
 export function saveGameSettings(settings: GameSettings): void {
