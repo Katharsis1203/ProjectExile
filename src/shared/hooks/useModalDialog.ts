@@ -9,6 +9,9 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(",");
 
+let scrollLockCount = 0;
+let unlockedOverflow = "";
+
 type UseModalDialogOptions = {
   containerRef: RefObject<HTMLElement | null>;
   initialFocusRef: RefObject<HTMLElement | null>;
@@ -32,7 +35,8 @@ export function useModalDialog({
 
   useEffect(() => {
     const previouslyFocused = document.activeElement;
-    const previousOverflow = document.body.style.overflow;
+    if (scrollLockCount === 0) unlockedOverflow = document.body.style.overflow;
+    scrollLockCount += 1;
     document.body.style.overflow = "hidden";
 
     const focusFrame = window.requestAnimationFrame(() => {
@@ -40,6 +44,7 @@ export function useModalDialog({
     });
 
     function handleKeyDown(event: KeyboardEvent): void {
+      if (containerRef.current?.closest("[inert]")) return;
       if (event.key === "Escape" && escapeEnabledRef.current) {
         const handleEscape = onEscapeRef.current;
         if (handleEscape) {
@@ -81,7 +86,8 @@ export function useModalDialog({
     return () => {
       window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
+      scrollLockCount -= 1;
+      if (scrollLockCount === 0) document.body.style.overflow = unlockedOverflow;
 
       if (
         previouslyFocused instanceof HTMLElement &&

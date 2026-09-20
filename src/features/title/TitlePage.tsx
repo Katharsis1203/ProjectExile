@@ -27,6 +27,9 @@ import "./TitlePage.css";
 type TitlePageProps = {
   onNewGame: (slotId: SaveSlotId, saveName: string) => void;
   onLoadGame: (save: GameSave) => void;
+  initialView?: "main" | "settings" | "load";
+  onBack?: () => void;
+  onSaveGame?: (slotId: SaveSlotId) => void;
 };
 
 type MenuView = "main" | "new" | "load" | "settings" | "credits";
@@ -167,11 +170,12 @@ function SettingToggle({
   );
 }
 
-export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
+export default function TitlePage({ onNewGame, onLoadGame, initialView = "main", onBack, onSaveGame }: TitlePageProps) {
   const [settingsTab, setSettingsTab] = useState<"general" | "audio">("general");
-  const [view, setView] = useState<MenuView>("main");
+  const [view, setView] = useState<MenuView>(initialView);
   const [saves, setSaves] = useState(() => listSaveSlots());
   const [selectedSlot, setSelectedSlot] = useState<SaveSlotId>(() => {
+    if (initialView === "load") return getMostRecentSave()?.slotId ?? 1;
     const firstEmpty = SAVE_SLOT_IDS.find((slotId) => !listSaveSlots()[slotId - 1]);
     return firstEmpty ?? 1;
   });
@@ -179,6 +183,7 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
   const [renameValue, setRenameValue] = useState("");
   const [confirmOverwrite, setConfirmOverwrite] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [saveNotice, setSaveNotice] = useState("");
   const [settings, setSettings] = useState<GameSettings>(() => loadGameSettings());
   const firstMenuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -200,6 +205,7 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
   }, [view]);
 
   useEffect(() => {
+    if (onBack) return;
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key !== "Escape" || view === "main") return;
       event.preventDefault();
@@ -210,7 +216,7 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [view]);
+  }, [view, onBack]);
 
   function refreshSaves(): void {
     setSaves(listSaveSlots());
@@ -247,6 +253,7 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
   }
 
   function handleSelectSlot(slotId: SaveSlotId): void {
+    setSaveNotice("");
     setSelectedSlot(slotId);
     setConfirmOverwrite(false);
     setConfirmDelete(false);
@@ -288,9 +295,9 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
           ref={firstMenuButtonRef}
           type="button"
           className="title-submenu__back"
-          onClick={() => setView("main")}
+          onClick={() => onBack ? onBack() : setView("main")}
         >
-          <span aria-hidden="true">‹</span> Main menu
+          <span aria-hidden="true">‹</span> {onBack ? "Back to game" : "Main menu"}
         </button>
         <div className="title-submenu__eyebrow">{eyebrow}</div>
         <h2>{title}</h2>
@@ -452,8 +459,8 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
             <div className="title-submenu">
               {renderPanelHeader(
                 "Archive",
-                "Load game",
-                "Select a journey to continue, rename it, or clear the slot.",
+                onSaveGame ? "Save / Load" : "Load game",
+                onSaveGame ? "Save your journey or load a saved slot. Hub saves resume at the hub." : "Select a journey to continue, rename it, or clear the slot.",
               )}
 
               <div className="title-submenu__body">
@@ -470,6 +477,23 @@ export default function TitlePage({ onNewGame, onLoadGame }: TitlePageProps) {
                 </div>
 
                 <div className="title-slot-detail">
+                  {onSaveGame ? (
+                    <>
+                      <button type="button" className="title-submenu__action" onClick={() => {
+                        if (selectedSave && !confirmOverwrite) {
+                          setConfirmOverwrite(true);
+                          return;
+                        }
+                        onSaveGame(selectedSlot);
+                        refreshSaves();
+                        setConfirmOverwrite(false);
+                        setSaveNotice(`Saved to slot 0${selectedSlot}.`);
+                      }}>
+                        {selectedSave && confirmOverwrite ? "Confirm overwrite" : "Save to this slot"}
+                      </button>
+                      <p role="status" className="mt-2 text-sm">{saveNotice}</p>
+                    </>
+                  ) : null}
                   {selectedSave ? (
                     <>
                       <div className="title-save-preview">

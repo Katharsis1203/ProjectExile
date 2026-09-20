@@ -12,6 +12,8 @@ import {
 import HubPage from "../features/hub/HubPage";
 import BackgroundMusic from "./BackgroundMusic";
 import ClickSound from "./ClickSound";
+import BackgroundMenu from "./BackgroundMenu";
+import GameMenuOverlay from "./GameMenuOverlay";
 
 type AppScreen = "title" | "intro" | "hub";
 
@@ -21,6 +23,8 @@ const OUTER_FADE_FALLBACK_MS = 1800;
 
 export default function App() {
   const [screen, setScreen] = useState<AppScreen>("title");
+  const [menuPanel, setMenuPanel] = useState<"settings" | "load" | null>(null);
+  const [gameInstance, setGameInstance] = useState(0);
   const [player, setPlayer] = useState(createDefaultPlayer);
   const [activeSlotId, setActiveSlotId] = useState<SaveSlotId | null>(null);
   const [activeSaveName, setActiveSaveName] = useState("");
@@ -105,6 +109,8 @@ export default function App() {
       beginOuterTransition(
         "intro",
         () => {
+          setMenuPanel(null);
+          setGameInstance((value) => value + 1);
           const newPlayer = createDefaultPlayer();
           setPlayer(newPlayer);
           setActiveSlotId(slotId);
@@ -129,6 +135,8 @@ export default function App() {
       beginOuterTransition(
         nextScreen,
         () => {
+          setMenuPanel(null);
+          setGameInstance((value) => value + 1);
           setPlayer(save.player);
           setActiveSlotId(save.slotId);
           setActiveSaveName(save.saveName);
@@ -142,6 +150,7 @@ export default function App() {
   );
 
   const returnToTitle = useCallback(() => {
+    setMenuPanel(null);
     beginOuterTransition("title");
   }, [beginOuterTransition]);
 
@@ -192,7 +201,32 @@ export default function App() {
     <>
       <BackgroundMusic />
       <ClickSound />
-      {content}
+      <div key={gameInstance} inert={menuPanel !== null} aria-hidden={menuPanel ? true : undefined}>
+        {content}
+      </div>
+      <BackgroundMenu
+        key={`${screen}-${menuPanel ?? "closed"}`}
+        enabled={screen !== "title" && !menuPanel && !outerTransitionActive}
+        onSettings={() => setMenuPanel("settings")}
+        onSaveLoad={() => setMenuPanel("load")}
+        onExit={returnToTitle}
+      />
+      {menuPanel ? (
+        <GameMenuOverlay
+          initialView={menuPanel}
+          onBack={() => setMenuPanel(null)}
+          onNewGame={startNewGame}
+          onLoadGame={loadGame}
+          onSaveGame={(slotId) => {
+            if (screen === "title") return;
+            writeSaveSlot(slotId, activeSaveName, player, {
+              screen,
+              ...(screen === "intro" ? { introNodeId, introComplete } : {}),
+            });
+            setActiveSlotId(slotId);
+          }}
+        />
+      ) : null}
       <div
         aria-hidden="true"
         className={`app-outer-transition${

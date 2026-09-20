@@ -1,6 +1,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -48,11 +49,8 @@ type NodePassageProps = {
   onReturn: () => void;
 };
 
-const TWO_COLUMN_WORD_THRESHOLD = 80;
-
-function isLongNarrative(text: string = ""): boolean {
-  return (text.match(/\S+/g)?.length ?? 0) >= TWO_COLUMN_WORD_THRESHOLD;
-}
+const TWO_COLUMN_HEIGHT_THRESHOLD = 240;
+const SINGLE_COLUMN_PAGE_WIDTH = 700;
 
 function FormattedNarrativeText({
   text,
@@ -73,7 +71,8 @@ function FormattedNarrativeText({
   return (
     <div
       id={id}
-      className={`${className}${isLongNarrative(text) ? " node-narrative-columns" : ""}`}
+      data-narrative
+      className={className}
     >
       {paragraphs.map((paragraph, index) => (
         <p
@@ -104,8 +103,6 @@ export default function NodePassage({
   const descriptionId = useId();
   const dialogRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const hasLongNarrative = [node.text, node.miscText, resolution?.flavourText]
-    .some((text) => isLongNarrative(text));
   const [expandedCheck, setExpandedCheck] = useState<{
     passageKey: string;
     index: number;
@@ -115,6 +112,72 @@ export default function NodePassage({
     .join("|") ?? "unresolved"}`;
   const expandedCheckIndex =
     expandedCheck?.passageKey === passageKey ? expandedCheck.index : null;
+
+  useLayoutEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    let frame = 0;
+    let disposed = false;
+
+    function measureNarratives() {
+      if (!dialog || disposed) return;
+      const canUseColumns = window.matchMedia("(min-width: 900px)").matches;
+      const style = getComputedStyle(dialog);
+      const contentWidth = SINGLE_COLUMN_PAGE_WIDTH -
+        parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      let needsWidePage = false;
+
+      for (const narrative of dialog.querySelectorAll<HTMLElement>("[data-narrative]")) {
+        let needsColumns = false;
+        if (canUseColumns) {
+          // Measure at the original single-column width so widening the page
+          // cannot change the decision and cause the layout to oscillate.
+          const measurement = narrative.cloneNode(true) as HTMLElement;
+          measurement.removeAttribute("id");
+          measurement.removeAttribute("data-narrative");
+          measurement.setAttribute("aria-hidden", "true");
+          measurement.inert = true;
+          measurement.classList.remove("node-narrative-columns");
+          Object.assign(measurement.style, {
+            position: "absolute",
+            visibility: "hidden",
+            pointerEvents: "none",
+            top: "0",
+            left: "0",
+            width: `${contentWidth}px`,
+            margin: "0",
+            columnCount: "1",
+          });
+          dialog.append(measurement);
+          needsColumns = measurement.offsetHeight >= TWO_COLUMN_HEIGHT_THRESHOLD;
+          measurement.remove();
+        }
+        narrative.classList.toggle("node-narrative-columns", needsColumns);
+        needsWidePage ||= needsColumns;
+      }
+      dialog.toggleAttribute("data-wide-passage", needsWidePage);
+    }
+
+    function scheduleMeasurement() {
+      if (disposed) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measureNarratives);
+    }
+
+    measureNarratives();
+    const observer = new ResizeObserver(scheduleMeasurement);
+    observer.observe(dialog);
+    window.addEventListener("resize", scheduleMeasurement);
+    document.fonts.addEventListener("loadingdone", scheduleMeasurement);
+    void document.fonts.ready.then(scheduleMeasurement);
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", scheduleMeasurement);
+      document.fonts.removeEventListener("loadingdone", scheduleMeasurement);
+    };
+  }, [node.text, node.miscText, resolution?.flavourText]);
 
   useModalDialog({
     containerRef: dialogRef,
@@ -141,7 +204,6 @@ export default function NodePassage({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
-        data-wide-passage={hasLongNarrative || undefined}
         onKeyDown={preventClosingInteraction}
         className={`relative min-h-[min(680px,calc(100dvh-1rem))] w-[min(700px,calc(100vw-1rem))] bg-[length:100%_100%] bg-center bg-no-repeat px-8 pb-12 pt-16 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)] sm:w-[min(700px,88vw)] sm:px-14 sm:pb-14 sm:pt-14 ${isClosing ? "node-page-exit" : "node-page-enter"}`}
         style={
