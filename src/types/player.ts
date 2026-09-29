@@ -1,3 +1,4 @@
+import type { CharacterData } from "./character";
 export type PlayerResourceTone =
   | "health"
   | "mana"
@@ -17,6 +18,7 @@ export type PlayerStatusEffect = {
   name: string;
   icon: string;
   duration: string;
+  remainingTurns?: number | null;
   effect: string;
   tone?: "cold" | "arcane" | "wound" | "neutral";
 };
@@ -26,6 +28,7 @@ export type PlayerInventory = Record<string, number>;
 export type PlayerState = {
   name: string;
   title: string;
+  character: CharacterData;
   stats: Record<string, number>;
   resources: PlayerResource[];
   effects: PlayerStatusEffect[];
@@ -51,4 +54,6 @@ export type AppliedItemEffect = {
   after: number;
 };
 
-export type AppliedEventEffect = AppliedResourceEffect | AppliedItemEffect;
+export type AppliedCharacterEffect = { type: "character"; name: string; amount: number; before: number; after: number };
+
+export type AppliedEventEffect = AppliedResourceEffect | AppliedItemEffect | AppliedCharacterEffect;

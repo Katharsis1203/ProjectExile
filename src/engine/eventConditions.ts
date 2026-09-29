@@ -1,3 +1,4 @@
+import { getEffectiveStats, meetsCharacterCondition } from "./character.ts";
 import type { PlayerState } from "../types/player";
 import type {
   EventCondition,
@@ -67,13 +68,15 @@ export function isEventConditionMet(
   { player, hub }: ConditionContext,
 ): boolean {
   switch (condition.type) {
+    case "feat": case "flag": case "questStage": case "questDecision":
+      return meetsCharacterCondition(condition, player);
     case "playerResource": {
       const actual = getResourceValue(player, condition.resource);
       return actual !== null && compareNumber(actual, condition.operator, condition.value);
     }
 
     case "playerStat": {
-      const actual = player.stats[normaliseKey(condition.stat)];
+      const actual = getEffectiveStats(player)[normaliseKey(condition.stat)];
       return typeof actual === "number" && compareNumber(actual, condition.operator, condition.value);
     }
 

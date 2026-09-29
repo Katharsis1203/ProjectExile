@@ -379,6 +379,15 @@
   animation: title-page-arrive 520ms ease-out both;
 }
 
+.intro-page {
+  background: #10233b var(--intro-sky-image) center / cover no-repeat;
+}
+
+.intro-page .node-passage-scroll {
+  background-color: transparent;
+  backdrop-filter: none;
+}
+
 .title-page__ornament {
   position: absolute;
   inset: 0;

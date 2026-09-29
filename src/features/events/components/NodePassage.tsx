@@ -1,7 +1,6 @@
 import {
   useEffect,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -18,7 +17,7 @@ import type {
   EventNode,
   NodeResolution,
 } from "../../../types/event";
-import type { AppliedEventEffect, PlayerInventory } from "../../../types/player";
+import type { AppliedEventEffect, PlayerInventory, PlayerState } from "../../../types/player";
 import { useModalDialog } from "../../../shared/hooks/useModalDialog";
 import {
   getEventImageUrl,
@@ -26,6 +25,7 @@ import {
   getPublicAssetUrl,
 } from "../../../shared/lib/publicAssetUrl";
 import NodeChoiceButton from "./NodeChoiceButton";
+import PassageEffectToasts from "./PassageEffectToasts";
 import "./NodePassage.css";
 
 type EventTransition = {
@@ -43,14 +43,12 @@ type NodePassageProps = {
   allowReturn: boolean;
   transition: EventTransition;
   isClosing: boolean;
+  player: PlayerState;
   playerStats: PlayerStats;
   playerInventory: PlayerInventory;
   onChoose: (choice: EventChoice) => void;
   onReturn: () => void;
 };
-
-const TWO_COLUMN_HEIGHT_THRESHOLD = 240;
-const SINGLE_COLUMN_PAGE_WIDTH = 700;
 
 function FormattedNarrativeText({
   text,
@@ -71,7 +69,6 @@ function FormattedNarrativeText({
   return (
     <div
       id={id}
-      data-narrative
       className={className}
     >
       {paragraphs.map((paragraph, index) => (
@@ -94,6 +91,7 @@ export default function NodePassage({
   allowReturn,
   transition,
   isClosing,
+  player,
   playerStats,
   playerInventory,
   onChoose,
@@ -112,72 +110,6 @@ export default function NodePassage({
     .join("|") ?? "unresolved"}`;
   const expandedCheckIndex =
     expandedCheck?.passageKey === passageKey ? expandedCheck.index : null;
-
-  useLayoutEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    let frame = 0;
-    let disposed = false;
-
-    function measureNarratives() {
-      if (!dialog || disposed) return;
-      const canUseColumns = window.matchMedia("(min-width: 900px)").matches;
-      const style = getComputedStyle(dialog);
-      const contentWidth = SINGLE_COLUMN_PAGE_WIDTH -
-        parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-      let needsWidePage = false;
-
-      for (const narrative of dialog.querySelectorAll<HTMLElement>("[data-narrative]")) {
-        let needsColumns = false;
-        if (canUseColumns) {
-          // Measure at the original single-column width so widening the page
-          // cannot change the decision and cause the layout to oscillate.
-          const measurement = narrative.cloneNode(true) as HTMLElement;
-          measurement.removeAttribute("id");
-          measurement.removeAttribute("data-narrative");
-          measurement.setAttribute("aria-hidden", "true");
-          measurement.inert = true;
-          measurement.classList.remove("node-narrative-columns");
-          Object.assign(measurement.style, {
-            position: "absolute",
-            visibility: "hidden",
-            pointerEvents: "none",
-            top: "0",
-            left: "0",
-            width: `${contentWidth}px`,
-            margin: "0",
-            columnCount: "1",
-          });
-          dialog.append(measurement);
-          needsColumns = measurement.offsetHeight >= TWO_COLUMN_HEIGHT_THRESHOLD;
-          measurement.remove();
-        }
-        narrative.classList.toggle("node-narrative-columns", needsColumns);
-        needsWidePage ||= needsColumns;
-      }
-      dialog.toggleAttribute("data-wide-passage", needsWidePage);
-    }
-
-    function scheduleMeasurement() {
-      if (disposed) return;
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(measureNarratives);
-    }
-
-    measureNarratives();
-    const observer = new ResizeObserver(scheduleMeasurement);
-    observer.observe(dialog);
-    window.addEventListener("resize", scheduleMeasurement);
-    document.fonts.addEventListener("loadingdone", scheduleMeasurement);
-    void document.fonts.ready.then(scheduleMeasurement);
-    return () => {
-      disposed = true;
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("resize", scheduleMeasurement);
-      document.fonts.removeEventListener("loadingdone", scheduleMeasurement);
-    };
-  }, [node.text, node.miscText, resolution?.flavourText]);
 
   useModalDialog({
     containerRef: dialogRef,
@@ -205,17 +137,18 @@ export default function NodePassage({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         onKeyDown={preventClosingInteraction}
-        className={`relative min-h-[min(680px,calc(100dvh-1rem))] w-[min(700px,calc(100vw-1rem))] bg-[length:100%_100%] bg-center bg-no-repeat px-8 pb-12 pt-16 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)] sm:w-[min(700px,88vw)] sm:px-14 sm:pb-14 sm:pt-14 ${isClosing ? "node-page-exit" : "node-page-enter"}`}
+        className={`node-passage-sheet relative min-h-[min(680px,calc(100dvh-1rem))] w-[min(700px,calc(100vw-1rem))] px-8 pb-12 pt-16 text-[#3b2b1d] drop-shadow-[0_24px_45px_rgba(0,0,0,0.45)] sm:w-[min(700px,88vw)] sm:px-14 sm:pb-14 sm:pt-14 ${isClosing ? "node-page-exit" : "node-page-enter"}`}
         style={
           {
             "--node-from-x": `${transition.fromX}px`,
             "--node-from-y": `${transition.fromY}px`,
             "--node-from-scale-x": transition.fromScaleX,
             "--node-from-scale-y": transition.fromScaleY,
-            backgroundImage: `url("${getImageUrl("parchment.png")}")`,
+            "--node-parchment-image": `url("${getImageUrl("parchment.png")}")`,
           } as CSSProperties
         }
       >
+        <PassageEffectToasts effects={consequences} />
         {allowReturn ? (
           <button
             type="button"
@@ -247,7 +180,7 @@ export default function NodePassage({
                 : getEventImageUrl(node.image)
             }
             alt={node.title}
-            className="mb-6 max-h-[220px] w-full rounded-md border border-[#9f8b6a] object-cover shadow-sm"
+            className="node-passage-image mb-6 rounded-md border border-[#9f8b6a] shadow-sm"
           />
         ) : null}
 
@@ -296,6 +229,7 @@ export default function NodePassage({
               <p className={resolution?.checks.length ? "mt-0.5" : ""}>
                 <span className="font-medium text-[#776856]">Effects: </span>
                 {consequences.map((effect, index) => {
+                  if (effect.type === "character") return <span key={`character-${index}`}>{index > 0 ? " · " : ""}{effect.name}{effect.amount ? ` ${effect.amount > 0 ? "+" : ""}${effect.amount}` : ""}</span>;
                   const isGain = effect.amount > 0;
                   const sign = isGain ? "+" : "";
                   const tone = effect.type === "item"
@@ -324,7 +258,7 @@ export default function NodePassage({
 
             {expandedCheckIndex !== null && resolution?.checks[expandedCheckIndex] ? (() => {
               const check = resolution.checks[expandedCheckIndex];
-              const chance = getCheckChance(check, playerStats);
+              const chance = getCheckChance(check, { [check.stat.trim().toLowerCase()]: check.statValue });
               const total = check.statValue + check.roll;
               const palette = getStatPalette(check.stat);
 
@@ -371,6 +305,7 @@ export default function NodePassage({
                 text: "Return to the hub",
                 returnToHub: true,
               }}
+              player={player}
               playerStats={playerStats}
               playerInventory={playerInventory}
               disabled={isClosing}
@@ -381,7 +316,8 @@ export default function NodePassage({
               <NodeChoiceButton
                 key={`${choice.text}-${index}`}
                 choice={choice}
-                playerStats={playerStats}
+                player={player}
+              playerStats={playerStats}
                 playerInventory={playerInventory}
                 disabled={isClosing}
                 onClick={() => onChoose(choice)}
@@ -394,6 +330,7 @@ export default function NodePassage({
                 text: "Return to the hub",
                 returnToHub: true,
               }}
+              player={player}
               playerStats={playerStats}
               playerInventory={playerInventory}
               disabled={isClosing}

@@ -1,3 +1,4 @@
+import type { SavedHub, SavedPassage } from "../types/session";
 import { useCallback, useEffect, useRef, useState } from "react";
 import IntroPage from "../features/intro/IntroPage";
 import TitlePage from "../features/title/TitlePage";
@@ -29,6 +30,8 @@ export default function App() {
   const [activeSlotId, setActiveSlotId] = useState<SaveSlotId | null>(null);
   const [activeSaveName, setActiveSaveName] = useState("");
   const [introNodeId, setIntroNodeId] = useState(INTRO_OPENING_NODE);
+  const [introSnapshot, setIntroSnapshot] = useState<SavedPassage | null>(null);
+  const [hubSnapshot, setHubSnapshot] = useState<SavedHub | null>(null);
   const [introComplete, setIntroComplete] = useState(false);
   const [outerTransitionActive, setOuterTransitionActive] = useState(false);
   const transitionLockedRef = useRef(false);
@@ -99,10 +102,10 @@ export default function App() {
     writeSaveSlot(activeSlotId, activeSaveName, player, {
       screen,
       ...(screen === "intro"
-        ? { introNodeId, introComplete }
-        : {}),
+        ? { introNodeId, introComplete, ...(introSnapshot ? { introSession: introSnapshot } : {}) }
+        : { ...(hubSnapshot ? { hubSession: hubSnapshot } : {}) }),
     });
-  }, [activeSaveName, activeSlotId, introComplete, introNodeId, player, screen]);
+  }, [activeSaveName, activeSlotId, introComplete, introNodeId, introSnapshot, hubSnapshot, player, screen]);
 
   const startNewGame = useCallback(
     (slotId: SaveSlotId, saveName: string) => {
@@ -111,6 +114,8 @@ export default function App() {
         () => {
           setMenuPanel(null);
           setGameInstance((value) => value + 1);
+          setIntroSnapshot(null);
+          setHubSnapshot(null);
           const newPlayer = createDefaultPlayer();
           setPlayer(newPlayer);
           setActiveSlotId(slotId);
@@ -137,6 +142,8 @@ export default function App() {
         () => {
           setMenuPanel(null);
           setGameInstance((value) => value + 1);
+          setIntroSnapshot(save.resume.introSession ?? null);
+          setHubSnapshot(save.resume.hubSession ?? null);
           setPlayer(save.player);
           setActiveSlotId(save.slotId);
           setActiveSaveName(save.saveName);
@@ -179,6 +186,8 @@ export default function App() {
       <IntroPage
         player={player}
         setPlayer={setPlayer}
+        initialSnapshot={introSnapshot}
+        onSnapshot={setIntroSnapshot}
         initialNodeId={introNodeId}
         initialComplete={introComplete}
         onProgress={handleIntroProgress}
@@ -190,6 +199,8 @@ export default function App() {
   } else {
     content = (
       <HubPage
+        initialSnapshot={hubSnapshot}
+        onSnapshot={setHubSnapshot}
         player={player}
         setPlayer={setPlayer}
         onReady={revealScreen}
@@ -221,7 +232,7 @@ export default function App() {
             if (screen === "title") return;
             writeSaveSlot(slotId, activeSaveName, player, {
               screen,
-              ...(screen === "intro" ? { introNodeId, introComplete } : {}),
+              ...(screen === "intro" ? { introNodeId, introComplete, ...(introSnapshot ? { introSession: introSnapshot } : {}) } : { ...(hubSnapshot ? { hubSession: hubSnapshot } : {}) }),
             });
             setActiveSlotId(slotId);
           }}

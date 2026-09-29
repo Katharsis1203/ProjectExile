@@ -1,3 +1,5 @@
+import type { SavedPassage } from "../../types/session";
+import { getEffectiveStats } from "../../engine/character";
 import {
   useEffect,
   useRef,
@@ -9,6 +11,8 @@ import {
 import {
   advanceEventSession,
   createPassageSession,
+  restorePassage,
+  savePassage,
   type PassageSession,
 } from "../../engine/eventSession";
 import { loadEvent } from "../../infrastructure/content/contentRepository";
@@ -17,7 +21,7 @@ import type { PlayerState } from "../../types/player";
 import { getImageUrl } from "../../shared/lib/publicAssetUrl";
 import NodePassage from "../events/components/NodePassage";
 
-const INTRO_EVENT_FILE = "intro_morning_at_home.json";
+const INTRO_EVENT_FILE = "dream_intro.json";
 const INTRO_OPENING_NODE = "start";
 
 const INTRO_TRANSITION = {
@@ -36,6 +40,8 @@ type IntroPageProps = {
   onBackToTitle: () => void;
   onComplete: () => void;
   onReady?: () => void;
+  initialSnapshot?: SavedPassage | null;
+  onSnapshot?: (snapshot: SavedPassage) => void;
 };
 
 function getErrorMessage(error: unknown): string {
@@ -51,11 +57,14 @@ export default function IntroPage({
   onBackToTitle,
   onComplete,
   onReady,
+  initialSnapshot = null,
+  onSnapshot,
 }: IntroPageProps) {
-  const titlePageStyle = {
-    "--title-night-image": `url("${getImageUrl("night.png")}")`,
+  const introPageStyle = {
+    "--intro-sky-image": `url("${getImageUrl("night.png")}")`,
     "--parchment-image": `url("${getImageUrl("parchment.png")}")`,
   } as CSSProperties;
+  const initialSnapshotRef = useRef(initialSnapshot);
   const initialNodeIdRef = useRef(initialNodeId);
   const initialCompleteRef = useRef(initialComplete);
   const [gameEvent, setGameEvent] = useState<GameEvent | null>(null);
@@ -66,6 +75,10 @@ export default function IntroPage({
   const hasReachedEndpoint = Boolean(
     session && (session.isComplete || session.node.choices.length === 0),
   );
+
+  useEffect(() => {
+    if (session) onSnapshot?.(savePassage(session));
+  }, [session, onSnapshot]);
 
   useEffect(() => {
     if (session || loadError) {
@@ -90,7 +103,7 @@ export default function IntroPage({
 
         setGameEvent(event);
         setSession(
-          createPassageSession(openingNode, {
+          (initialSnapshotRef.current && restorePassage(event, initialSnapshotRef.current)) || createPassageSession(openingNode, {
             isComplete: initialCompleteRef.current,
             canReturn:
               openingNode.id === INTRO_OPENING_NODE &&
@@ -145,12 +158,7 @@ export default function IntroPage({
 
   if (loadError) {
     return (
-      <main className="title-page" style={titlePageStyle}>
-        <div className="title-page__scene" aria-hidden="true">
-          <img src={getImageUrl("backy.png")} alt="" className="title-page__scene-image" />
-          <div className="title-page__scene-wash" />
-          <div className="title-page__scene-vignette" />
-        </div>
+      <main className="title-page intro-page" style={introPageStyle}>
 
         <section className="relative z-10 mx-auto mt-[12vh] w-[min(620px,92vw)] rounded-md border border-[#b9a37f]/60 bg-[#f4e6c9]/95 p-7 text-[#3b2b1d] shadow-2xl">
           <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#75624c]">
@@ -182,12 +190,7 @@ export default function IntroPage({
   }
 
   return (
-    <main className="title-page" style={titlePageStyle}>
-      <div className="title-page__scene" aria-hidden="true">
-        <img src={getImageUrl("backy.png")} alt="" className="title-page__scene-image" />
-        <div className="title-page__scene-wash" />
-        <div className="title-page__scene-vignette" />
-      </div>
+    <main className="title-page intro-page" style={introPageStyle}>
 
       {session ? (
         <NodePassage
@@ -195,10 +198,11 @@ export default function IntroPage({
           resolution={session.resolution}
           consequences={session.appliedEffects}
           isComplete={session.isComplete}
-          allowReturn={session.canReturn}
+          allowReturn={hasReachedEndpoint || session.canReturn}
           transition={INTRO_TRANSITION}
           isClosing={false}
-          playerStats={player.stats}
+          player={player}
+          playerStats={getEffectiveStats(player)}
           playerInventory={player.inventory}
           onChoose={handleChoose}
           onReturn={hasReachedEndpoint ? onComplete : onBackToTitle}

@@ -21,6 +21,7 @@ type InventoryPageProps = {
   onUseItem: (itemId: string) => void;
   onDiscardItem: (itemId: string) => void;
   onClose: () => void;
+  onEquipment: () => void;
 };
 
 type InventoryEntry = {
@@ -78,6 +79,7 @@ export default function InventoryPage({
   onUseItem,
   onDiscardItem,
   onClose,
+  onEquipment,
 }: InventoryPageProps) {
   const pageRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -169,6 +171,7 @@ export default function InventoryPage({
             Return
           </button>
         </header>
+        <div className="my-3 flex items-center justify-between gap-3 text-sm"><span>{Object.keys(player.character.instances).length} personal equipment items · {Object.keys(player.character.equipment).length} equipped</span><button type="button" onClick={onEquipment} className="rounded border border-[#b9a078] px-3 py-1.5">Manage equipment</button></div>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#7b664d]/14 pb-3">
           <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Inventory categories">
@@ -209,7 +212,7 @@ export default function InventoryPage({
             <span className="font-bold uppercase tracking-[0.16em] text-[#75634f]">Last action</span>
             {recentEffects.map((effect, index) => (
               <span
-                key={`${effect.type}-${effect.type === "item" ? effect.item : effect.resource}-${index}`}
+                key={`${effect.type}-${effect.type === "item" ? effect.item : effect.type === "resource" ? effect.resource : effect.name}-${index}`}
                 className={`rounded-full border px-2 py-0.5 font-semibold ${
                   effect.amount >= 0
                     ? "border-[#718260]/25 bg-[#718260]/8 text-[#526147]"

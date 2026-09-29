@@ -1,0 +1,26 @@
+.equipment-navigation { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+.equipment-navigation > span { margin-left: auto; }
+.equipment-layout { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,.85fr) minmax(0,1fr); gap: 18px; }
+.equipment-layout > section { min-width: 0; }
+.equipment-portrait { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #796650; font: italic 16px Georgia,serif; }
+.equipment-portrait img { width: 62px; height: 78px; object-fit: cover; border: 1px solid #a18a6370; border-radius: 6px; }
+.equipment-slots { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+.equipment-slot, .equipment-item { display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: left; border: 1px solid #a18a6360; border-radius: 5px; padding: 10px; background: #fff9eb77; cursor: pointer; font-size: 13px; }
+.equipment-slot { min-height: 90px; }
+.equipment-slot-empty { border-style: dashed; }
+.equipment-slot-label { text-transform: uppercase; font-size: 10px; letter-spacing: .08em; color: #796650; }
+.equipment-slot small, .equipment-item small, .equipment-item span { color: #796650; font-size: 11px; }
+.equipment-slot[aria-pressed="true"], .equipment-item[aria-pressed="true"] { border: 1px solid #725b3b; background: #e5d3af99; box-shadow: inset 3px 0 #725b3b; }
+.equipment-slot:hover, .equipment-item:hover { background: #e5d3af66; }
+.equipment-items { display: grid; gap: 7px; margin: 12px 0; }
+.equipment-bag, .equipment-details { border-left: 1px solid #a18a6340; padding-left: 16px; }
+.equipment-details { font-size: 13px; }
+.equipment-details p { margin: 8px 0; line-height: 1.5; }
+.equipment-details h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #796650; margin: 20px 0 8px; }
+.equipment-bonuses > span { display: inline-block; font-size: 12px; background: #69745412; padding: 4px 8px; margin: 0 5px 5px 0; border-radius: 4px; }
+.equipment-gain { color: #52653d; }
+.equipment-loss { color: #943f36; }
+.equipment-apply { margin-top: 16px; width: 100%; }
+.equipment-feedback { min-height: 22px; margin-top: 18px; font-size: 12px; color: #52653d; }
+@media (max-width: 850px) { .equipment-layout { grid-template-columns: repeat(2,minmax(0,1fr)); } .equipment-details { grid-column: 1 / -1; border-left: 0; border-top: 1px solid #a18a6340; padding: 16px 0 0; } }
+@media (max-width: 520px) { .equipment-layout { grid-template-columns: 1fr; } .equipment-bag { border-left: 0; border-top: 1px solid #a18a6340; padding: 16px 0 0; } }

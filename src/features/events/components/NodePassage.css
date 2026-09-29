@@ -1,3 +1,16 @@
+.node-passage-sheet {
+  isolation: isolate;
+}
+
+.node-passage-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--node-parchment-image) center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
 .node-passage-scroll {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -9,23 +22,13 @@
   height: 0;
 }
 
-@media (min-width: 900px) {
-  .node-passage-scroll > [data-wide-passage] {
-    width: min(960px, 92vw);
-  }
-
-  .node-narrative-columns {
-    column-count: 2;
-    column-gap: 2.5rem;
-    column-rule: 1px solid rgba(159, 139, 106, 0.3);
-    column-fill: balance;
-  }
-
-  .node-narrative-columns > p {
-    break-inside: avoid-column;
-    orphans: 3;
-    widows: 3;
-  }
+.node-passage-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+  object-position: center;
 }
 
 @keyframes node-enter {

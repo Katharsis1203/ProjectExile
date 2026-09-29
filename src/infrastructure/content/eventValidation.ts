@@ -1,3 +1,6 @@
+import { CHARACTER_CATALOG } from "../../data/characterCatalog.ts";
+import { ITEM_CATALOG } from "../../data/itemCatalog.ts";
+import { validateCharacterCondition, validateCharacterEffect } from "./characterValidation.ts";
 import type { EventNode, GameEvent } from "../../types/event";
 import {
   expectArray,
@@ -16,7 +19,8 @@ function validateStatChecks(value: unknown, source: string, field: string): void
   expectArray(value, source, field).forEach((check, index) => {
     const checkField = `${field}[${index}]`;
     const record = expectRecord(check, source, checkField);
-    expectString(record.stat, source, `${checkField}.stat`);
+    const stat = expectString(record.stat, source, `${checkField}.stat`);
+    if (!CHARACTER_CATALOG.stats[stat]) fail(source, `Unknown stat "${stat}" in ${checkField}.`);
     expectFiniteNumber(record.difficulty, source, `${checkField}.difficulty`);
   });
 }
@@ -25,19 +29,21 @@ function validateEventEffect(value: unknown, source: string, field: string): voi
   const effect = expectRecord(value, source, field);
   const type = expectString(effect.type, source, `${field}.type`);
   if (type === "resource") {
-    expectString(effect.resource, source, `${field}.resource`);
+    const resource = expectString(effect.resource, source, `${field}.resource`);
+    if (!["health", "mana", "stamina", "hunger"].includes(resource)) fail(source, `Unknown resource "${resource}".`);
     expectFiniteNumber(effect.amount, source, `${field}.amount`);
     return;
   }
   if (type === "item") {
-    expectString(effect.item, source, `${field}.item`);
+    const item = expectString(effect.item, source, `${field}.item`);
+    if (!ITEM_CATALOG[item]) fail(source, `Unknown item "${item}".`);
     const amount = expectFiniteNumber(effect.amount, source, `${field}.amount`);
     if (!Number.isInteger(amount) || amount === 0) {
       fail(source, `"${field}.amount" must be a non-zero integer for item effects.`);
     }
     return;
   }
-  fail(source, `"${field}.type" must be "resource" or "item".`);
+  validateCharacterEffect(value, source, field);
 }
 
 function validateThresholdOutcome(value: unknown, source: string, field: string): void {
@@ -63,10 +69,15 @@ function validateThresholdOutcome(value: unknown, source: string, field: string)
 
 function validateChoiceRequirement(value: unknown, source: string, field: string): void {
   const requirement = expectRecord(value, source, field);
+  if (requirement.type === "condition") {
+    validateCharacterCondition(requirement.condition, source, `${field}.condition`);
+    return;
+  }
   if (expectString(requirement.type, source, `${field}.type`) !== "item") {
     fail(source, `"${field}.type" must be "item".`);
   }
-  expectString(requirement.item, source, `${field}.item`);
+  const item = expectString(requirement.item, source, `${field}.item`);
+  if (!ITEM_CATALOG[item]) fail(source, `Unknown required item "${item}".`);
   if (requirement.quantity !== undefined) {
     const quantity = expectFiniteNumber(requirement.quantity, source, `${field}.quantity`);
     if (!Number.isInteger(quantity) || quantity < 1) {
@@ -82,6 +93,7 @@ function validateChoice(value: unknown, source: string, field: string): void {
     fail(source, `"${field}.type" must be "simple" or "checked".`);
   }
   expectString(choice.text, source, `${field}.text`);
+  expectOptionalString(choice.rewardId, source, `${field}.rewardId`);
   expectOptionalString(choice.flavourText, source, `${field}.flavourText`);
   expectOptionalString(choice.next, source, `${field}.next`);
   expectOptionalBoolean(choice.returnToHub, source, `${field}.returnToHub`);

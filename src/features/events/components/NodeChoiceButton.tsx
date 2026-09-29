@@ -10,10 +10,11 @@ import {
 } from "../../../engine/playerState";
 import type { PlayerStats } from "../../../engine/eventRules";
 import type { EventChoice } from "../../../types/event";
-import type { PlayerInventory } from "../../../types/player";
+import type { PlayerInventory, PlayerState } from "../../../types/player";
 
 type NodeChoiceButtonProps = {
   choice: EventChoice;
+  player: PlayerState;
   playerStats: PlayerStats;
   playerInventory: PlayerInventory;
   disabled?: boolean;
@@ -22,6 +23,7 @@ type NodeChoiceButtonProps = {
 
 export default function NodeChoiceButton({
   choice,
+  player,
   playerStats,
   playerInventory,
   disabled = false,
@@ -30,7 +32,7 @@ export default function NodeChoiceButton({
   const checks = choice.type === "checked" ? choice.statChecks : [];
   const requirements = choice.requirements ?? [];
   const missingRequirement = requirements.some(
-    (requirement) => !isChoiceRequirementMet(requirement, playerInventory),
+    (requirement) => !isChoiceRequirementMet(requirement, playerInventory, player),
   );
   const isDisabled = disabled || missingRequirement;
   const endsEvent = choice.endEvent || choice.returnToHub ||
@@ -77,10 +79,10 @@ export default function NodeChoiceButton({
           })}
 
           {requirements.map((requirement, index) => {
-            const isMet = isChoiceRequirementMet(requirement, playerInventory);
+            const isMet = isChoiceRequirementMet(requirement, playerInventory, player);
             return (
               <span
-                key={`${requirement.type}-${requirement.item}-${index}`}
+                key={`${requirement.type}-${index}`}
                 className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold leading-none ${
                   isMet
                     ? "border-[#6f7a5b]/30 bg-[#75805f]/10 text-[#556044]"

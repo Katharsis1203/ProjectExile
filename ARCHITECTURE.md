@@ -10,7 +10,7 @@ game engine.
 - `src/engine` owns deterministic game rules and reusable session transitions.
 - `src/infrastructure` owns browser and network boundaries such as storage,
   JSON fetching, caching, parsing, and content-graph validation.
-- `src/data` contains temporary defaults and authored code-side catalogs.
+- `src/data` contains starting templates, JSON character definitions and authored item catalogs.
 - `src/types` contains shared domain contracts.
 - `src/shared` contains behavior that is genuinely reused across features.
 
@@ -37,3 +37,16 @@ how each outcome is presented or closed.
 Files in `public` are shipped unchanged. Keep only runtime data and artwork
 there. Source variants and unused alternatives belong under `art/source` so
 they remain recoverable without increasing the production artifact.
+
+## Characters and saves
+
+`CharacterData` extends the shared `PlayerState` with progression, feats, skills,
+equipment instances, quest decisions, flags, relationships and discoveries.
+`engine/character` computes effective stats without mutating their base values.
+Checks, choice odds and eligibility share these calculations. Character-sheet
+training and equipment actions call the same engine rules as gameplay.
+
+Version-2 saves migrate existing characters and include full intro/hub passage
+snapshots. The hub owns its live hand/session and reports snapshots to the app;
+the app persists them with the player. Quest reward IDs prevent repeat grants.
+See `CHARACTER_DATA.md` for authoring examples and the current rules.

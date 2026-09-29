@@ -5,6 +5,7 @@ import HubSectionTiles from "./HubSectionTiles";
 type HubSidebarProps = {
   hub: Hub | null;
   onInventory: () => void;
+  onCharacter: () => void;
 };
 
 const statToneClasses: Record<HubStatTone, string> = {
@@ -15,7 +16,7 @@ const statToneClasses: Record<HubStatTone, string> = {
   neutral: "bg-[#6f6d67]",
 };
 
-export default function HubSidebar({ hub, onInventory }: HubSidebarProps) {
+export default function HubSidebar({ hub, onInventory, onCharacter }: HubSidebarProps) {
   const stats = hub?.stats ?? [];
 
   return (
@@ -27,7 +28,7 @@ export default function HubSidebar({ hub, onInventory }: HubSidebarProps) {
         className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden bg-[length:100%_100%] bg-center bg-no-repeat"
         style={{ backgroundImage: `url("${getImageUrl("parchment.png")}")` }}
       >
-        <HubSectionTiles onInventory={onInventory} />
+        <HubSectionTiles onInventory={onInventory} onCharacter={onCharacter} />
 
         <section className="relative -mt-[30px] flex min-h-0 flex-1 flex-col bg-transparent px-5 pb-5 pt-[44px] text-[#2b2b2b]">
           <div className="border-b border-black/10 pb-3">

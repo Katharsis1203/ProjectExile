@@ -1,3 +1,4 @@
+import type { CharacterCondition } from "./character";
 import type { GameEvent } from "./event";
 
 export type HubTagTone = "cold" | "danger" | "neutral" | "night";
@@ -75,7 +76,7 @@ export type HubScene = {
 
 export type NumericConditionOperator = "lt" | "lte" | "eq" | "gte" | "gt";
 
-export type EventCondition =
+export type EventCondition = CharacterCondition
   | {
       type: "playerResource";
       resource: string;

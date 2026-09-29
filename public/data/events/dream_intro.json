@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 2,
+  "id": "dream_intro",
+  "name": "dream_intro",
+  "type": "event",
+  "tags": [
+    "intro",
+    "dream"
+  ],
+  "nodes": {
+    "start": {
+      "id": "start",
+      "title": "A dream",
+      "image": "dream_intro01.png",
+      "text": "You wake sometime in the night.\n\nAt first, you do not know what disturbed you. The room is almost completely dark, save for a thin wash of moonlight leaking through the curtains and silvering the edge of the floor. Your sheets are warm and tangled around you, one arm still buried beneath the pillow where you must have fallen asleep. The air carries the faint coolness that settles into the palace after midnight, enough to make the warmth of the bed feel particularly difficult to leave.\n\nFor a while, you simply lie there. Sleep has not entirely released you, and the room seems to exist only in fragments: the dim outline of the wardrobe, the pale suggestion of the dressing mirror, the darker shape of the balcony curtains against the wall. Nothing appears out of place. Nothing immediately explains why you are awake.\n\nYou close your eyes again, expecting whatever restless thought pulled you from sleep to pass. It does not.\nSomewhere beneath the lingering heaviness of sleep, there is the quiet certainty that something is different.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Something feels wrong.",
+          "flavourText": "The palace is silent.",
+          "next": "d02"
+        }
+      ]
+    },
+    "d02": {
+      "id": "d02",
+      "title": "A dream",
+      "text": "Not frightening. Not yet. Just wrong in the way a familiar room can sometimes seem unfamiliar when seen at an unusual hour.\n\nUsually, even at night, there is life somewhere beyond your door: the muted tread of a guard passing along the corridor, servants changing shifts, the distant splash of water in the gardens below. Small sounds you have heard so often that you rarely notice them.\n\nTonight, there is nothing.\n\nNo footsteps.\n\nNo voices.\n\nNot even wind against the balcony doors.\n\nYou hold your breath and listen harder, as though the palace might reveal itself if you are patient enough.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Still nothing",
+          "flavourText": "The world arrives slowly.",
+          "next": "d03"
+        }
+      ]
+    },
+    "d03": {
+      "id": "d03",
+      "title": "A dream",
+      "text": "Your eyes adjust slowly to the darkness. Familiar shapes emerge around you: the chair beside the bed, the low table near the window, the dressing mirror catching a pale sliver of moonlight. Nothing seems disturbed, yet the feeling that woke you refuses to fade.\n\nYou listen again, half-expecting the palace to reassert itself. A guard should pass eventually. Somewhere below, water should still be moving through the gardens. Instead there is only the same heavy silence.\nThen your gaze settles on the door.\nIt is open.\n\nOnly slightly. A narrow strip of darkness between the door and its frame.\n\nYou are almost certain you closed it before sleeping.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Call out into the corridor.",
+          "flavourText": "Your voice slips into the dark. Nothing answers.",
+          "next": "d04"
+        },
+        {
+          "type": "simple",
+          "text": "Get out of bed",
+          "flavourText": "The warmth of the sheets gives way to cold stone beneath your feet.",
+          "next": "d04"
+        },
+        {
+          "type": "simple",
+          "text": "Stay still",
+          "flavourText": "The silence begins to feel less like an absence of sound and more like something being held.",
+          "next": "d04"
+        }
+      ],
+      "image": "d03.png"
+    },
+    "d04": {
+      "id": "d04",
+      "title": "A dream",
+      "text": "The palace remains silent.\n\nBeyond your door, the corridor is washed in thin moonlight. The lamps along the walls are unlit, and the long stretch of polished stone disappears into shadow at either end. Nothing moves.\n\nThat is strange enough on its own.\n\nAt this hour there should still be guards somewhere nearby. There should be servants crossing between the inner rooms, or at least the distant sound of someone awake where they ought not to be.\n\nInstead, the corridor feels abandoned.\n\nEven the air seems still.\n\nAnd then, somewhere farther along the hall, a door slowly swings shut.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Go after it.",
+          "flavourText": "The sound gives the silence a direction.",
+          "next": "d05"
+        },
+        {
+          "type": "simple",
+          "text": "Call for a guard.",
+          "flavourText": "The words travel farther than they should. No familiar voice answers them.",
+          "next": "d05"
+        },
+        {
+          "type": "simple",
+          "text": "Wait and see if anything else moves.",
+          "flavourText": "The silence stretches with you.",
+          "next": "d04_wait_01",
+          "endEvent": false
+        }
+      ]
+    },
+    "d05": {
+      "id": "d05",
+      "title": "A dream",
+      "text": "The corridor seems longer once you begin paying attention to it.\n\nNot dramatically so. There is no impossible stretching of walls, no sudden transformation. The pillars remain where you remember them, the same tapestries hang between the windows, and the same pale stone runs beneath your feet.\n\nAnd yet the door at the far end does not seem any closer.\n\nMoonlight lies across the floor in narrow bands. Between them, the darkness feels deeper than it should, swallowing the familiar details of the palace until each stretch of corridor seems briefly unfamiliar.\n\nThen something catches your eye beside one of the windows.\n\nA mark on the floor.\n\nToo dark to be moonlight. Too irregular to be part of the stone.\n\nFrom here, you cannot quite tell what it is.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Examine the mark.",
+          "flavourText": "Up close, the darkness has a sheen to it.",
+          "next": "serpent_01"
+        },
+        {
+          "type": "simple",
+          "text": "Look through the window.",
+          "flavourText": "The glass is cold beneath your fingertips.",
+          "next": "owl_01"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it and keep following the corridor.",
+          "flavourText": "Some mysteries are easier to follow than others.",
+          "next": "d06"
+        }
+      ]
+    },
+    "d04_wait_01": {
+      "id": "d04_wait_01",
+      "title": "A dream",
+      "text": "Nothing follows.\n\nThe corridor settles again beneath the moonlight. No shadow crosses the floor. No guard rounds the corner. Whatever closed the distant door seems content to leave you wondering.\n\nYou remain where you are.\n\nAfter a while, you become aware of how loud your own breathing sounds.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Wait a little longer.",
+          "flavourText": "Stillness becomes its own kind of attention.",
+          "next": "d05_wait_02"
+        },
+        {
+          "type": "simple",
+          "text": "Enough. Go and look.",
+          "flavourText": "Waiting has revealed nothing.",
+          "next": "d05"
+        }
+      ]
+    },
+    "d05_wait_02": {
+      "id": "d05_wait_02",
+      "title": "A dream",
+      "text": "Another stretch of silence passes.\n\nYour eyes begin finding details they missed before: the slight movement of a curtain, a pale edge of moonlight beneath a chair, shadows collecting in the corners of the room.\n\nNothing threatening.\n\nYet your attention keeps returning to them.\n\nThen comes a sound.\n\nVery faint.\n\nA soft scrape somewhere beneath the balcony window.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Remain Still.",
+          "flavourText": "Whatever made the sound does not seem to know whether you have noticed it.",
+          "next": "d05_wait_03"
+        },
+        {
+          "type": "simple",
+          "text": "Ignore it and leave the room.",
+          "flavourText": "Whether courage finally wins out, or patience simply runs thin, you step into the corridor.",
+          "next": "d05"
+        }
+      ]
+    },
+    "d05_wait_03": {
+      "id": "d05_wait_03",
+      "title": "A dream",
+      "text": "The sound comes again.\n\nThis time you catch the movement. The curtain beside the balcony shifts, although the doors remain closed and there is still no wind. For a moment there is only darkness beneath the window. Then two long ears rise slowly into the moonlight.\n\nA hare sits beside the curtain.\n\nIt should not be here. There is no obvious way it could have entered, yet it seems entirely untroubled by this. Its body is held close and still, every part of it poised between patience and flight.\n\nIt watches you.\n\nYou watch it.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Wait for it to move first.",
+          "flavourText": "For once, patience is answered.",
+          "next": "hare_01"
+        },
+        {
+          "type": "simple",
+          "text": "Approach it carefully.",
+          "flavourText": "One long ear turns toward you.",
+          "next": "hare_01"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it and go into the corridor.",
+          "flavourText": "At last, waiting becomes harder than moving.",
+          "next": "d05"
+        }
+      ]
+    },
+    "hare_01": {
+      "id": "hare_01",
+      "title": "A dream",
+      "text": "The hare remains still for another moment, watching with the peculiar attentiveness of something that seems to have been waiting for you specifically. Then it moves closer, one quiet step at a time, crossing the strip of moonlight between you.\n\nWhatever nervous energy had seemed wound through its small body settles as the distance closes. The room seems to soften around it; the edges of the bed, the curtains and the balcony doors lose a little of their certainty. Somewhere far away comes the faint whisper of grass moving beneath a night wind.\n\nThe hare lowers its head.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Reach out to it.",
+          "flavourText": "Something small and warm settles beneath your hand.",
+          "next": "end_hare"
+        },
+        {
+          "type": "simple",
+          "text": "Let it come the rest of the way.",
+          "flavourText": "Patience is answered without ceremony.",
+          "next": "end_hare"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it untouched.",
+          "flavourText": "The moment passes without protest.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "end_hare": {
+      "id": "end_hare",
+      "title": "A dream",
+      "text": "The instant contact is made, the room falls away.\n\nFor one brief moment there is only a pale field beneath an open sky, long grass brushing against your legs and the quick rhythm of a heartbeat that is not entirely your own. Something moves at the edge of sight—fast, light, gone before the eye can settle upon it.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    },
+    "serpent_01": {
+      "id": "serpent_01",
+      "title": "A dream",
+      "text": "It is water.\n\nOnly a little: a thin dark smear across the polished stone, beading at the edges where the moonlight catches it. There is no overturned vessel nearby, no open window, nothing above that could have dripped. A second mark lies a little farther on, then another.\n\nThe trail disappears beneath a narrow archway leading toward one of the palace water courts. You know the fountains there are shut at night.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the trail.",
+          "flavourText": "Each mark waits just far enough beyond the last.",
+          "next": "serpent_02"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it alone.",
+          "flavourText": "The water keeps whatever explanation it has.",
+          "next": "d06"
+        }
+      ]
+    },
+    "serpent_02": {
+      "id": "serpent_02",
+      "title": "A dream",
+      "text": "The water court is darker than the corridor behind you. Its fountain is silent, the shallow channels around it perfectly still, yet the trail ends at the edge of the central pool.\n\nSomething moves beneath the surface.\n\nA long shape turns slowly through the black water, too large to have hidden in so shallow a basin. Scales catch the moonlight one at a time—green, silver, then gone. The serpent rises without disturbing the surface and rests its head upon the stone lip of the pool.\n\nIts tongue tastes the air between you.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Lower your hand to the water.",
+          "flavourText": "Cold gathers around your fingertips before they touch the surface.",
+          "next": "end_serpent"
+        },
+        {
+          "type": "simple",
+          "text": "Leave the water untouched.",
+          "flavourText": "The surface closes over the invitation.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "end_serpent": {
+      "id": "end_serpent",
+      "title": "A dream",
+      "text": "The serpent meets your hand at the waterline.\n\nCold moves beneath your skin—not painful, but deeper than touch has any right to reach. For an instant you become aware of every small thing within yourself: pulse, breath, warmth, the quiet movement of blood through your fingers.\n\nThe serpent slips beneath the surface. The water follows it downward, the pool becoming impossibly deep beneath your hand.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    },
+    "owl_01": {
+      "id": "owl_01",
+      "title": "A dream",
+      "text": "The city beyond the glass is almost invisible. Roofs and terraces lie beneath the night, their familiar shapes reduced to pale edges among the trees. Above them, however, the sky is unnaturally clear. There are more stars than you remember there being.\n\nA pale shape crosses them.\n\nIt moves without a sound, passing close enough to the palace that for an instant broad wings blot out a patch of starlight. The shape rises toward the upper galleries and disappears beyond the roofline.\n\nThere is an old stair nearby that leads upward.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow it.",
+          "flavourText": "The movement is gone, but its direction remains.",
+          "next": "owl_02"
+        },
+        {
+          "type": "simple",
+          "text": "Return your attention to the corridor.",
+          "flavourText": "The stars offer no explanation.",
+          "next": "d06"
+        }
+      ]
+    },
+    "owl_02": {
+      "id": "owl_02",
+      "title": "A dream",
+      "text": "The stair ends at a small upper gallery open to the night. Instruments used for charting the heavens stand beneath the arches, their brass rings and narrow arms pale with moonlight. No one has covered them. No one appears to have been here at all.\n\nThe owl waits on the highest ring of an old astrolabe.\n\nIts feathers are almost colourless in the dark. It turns its head as you enter, fixing you with two black eyes that seem to hold more of the room than they reflect. For a moment you become aware of details you had not noticed—the tiny scratches in the brass, dust shifting on the floor, something moving far below in the garden.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Hold its gaze.",
+          "flavourText": "The rest of the gallery seems to sharpen around those two dark eyes.",
+          "next": "end_owl"
+        },
+        {
+          "type": "simple",
+          "text": "Look away and leave it.",
+          "flavourText": "Some things remain clearer at a distance.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "end_owl": {
+      "id": "end_owl",
+      "title": "A dream",
+      "text": "The owl does not blink.\n\nThe gallery brightens without any increase in light. Every edge becomes distinct at once: stone grain, individual leaves far below, the smallest movement beneath the arches. For a breath it feels possible to notice everything, if only you could keep your eyes open long enough.\n\nA wing passes across your vision.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    },
+    "d06": {
+      "id": "d06",
+      "title": "A dream",
+      "text": "You continue toward the door that closed at the far end of the hall. With each pool of moonlight crossed, the palace grows a little less certain around you. The right paintings hang in the right places; the pillars are spaced as they should be; even the faint cracks in the stone seem familiar. Yet the distance between one thing and the next feels somehow wrong.\n\nWhen you finally reach the door, it opens beneath the slightest pressure.\n\nBeyond it, the passage divides where no division should exist. From the left comes the faint rhythm of movement heading toward the training courts. To the right, something small slips through a narrow servants' passage and is gone before you can make out its shape. Straight ahead, the doors to the inner gardens stand open, carrying the cool scent of leaves into the palace.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow the movement toward the training court.",
+          "flavourText": "Whatever is ahead is moving with purpose.",
+          "next": "wolf_01"
+        },
+        {
+          "type": "simple",
+          "text": "Take the narrow passage.",
+          "flavourText": "The smaller path is the one that should not be here.",
+          "next": "fox_01"
+        },
+        {
+          "type": "simple",
+          "text": "Step into the gardens.",
+          "flavourText": "Cool air carries the smell of damp earth and leaves.",
+          "next": "stag_01"
+        }
+      ]
+    },
+    "wolf_01": {
+      "id": "wolf_01",
+      "title": "A dream",
+      "text": "The passage opens onto one of the training courts. Racks of practice weapons stand beneath the covered walkways, and pale sand fills the square at the centre. No lamps burn. No instructors wait. Nothing here should have been moving.\n\nA wolf stands in the middle of the court.\n\nIt is larger than any wolf you have seen depicted, though there is nothing monstrous in its shape. Its breath clouds faintly in the cold air. It does not bare its teeth when you enter. It does not retreat either.\n\nThe distance between you feels deliberate.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Walk straight toward it.",
+          "flavourText": "Neither of you gives ground.",
+          "next": "end_wolf"
+        },
+        {
+          "type": "simple",
+          "text": "Stand your ground and let it approach.",
+          "flavourText": "The wolf watches for a long moment, then begins to move.",
+          "next": "end_wolf"
+        },
+        {
+          "type": "simple",
+          "text": "Back away.",
+          "flavourText": "The distance remains between you.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "end_wolf": {
+      "id": "end_wolf",
+      "title": "A dream",
+      "text": "The wolf closes the final distance without hurry. Warm breath brushes your hand, followed by the rough press of fur as it lowers its head against you.\n\nThe court disappears beneath the sudden smell of rain and pine. For one brief instant you are running through darkness with the ground passing quickly beneath you, every distant sound placed exactly where it belongs. There is another heartbeat beside your own—or perhaps inside it.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    },
+    "fox_01": {
+      "id": "fox_01",
+      "title": "A dream",
+      "text": "The narrow passage should lead only to servants' stairs. Instead it turns twice, descends a few steps, then opens into another corridor you do not recognise. The palace has somehow become intimate here: low arches, little doors, corners too close together for any grand procession.\n\nAt the far end, something red disappears around a corner.\n\nWhen you reach it, a fox is waiting. It sits neatly in the middle of the passage, tail curled around its feet. The instant you stop, it rises and trots away again—not fleeing, exactly. Merely assuming you will understand.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Follow it.",
+          "flavourText": "It never hurries, yet somehow remains just out of reach.",
+          "next": "fox_02"
+        },
+        {
+          "type": "simple",
+          "text": "Refuse to be led around your own palace.",
+          "flavourText": "The fox waits at the next corner. When you do not follow, it vanishes.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "fox_02": {
+      "id": "fox_02",
+      "title": "A dream",
+      "text": "The fox leads you through a palace that grows less familiar with every turn. Once you pass through the same doorway twice and emerge somewhere different each time. Another corridor ends in a wall until the fox slips behind a hanging and reveals a passage where there should be solid stone.\n\nAt last it stops in a tiny moonlit courtyard no larger than a room. There is nowhere else to go.\n\nThe fox sits beneath a small tree and looks back at you. Something in its expression feels dangerously close to amusement.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Go to it.",
+          "flavourText": "The game, if that is what it was, seems to be over.",
+          "next": "end_fox"
+        },
+        {
+          "type": "simple",
+          "text": "Leave it where it sits.",
+          "flavourText": "Some paths need not be followed to their end.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "end_fox": {
+      "id": "end_fox",
+      "title": "A dream",
+      "text": "The fox rises as you approach and circles once around your feet. Its tail brushes your ankle, impossibly soft.\n\nThe courtyard changes between one step and the next. For a heartbeat you stand at the meeting point of a hundred narrow paths, each disappearing into tall grass, stone, woodland or darkness. You cannot explain how, but one of them feels obvious.\n\nThe fox takes it without looking back.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    },
+    "stag_01": {
+      "id": "stag_01",
+      "title": "A dream",
+      "text": "The inner garden is not as you left it.\n\nThe clipped hedges have grown high enough to lose their careful shapes, and grass rises between stones that should have been swept clean. White flowers gather around the dry fountain at the centre. Beyond it, beneath a tree whose branches stretch far wider than the garden should allow, stands a stag.\n\nIt is enormous. Not misshapen, not monstrous—simply greater than such a creature ought to be. Its antlers branch upward into the leaves until it is difficult to tell where one ends and the other begins.\n\nThe stag lowers its head as you enter the garden.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Stand your ground.",
+          "flavourText": "The garden seems to settle around the decision.",
+          "next": "end_stag"
+        },
+        {
+          "type": "simple",
+          "text": "Approach it.",
+          "flavourText": "Each step feels heavier than the last, but none are refused.",
+          "next": "end_stag"
+        },
+        {
+          "type": "simple",
+          "text": "Step aside and let it pass.",
+          "flavourText": "Nothing asks you to follow.",
+          "next": "end_pure"
+        }
+      ]
+    },
+    "end_stag": {
+      "id": "end_stag",
+      "title": "A dream",
+      "text": "The stag comes forward.\n\nIt stops close enough that the breadth of its antlers fills your vision. For a moment you feel the slow force of its breathing, steady and deep, and beneath that something older: roots beneath soil, sap rising through wood, the patient weight of a living thing that has no need to hurry.\n\nIts brow touches yours.\n\nThe garden becomes a forest of white trunks beneath a pale sky.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    },
+    "end_pure": {
+      "id": "end_pure",
+      "title": "A dream",
+      "text": "Whatever had been waiting for you makes no attempt to follow.\n\nThe palace gathers itself around the absence: familiar stone, pale moonlight, the quiet shape of corridors you have known all your life. For one clear moment the dream feels almost ordinary again. Nothing has been taken from you. Nothing has been added.\n\nThen you wake.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Open your eyes.",
+          "endEvent": true
+        }
+      ]
+    }
+  },
+  "cardImage": "dream_intro01.png"
+}

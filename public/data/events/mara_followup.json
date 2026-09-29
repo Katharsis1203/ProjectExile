@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 2,
+  "id": "mara_followup",
+  "name": "A Debt Remembered",
+  "type": "event",
+  "tags": [
+    "Life",
+    "Consequences"
+  ],
+  "cardImage": "../village.png",
+  "nodes": {
+    "trusted": {
+      "id": "trusted",
+      "title": "A Place by the Fire",
+      "text": "Mara notices you before you reach the bar. A bowl is already waiting beside the hearth. “For finding my ledger,” she says. There is no entry for it in the little book. Your discretion has bought something less tangible than coin: a welcome.",
+      "image": "../village.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Leave the inn",
+          "endEvent": true,
+          "rewardId": "mara_followup.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "mara_followup",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 25
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": 5
+            }
+          ]
+        }
+      ]
+    },
+    "wary": {
+      "id": "wary",
+      "title": "Six Other Rooms",
+      "text": "Mara serves you politely, but closes the ledger before you sit. When footsteps sound overhead, she asks if you have considered taking the southern road. Your question about the north room has not been forgotten.",
+      "image": "../village.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Leave the inn",
+          "endEvent": true,
+          "rewardId": "mara_followup.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "mara_followup",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 25
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": 0
+            }
+          ]
+        }
+      ]
+    },
+    "broken": {
+      "id": "broken",
+      "title": "A Missing Book, a Familiar Face",
+      "text": "Mara watches your coat as you enter. “Still looking for my ledger?” she asks. No one at the bar speaks until you answer. The book you kept has cost you the easy welcome you once had here.",
+      "image": "../village.png",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Leave the inn",
+          "endEvent": true,
+          "rewardId": "mara_followup.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "mara_followup",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 25
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": -5
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

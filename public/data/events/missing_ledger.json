@@ -28,7 +28,20 @@
                 "id": "found",
                 "threshold": 1,
                 "flavourText": "A clean rectangle in the dust shows where the ledger sat. Below it, a chair leg has fresh scrape marks leading toward the stove.",
-                "next": "stove"
+                "next": "stove",
+                "effects": [
+                  {
+                    "type": "item",
+                    "item": "missing_ledger",
+                    "amount": 1
+                  },
+                  {
+                    "type": "quest",
+                    "quest": "missing_ledger",
+                    "stage": "recovered",
+                    "objective": "ledger_recovered"
+                  }
+                ]
               },
               {
                 "id": "miss",
@@ -37,17 +50,122 @@
                 "next": "ask"
               }
             ]
+          },
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "searching"
+            }
+          ]
+        },
+        {
+          "type": "checked",
+          "text": "Use your rope to reach behind the stove",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "rope"
+            }
+          ],
+          "statChecks": [
+            {
+              "stat": "perception",
+              "difficulty": 9
+            }
+          ],
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "searching"
+            },
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -2
+            }
+          ],
+          "weighted": {
+            "buckets": [
+              {
+                "id": "found",
+                "threshold": 1,
+                "next": "stove",
+                "flavourText": "A loop of rope catches the ledger beneath a strip of cloth.",
+                "effects": [
+                  {
+                    "type": "item",
+                    "item": "missing_ledger",
+                    "amount": 1
+                  },
+                  {
+                    "type": "quest",
+                    "quest": "missing_ledger",
+                    "stage": "recovered",
+                    "objective": "ledger_recovered"
+                  }
+                ]
+              },
+              {
+                "id": "miss",
+                "threshold": 0,
+                "next": "ask",
+                "flavourText": "You retrieve only a dusty splinter. Someone must have seen where it went."
+              }
+            ]
           }
         },
         {
           "type": "simple",
+          "text": "Follow the fresh scrape marks to the stove",
+          "requirements": [
+            {
+              "type": "condition",
+              "condition": {
+                "type": "feat",
+                "feat": "keen_observer"
+              }
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "missing_ledger",
+              "amount": 1
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "recovered",
+              "objective": "ledger_recovered"
+            }
+          ],
+          "next": "stove"
+        },
+        {
+          "type": "simple",
           "text": "Ask who was in the room this morning",
-          "next": "ask"
+          "next": "ask",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "searching"
+            }
+          ]
         },
         {
           "type": "simple",
           "text": "Tell Mara it will turn up",
-          "next": "leave"
+          "next": "leave",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "searching"
+            }
+          ]
         }
       ],
       "image": "../village.png"
@@ -60,12 +178,83 @@
         {
           "type": "simple",
           "text": "Give it to Mara and mention the cloth",
-          "next": "return"
+          "next": "return",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "missing_ledger"
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "missing_ledger",
+              "amount": -1
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "ledger_destination",
+              "value": "returned"
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "north_room",
+              "value": "unread"
+            },
+            {
+              "type": "flag",
+              "flag": "story.mara_trust",
+              "value": "trusted"
+            }
+          ]
         },
         {
           "type": "simple",
           "text": "Glance at the last page before returning it",
-          "next": "peek"
+          "next": "peek",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "missing_ledger"
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "story.knows_north_room",
+              "value": true
+            },
+            {
+              "type": "discovery",
+              "discovery": "north_room"
+            }
+          ]
+        },
+        {
+          "type": "simple",
+          "text": "Keep the ledger and leave quietly",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "missing_ledger"
+            }
+          ],
+          "next": "kept",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "ledger_destination",
+              "value": "kept"
+            },
+            {
+              "type": "flag",
+              "flag": "story.mara_trust",
+              "value": "broken"
+            }
+          ]
         }
       ]
     },
@@ -89,7 +278,20 @@
                 "id": "tell",
                 "threshold": 1,
                 "flavourText": "The washerwoman looks toward the stove every time the ledger is mentioned.",
-                "next": "stove"
+                "next": "stove",
+                "effects": [
+                  {
+                    "type": "item",
+                    "item": "missing_ledger",
+                    "amount": 1
+                  },
+                  {
+                    "type": "quest",
+                    "quest": "missing_ledger",
+                    "stage": "recovered",
+                    "objective": "ledger_recovered"
+                  }
+                ]
               },
               {
                 "id": "miss",
@@ -115,12 +317,72 @@
         {
           "type": "simple",
           "text": "Return the ledger without comment",
-          "next": "quiet_return"
+          "next": "quiet_return",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "missing_ledger"
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "missing_ledger",
+              "amount": -1
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "ledger_destination",
+              "value": "returned"
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "north_room",
+              "value": "silent"
+            },
+            {
+              "type": "flag",
+              "flag": "story.mara_trust",
+              "value": "trusted"
+            }
+          ]
         },
         {
           "type": "simple",
           "text": "Ask Mara about the north room",
-          "next": "north_room"
+          "next": "north_room",
+          "requirements": [
+            {
+              "type": "item",
+              "item": "missing_ledger"
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "item": "missing_ledger",
+              "amount": -1
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "ledger_destination",
+              "value": "returned"
+            },
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "decision": "north_room",
+              "value": "asked"
+            },
+            {
+              "type": "flag",
+              "flag": "story.mara_trust",
+              "value": "wary"
+            }
+          ]
         }
       ]
     },
@@ -132,7 +394,44 @@
         {
           "type": "simple",
           "text": "Return to the hub",
-          "endEvent": true
+          "endEvent": true,
+          "rewardId": "missing_ledger.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 100
+            },
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -3
+            },
+            {
+              "type": "reputation",
+              "faction": "village",
+              "amount": 5
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": 5
+            },
+            {
+              "type": "item",
+              "item": "winter_scrip",
+              "amount": 4
+            },
+            {
+              "type": "equipmentItem",
+              "item": "scouting_charm",
+              "instanceId": "mara-ledger-charm"
+            }
+          ]
         }
       ]
     },
@@ -144,7 +443,44 @@
         {
           "type": "simple",
           "text": "Return to the hub",
-          "endEvent": true
+          "endEvent": true,
+          "rewardId": "missing_ledger.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 100
+            },
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -3
+            },
+            {
+              "type": "reputation",
+              "faction": "village",
+              "amount": 5
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": 5
+            },
+            {
+              "type": "item",
+              "item": "winter_scrip",
+              "amount": 4
+            },
+            {
+              "type": "equipmentItem",
+              "item": "scouting_charm",
+              "instanceId": "mara-ledger-charm"
+            }
+          ]
         }
       ]
     },
@@ -156,7 +492,34 @@
         {
           "type": "simple",
           "text": "Return to the hub",
-          "endEvent": true
+          "endEvent": true,
+          "rewardId": "missing_ledger.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 100
+            },
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -3
+            },
+            {
+              "type": "reputation",
+              "faction": "village",
+              "amount": 5
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": 5
+            }
+          ]
         }
       ]
     },
@@ -168,7 +531,54 @@
         {
           "type": "simple",
           "text": "Return to the hub",
-          "endEvent": true
+          "endEvent": true,
+          "rewardId": "missing_ledger.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "declined"
+            }
+          ]
+        }
+      ]
+    },
+    "kept": {
+      "id": "kept",
+      "title": "A Book of Other People’s Debts",
+      "text": "You slip the ledger inside your coat. Mara searches the shelf once more as you pass the door. The little book feels heavier outside the inn. Whatever use you find for it, she will remember who offered to help.",
+      "choices": [
+        {
+          "type": "simple",
+          "text": "Return to the hub",
+          "endEvent": true,
+          "rewardId": "missing_ledger.completion",
+          "effects": [
+            {
+              "type": "quest",
+              "quest": "missing_ledger",
+              "stage": "resolved"
+            },
+            {
+              "type": "experience",
+              "amount": 100
+            },
+            {
+              "type": "resource",
+              "resource": "stamina",
+              "amount": -3
+            },
+            {
+              "type": "reputation",
+              "faction": "village",
+              "amount": -5
+            },
+            {
+              "type": "relationship",
+              "person": "mara",
+              "amount": -10
+            }
+          ]
         }
       ]
     }

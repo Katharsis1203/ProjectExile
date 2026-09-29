@@ -1,8 +1,11 @@
 import type { PlayerState } from "../types/player";
 
-/** Temporary local state until the save-game layer is introduced. */
+import { createCharacterData, createStatus } from "../engine/character.ts";
+
+/** Starting template; each new game receives an independent copy. */
 export const DEFAULT_PLAYER: PlayerState = {
   name: "The Exile",
+  character: createCharacterData(),
   title: "the Wayfarer",
   stats: {
     strength: 7,
@@ -16,32 +19,7 @@ export const DEFAULT_PLAYER: PlayerState = {
     { id: "stamina", label: "Stamina", value: 71, max: 100, tone: "stamina" },
     { id: "hunger", label: "Hunger", value: 34, max: 100, tone: "hunger" },
   ],
-  effects: [
-    {
-      id: "chilled",
-      name: "Chilled",
-      icon: "chilled.svg",
-      duration: "1h 45m remaining",
-      effect: "Stamina recovery reduced by 15%.",
-      tone: "cold",
-    },
-    {
-      id: "focused",
-      name: "Focused",
-      icon: "focused.svg",
-      duration: "36m remaining",
-      effect: "Mana recovery increased by 10%.",
-      tone: "arcane",
-    },
-    {
-      id: "minor_wound",
-      name: "Minor Wound",
-      icon: "minor_wound.svg",
-      duration: "Until treated",
-      effect: "Maximum Health reduced slightly.",
-      tone: "wound",
-    },
-  ],
+  effects: [createStatus("chilled"), createStatus("focused"), createStatus("minor_wound")],
   inventory: {
     rope: 1,
     bandage: 1,
@@ -51,6 +29,7 @@ export const DEFAULT_PLAYER: PlayerState = {
 export function createDefaultPlayer(): PlayerState {
   return {
     ...DEFAULT_PLAYER,
+    character: { ...createCharacterData(), id: crypto.randomUUID() },
     stats: { ...DEFAULT_PLAYER.stats },
     resources: DEFAULT_PLAYER.resources.map((resource) => ({ ...resource })),
     effects: DEFAULT_PLAYER.effects.map((effect) => ({ ...effect })),

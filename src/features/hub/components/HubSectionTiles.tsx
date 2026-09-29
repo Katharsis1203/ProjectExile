@@ -9,15 +9,16 @@ type HubSection = {
 
 type HubSectionTilesProps = {
   onInventory: () => void;
+  onCharacter: () => void;
 };
 
 const hubSections: HubSection[] = [
   { title: "Travel", image: getImageUrl("alt/character-btn4.png"), enabled: false },
   { title: "Inventory", image: getImageUrl("alt/inventory-btn3.png"), enabled: true },
-  { title: "Characters", image: getImageUrl("alt/status-btn3.png"), enabled: false },
+  { title: "Character", image: getImageUrl("alt/status-btn3.png"), enabled: true },
 ];
 
-export default function HubSectionTiles({ onInventory }: HubSectionTilesProps) {
+export default function HubSectionTiles({ onInventory, onCharacter }: HubSectionTilesProps) {
   return (
     <div
       role="group"
@@ -29,7 +30,7 @@ export default function HubSectionTiles({ onInventory }: HubSectionTilesProps) {
           key={title}
           type="button"
           disabled={!enabled}
-          onClick={title === "Inventory" ? onInventory : undefined}
+          onClick={title === "Inventory" ? onInventory : title === "Character" ? onCharacter : undefined}
           title={enabled ? `Open ${title}` : `${title} (coming soon)`}
           className="group relative flex h-[80px] w-full items-center justify-center overflow-hidden border-b border-[rgba(70,58,44,0.15)] bg-transparent text-left focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#725d44]/60 disabled:cursor-default xl:h-[80px]"
         >

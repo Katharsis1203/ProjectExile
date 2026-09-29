@@ -1,3 +1,6 @@
+import { isSavedHub, isSavedPassage } from "./sessionValidation.ts";
+import { migratePlayer } from "./playerMigration.ts";
+import type { SavedHub, SavedPassage } from "../../types/session";
 import type { PlayerState } from "../../types/player";
 
 export const SAVE_SLOT_IDS = [1, 2, 3] as const;
@@ -8,10 +11,12 @@ export type SaveResumePoint = {
   screen: SaveLocation;
   introNodeId?: string;
   introComplete?: boolean;
+  introSession?: SavedPassage;
+  hubSession?: SavedHub;
 };
 
 export type GameSave = {
-  version: 1;
+  version: 2;
   slotId: SaveSlotId;
   saveName: string;
   player: PlayerState;
@@ -61,26 +66,19 @@ function hasStorage(): boolean {
   return typeof window !== "undefined" && Boolean(window.localStorage);
 }
 
-function clonePlayer(player: PlayerState): PlayerState {
-  return {
-    ...player,
-    stats: { ...player.stats },
-    resources: player.resources.map((resource) => ({ ...resource })),
-    effects: player.effects.map((effect) => ({ ...effect })),
-    inventory: { ...player.inventory },
-  };
-}
 
 function isSaveSlotId(value: unknown): value is SaveSlotId {
   return SAVE_SLOT_IDS.includes(value as SaveSlotId);
 }
 
-function isGameSave(value: unknown): value is GameSave {
+type SaveEnvelope = Omit<GameSave, "version"> & { version: 1 | 2 };
+
+function isGameSave(value: unknown): value is SaveEnvelope {
   if (!value || typeof value !== "object") return false;
 
-  const save = value as Partial<GameSave>;
+  const save = value as Partial<SaveEnvelope>;
   return (
-    save.version === 1 &&
+    (save.version === 1 || save.version === 2) &&
     isSaveSlotId(save.slotId) &&
     typeof save.saveName === "string" &&
     Boolean(save.player) &&
@@ -99,7 +97,11 @@ export function readSaveSlot(slotId: SaveSlotId): GameSave | null {
     if (!raw) return null;
 
     const parsed: unknown = JSON.parse(raw);
-    return isGameSave(parsed) ? parsed : null;
+    if (!isGameSave(parsed)) return null;
+    if (parsed.resume.introSession !== undefined && !isSavedPassage(parsed.resume.introSession)) return null;
+    if (parsed.resume.hubSession !== undefined && !isSavedHub(parsed.resume.hubSession)) return null;
+    const player = migratePlayer(parsed.player, parsed.version);
+    return { ...parsed, version: 2, player };
   } catch {
     return null;
   }
@@ -127,11 +129,11 @@ export function writeSaveSlot(
   const existing = readSaveSlot(slotId);
   const now = new Date().toISOString();
   const save: GameSave = {
-    version: 1,
+    version: 2,
     slotId,
     saveName: saveName.trim() || `Journey ${slotId}`,
-    player: clonePlayer(player),
-    resume: { ...resume },
+    player: structuredClone(player),
+    resume: structuredClone(resume),
     createdAt: existing?.createdAt ?? now,
     updatedAt: now,
   };

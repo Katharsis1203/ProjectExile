@@ -22,7 +22,8 @@ export type ItemDefinition = {
   discardable?: boolean;
 };
 
-const ITEM_CATALOG: Record<string, ItemDefinition> = {
+export const ITEM_CATALOG: Record<string, ItemDefinition> = {
+  missing_ledger: { id: "missing_ledger", name: "Mara’s ledger", description: "A thin book of small debts, recovered from behind the stove.", category: "quest", discardable: false },
   rope: {
     id: "rope",
     name: "Rope",
@@ -37,7 +38,7 @@ const ITEM_CATALOG: Record<string, ItemDefinition> = {
     use: {
       label: "Dress wounds",
       description: "Consume one bandage to recover 12 Health.",
-      effects: [{ type: "resource", resource: "health", amount: 12 }],
+      effects: [{ type: "resource", resource: "health", amount: 12 }, { type: "status", status: "minor_wound", remove: true }],
     },
   },
   dry_kindling: {

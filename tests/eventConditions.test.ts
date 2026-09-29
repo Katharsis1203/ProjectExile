@@ -30,7 +30,8 @@ test("event conditions evaluate each supported source", () => {
   );
   assert.equal(
     isEventConditionMet(
-      { type: "playerStat", stat: "perception", operator: "eq", value: 8 },
+      // Base Perception 8 plus the active Focused condition.
+      { type: "playerStat", stat: "perception", operator: "eq", value: 9 },
       context,
     ),
     true,

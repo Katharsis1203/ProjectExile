@@ -16,6 +16,84 @@
   "eventPools": {
     "life": [
       {
+        "id": "mara_followup_broken",
+        "weight": 6,
+        "conditions": [
+          {
+            "type": "questStage",
+            "quest": "missing_ledger",
+            "stage": "resolved"
+          },
+          {
+            "type": "questStage",
+            "quest": "mara_followup",
+            "stage": "resolved",
+            "present": false
+          },
+          {
+            "type": "flag",
+            "flag": "story.mara_trust",
+            "equals": "broken"
+          }
+        ],
+        "opens": {
+          "eventFile": "mara_followup",
+          "nodeId": "broken"
+        }
+      },
+      {
+        "id": "mara_followup_wary",
+        "weight": 6,
+        "conditions": [
+          {
+            "type": "questStage",
+            "quest": "missing_ledger",
+            "stage": "resolved"
+          },
+          {
+            "type": "questStage",
+            "quest": "mara_followup",
+            "stage": "resolved",
+            "present": false
+          },
+          {
+            "type": "flag",
+            "flag": "story.mara_trust",
+            "equals": "wary"
+          }
+        ],
+        "opens": {
+          "eventFile": "mara_followup",
+          "nodeId": "wary"
+        }
+      },
+      {
+        "id": "mara_followup_trusted",
+        "weight": 6,
+        "conditions": [
+          {
+            "type": "questStage",
+            "quest": "missing_ledger",
+            "stage": "resolved"
+          },
+          {
+            "type": "questStage",
+            "quest": "mara_followup",
+            "stage": "resolved",
+            "present": false
+          },
+          {
+            "type": "flag",
+            "flag": "story.mara_trust",
+            "equals": "trusted"
+          }
+        ],
+        "opens": {
+          "eventFile": "mara_followup",
+          "nodeId": "trusted"
+        }
+      },
+      {
         "id": "courier_tube_return_entry",
         "weight": 4.2,
         "conditions": [
@@ -76,8 +154,21 @@
       },
       {
         "id": "missing_ledger_entry",
-        "weight": 2.4,
-        "conditions": [],
+        "weight": 5,
+        "conditions": [
+          {
+            "type": "questStage",
+            "quest": "missing_ledger",
+            "stage": "resolved",
+            "present": false
+          },
+          {
+            "type": "questStage",
+            "quest": "missing_ledger",
+            "stage": "declined",
+            "present": false
+          }
+        ],
         "opens": {
           "eventFile": "missing_ledger",
           "nodeId": "start"

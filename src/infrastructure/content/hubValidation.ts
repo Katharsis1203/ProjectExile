@@ -1,3 +1,4 @@
+import { validateCharacterCondition } from "./characterValidation.ts";
 import type { Hub } from "../../types/hub";
 import {
   expectArray,
@@ -20,13 +21,17 @@ const WEATHER_INTENSITIES = new Set(["light", "medium", "heavy"]);
 const BLEND_MODES = new Set(["normal", "multiply", "screen", "overlay"]);
 const NUMERIC_OPERATORS = new Set(["lt", "lte", "eq", "gte", "gt"]);
 const CONDITION_TYPES = new Set([
-  "playerResource", "playerStat", "statusEffect", "inventoryItem", "hubStat", "scene",
+  "feat", "flag", "questStage", "questDecision", "playerResource", "playerStat", "statusEffect", "inventoryItem", "hubStat", "scene",
 ]);
 const SCENE_FIELDS = new Set(["lighting", "weather", "weatherIntensity"]);
 
 function validateEventCondition(value: unknown, source: string, field: string): void {
   const condition = expectRecord(value, source, field);
   const type = expectString(condition.type, source, `${field}.type`);
+  if (["feat", "flag", "questStage", "questDecision"].includes(type)) {
+    validateCharacterCondition(value, source, field);
+    return;
+  }
   if (!CONDITION_TYPES.has(type)) {
     fail(source, `"${field}.type" must be one of: ${[...CONDITION_TYPES].join(", ")}.`);
   }

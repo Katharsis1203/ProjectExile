@@ -460,7 +460,7 @@ export default function TitlePage({ onNewGame, onLoadGame, initialView = "main",
               {renderPanelHeader(
                 "Archive",
                 onSaveGame ? "Save / Load" : "Load game",
-                onSaveGame ? "Save your journey or load a saved slot. Hub saves resume at the hub." : "Select a journey to continue, rename it, or clear the slot.",
+                onSaveGame ? "Save your journey or load a saved slot. Your current passage and event cards are preserved." : "Select a journey to continue, rename it, or clear the slot.",
               )}
 
               <div className="title-submenu__body">

@@ -1,0 +1,38 @@
+{
+  "statCategories": {"core":"Core","physical":"Physical","knowledge":"Knowledge","social":"Social"},
+  "stats": {
+    "strength": {"name":"Strength","description":"Physical force and heavy work.","category":"core","kind":"attribute"},
+    "endurance": {"name":"Endurance","description":"Resilience against fatigue and exposure.","category":"core","kind":"attribute"},
+    "perception": {"name":"Perception","description":"Noticing details and reading a situation.","category":"core","kind":"attribute"},
+    "survival": {"name":"Survival","description":"Finding safe routes and shelter in the wilderness.","category":"physical","kind":"skill"},
+    "medicine": {"name":"Medicine","description":"Treating injuries and understanding remedies.","category":"knowledge","kind":"skill"},
+    "persuasion": {"name":"Persuasion","description":"Winning trust and negotiating with others.","category":"social","kind":"skill"},
+    "lore": {"name":"Lore","description":"Knowledge of histories, customs and forgotten things.","category":"knowledge","kind":"skill"}
+  },
+  "feats": {
+    "keen_observer": {"name":"Keen Observer","description":"Notice the details others overlook. +1 Perception per rank.","cost":1,"maxRank":2,"prerequisites":{"perception":8},"modifiers":[{"stat":"perception","amount":1}]},
+    "cold_hardened": {"name":"Cold-Hardened","description":"Experience in bitter weather grants +1 Endurance and +1 Survival.","cost":1,"maxRank":1,"prerequisites":{"endurance":8},"modifiers":[{"stat":"endurance","amount":1},{"stat":"survival","amount":1}]},
+    "field_medic": {"name":"Field Medic","description":"Practical training grants +2 Medicine.","cost":1,"maxRank":1,"prerequisites":{"medicine":3},"modifiers":[{"stat":"medicine","amount":2}]}
+  },
+  "statuses": {
+    "chilled": {"name":"Chilled","description":"Cold hands make wilderness work harder. Survival -1.","icon":"chilled.svg","tone":"cold","turns":6,"modifiers":[{"stat":"survival","amount":-1}]},
+    "focused": {"name":"Focused","description":"A clear mind sharpens your attention. Perception +1.","icon":"focused.svg","tone":"arcane","turns":4,"modifiers":[{"stat":"perception","amount":1}]},
+    "minor_wound": {"name":"Minor Wound","description":"An untreated injury weakens your grip. Strength -1. Treat with a bandage.","icon":"minor_wound.svg","tone":"wound","turns":null,"modifiers":[{"stat":"strength","amount":-1}]}
+  },
+  "quests": {
+    "missing_ledger": {"name":"The Missing Ledger","stages":{"unstarted":"Not started","searching":"Searching the inn","recovered":"Ledger recovered","resolved":"Resolved","declined":"Declined"},"objectives":{"ledger_recovered":"Recover Mara's ledger"},"decisions":{"ledger_destination":{"label":"The ledger","values":{"returned":"Returned to Mara","kept":"Kept for yourself"}},"north_room":{"label":"The north room","values":{"unread":"Respected Mara's privacy","silent":"Read the entry and kept quiet","asked":"Asked Mara about the room"}}}},
+    "mara_followup": {"name":"A Debt Remembered","stages":{"unstarted":"Not started","resolved":"Resolved"},"objectives":{},"decisions":{}}
+  },
+  "flags": {
+    "story.knows_north_room": {"name":"Knows about the north room","type":"boolean","default":false},
+    "story.mara_trust": {"name":"Mara's trust","type":"string","default":"unknown","values":["unknown","trusted","wary","broken"]}
+  },
+  "factions": {"village":{"name":"Snowlands villagers","min":-100,"max":100}},
+  "people": {"mara":{"name":"Mara","min":-100,"max":100}},
+  "discoveries": {"north_room":{"name":"The north room","description":"Someone paid Mara for seven nights in advance."}},
+  "equipmentSlots": {"head":"Head","body":"Body","hands":"Hands","feet":"Feet","main_hand":"Main hand","off_hand":"Off hand","trinket":"Accessory I","trinket_2":"Accessory II"},
+  "equipment": {
+    "traveller_coat":{"name":"Traveller's coat","description":"A patched but serviceable coat. +1 Endurance while equipped.","slot":"body","maxDurability":100,"modifiers":[{"stat":"endurance","amount":1}]},
+    "scouting_charm":{"name":"Scouting charm","description":"A small reminder to look twice. +1 Perception while equipped.","slot":"trinket","maxDurability":100,"modifiers":[{"stat":"perception","amount":1}]}
+  }
+}

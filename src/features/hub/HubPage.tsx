@@ -1,3 +1,7 @@
+import EquipmentPage from "../equipment/EquipmentPage";
+import type { SavedHub } from "../../types/session";
+import CharacterPage from "../character/CharacterPage";
+import { getEffectiveStats } from "../../engine/character";
 import {
   useEffect,
   useRef,
@@ -22,6 +26,8 @@ import {
 import {
   advanceEventSession,
   createPassageSession,
+  restorePassage,
+  savePassage,
   type PassageSession,
 } from "../../engine/eventSession";
 import { normaliseLighting } from "../../engine/sceneEffects";
@@ -85,9 +91,13 @@ type HubPageProps = {
   player: PlayerState;
   setPlayer: Dispatch<SetStateAction<PlayerState>>;
   onReady?: () => void;
+  initialSnapshot?: SavedHub | null;
+  onSnapshot?: (snapshot: SavedHub) => void;
 };
 
-export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
+export default function HubPage({ player, setPlayer, onReady, initialSnapshot = null, onSnapshot }: HubPageProps) {
+  const initialSnapshotRef = useRef(initialSnapshot);
+  const restoredRef = useRef(false);
   const [activityEnergy, setActivityEnergy] = useState(() => loadActivityEnergy());
   const activityEnergyRef = useRef(activityEnergy);
   const [hubContent, setHubContent] = useState<LoadedHub | null>(null);
@@ -97,6 +107,8 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
   const eventSlotsRef = useRef(eventSlots);
   const [eventSession, setEventSession] = useState<EventSession | null>(null);
   const [interactionError, setInteractionError] = useState<string | null>(null);
+  const [equipmentOpen, setEquipmentOpen] = useState(false);
+  const [characterOpen, setCharacterOpen] = useState(false);
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [inventoryEffects, setInventoryEffects] = useState<AppliedEventEffect[]>([]);
   const closeTimerRef = useRef<number | null>(null);
@@ -107,6 +119,21 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
     void loadHub("snowlands_hub")
       .then((content) => {
         if (!ignoreResult) {
+          if (!restoredRef.current && initialSnapshotRef.current) {
+            const saved = initialSnapshotRef.current;
+            const entries = Object.values(content.hub.eventPools).flat();
+            const slots = saved.slots.map((id) => entries.find((entry) => entry.id === id) ?? null);
+            eventSlotsRef.current = slots;
+            setEventSlots(slots);
+            const active = saved.active;
+            const event = active && content.events[active.eventFile];
+            const passage = event && active && restorePassage(event, active);
+            if (active && passage && slots[active.slotIndex]?.opens.eventFile === active.eventFile) {
+              setEventSession({ ...passage, eventFile: active.eventFile, slotIndex: active.slotIndex,
+                isClosing: false, transition: { fromX: 0, fromY: 24, fromScaleX: 0.94, fromScaleY: 0.94 } });
+            }
+          }
+          restoredRef.current = true;
           setHubContent(content);
         }
       })
@@ -164,6 +191,12 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
     },
     [],
   );
+
+  useEffect(() => {
+    if (!hubContent) return;
+    onSnapshot?.({ slots: eventSlots.map((entry) => entry?.id ?? null),
+      active: eventSession ? { ...savePassage(eventSession), eventFile: eventSession.eventFile, slotIndex: eventSession.slotIndex } : null });
+  }, [hubContent, eventSlots, eventSession, onSnapshot]);
 
   const scene = hubContent?.hub.scene;
   const sceneLighting = normaliseLighting(
@@ -452,6 +485,7 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
               <HubSidebar
                 hub={hubContent?.hub ?? null}
                 onInventory={handleOpenInventory}
+                onCharacter={() => setCharacterOpen(true)}
               />
             </div>
 
@@ -473,6 +507,10 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
         </div>
       ) : null}
 
+      {equipmentOpen ? <EquipmentPage player={player} setPlayer={setPlayer} onClose={() => setEquipmentOpen(false)} onCharacter={() => { setEquipmentOpen(false); setCharacterOpen(true); }} onInventory={() => { setEquipmentOpen(false); handleOpenInventory(); }} /> : null}
+
+      {characterOpen ? <CharacterPage player={player} setPlayer={setPlayer} onClose={() => setCharacterOpen(false)} onEquipment={() => { setCharacterOpen(false); setEquipmentOpen(true); }} /> : null}
+
       {inventoryOpen ? (
         <InventoryPage
           player={player}
@@ -480,6 +518,7 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
           onUseItem={handleUseInventoryItem}
           onDiscardItem={handleDiscardInventoryItem}
           onClose={handleCloseInventory}
+          onEquipment={() => { handleCloseInventory(); setEquipmentOpen(true); }}
         />
       ) : null}
 
@@ -495,7 +534,8 @@ export default function HubPage({ player, setPlayer, onReady }: HubPageProps) {
           allowReturn={eventSession.canReturn}
           transition={eventSession.transition}
           isClosing={eventSession.isClosing}
-          playerStats={player.stats}
+          player={player}
+          playerStats={getEffectiveStats(player)}
           playerInventory={player.inventory}
           onChoose={handleChoose}
           onReturn={() => closeNode(eventSession.isComplete)}

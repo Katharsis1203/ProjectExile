@@ -1,3 +1,4 @@
+import { applyCharacterEffect, describeCharacterCondition, meetsCharacterCondition } from "./character.ts";
 import { getItemDefinition } from "../data/itemCatalog.ts";
 import type {
   ChoiceRequirement,
@@ -26,12 +27,13 @@ export function getInventoryQuantity(
 }
 
 export function getRequiredQuantity(requirement: ChoiceRequirement): number {
-  return Math.max(1, Math.floor(requirement.quantity ?? 1));
+  return requirement.type === "item" ? Math.max(1, Math.floor(requirement.quantity ?? 1)) : 1;
 }
 
 export function isChoiceRequirementMet(
   requirement: ChoiceRequirement,
   inventory: PlayerInventory,
+  player?: PlayerState,
 ): boolean {
   if (requirement.type === "item") {
     return (
@@ -40,28 +42,31 @@ export function isChoiceRequirementMet(
     );
   }
 
-  return false;
+  return requirement.type === "condition" && Boolean(player && meetsCharacterCondition(requirement.condition, player));
 }
 
 export function getUnmetChoiceRequirements(
   choice: EventChoice,
   inventory: PlayerInventory,
+  player?: PlayerState,
 ): ChoiceRequirement[] {
   return (choice.requirements ?? []).filter(
-    (requirement) => !isChoiceRequirementMet(requirement, inventory),
+    (requirement) => !isChoiceRequirementMet(requirement, inventory, player),
   );
 }
 
 export function areChoiceRequirementsMet(
   choice: EventChoice,
   inventory: PlayerInventory,
+  player?: PlayerState,
 ): boolean {
-  return getUnmetChoiceRequirements(choice, inventory).length === 0;
+  return getUnmetChoiceRequirements(choice, inventory, player).length === 0;
 }
 
 export function describeChoiceRequirement(
   requirement: ChoiceRequirement,
 ): string {
+  if (requirement.type === "condition") return describeCharacterCondition(requirement.condition);
   const definition = getItemDefinition(requirement.item);
   const quantity = getRequiredQuantity(requirement);
   return quantity > 1 ? `${definition.name} ×${quantity}` : definition.name;
@@ -75,11 +80,18 @@ export function applyEventEffects(
     return { player, appliedEffects: [] };
   }
 
+  let characterPlayer = player;
   const nextResources = player.resources.map((resource) => ({ ...resource }));
   const nextInventory: PlayerInventory = { ...player.inventory };
   const appliedEffects: AppliedEventEffect[] = [];
 
   for (const effect of effects) {
+    if (effect.type !== "resource" && effect.type !== "item") {
+      const result = applyCharacterEffect(characterPlayer, effect);
+      characterPlayer = result.player;
+      if (result.applied) appliedEffects.push(result.applied);
+      continue;
+    }
     if (effect.type === "resource") {
       const resourceId = normaliseResourceId(effect.resource);
       const index = nextResources.findIndex(
@@ -141,7 +153,7 @@ export function applyEventEffects(
 
   return {
     player: {
-      ...player,
+      ...characterPlayer,
       resources: nextResources,
       inventory: nextInventory,
     },
@@ -150,6 +162,7 @@ export function applyEventEffects(
 }
 
 export function formatAppliedEffect(effect: AppliedEventEffect): string {
+  if (effect.type === "character") return `${effect.name}${effect.amount ? ` ${effect.amount > 0 ? "+" : ""}${effect.amount}` : ""}`;
   const sign = effect.amount > 0 ? "+" : "";
 
   if (effect.type === "resource") {

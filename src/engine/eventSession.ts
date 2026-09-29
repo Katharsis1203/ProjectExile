@@ -1,3 +1,4 @@
+import { advanceCharacterTurn, getEffectiveStats } from "./character.ts";
 import type { EventChoice, EventNode, GameEvent, NodeResolution } from "../types/event";
 import type { AppliedEventEffect, PlayerState } from "../types/player";
 import { resolveChoice, type RandomSource } from "./eventRules.ts";
@@ -58,8 +59,10 @@ export function advanceEventSession({
   player,
   random,
 }: AdvanceEventSessionOptions): EventSessionOutcome {
-  if (!areChoiceRequirementsMet(choice, player.inventory)) {
-    const missing = getUnmetChoiceRequirements(choice, player.inventory)
+  if (session.isComplete) return { kind: "finished", player, session };
+
+  if (!areChoiceRequirementsMet(choice, player.inventory, player)) {
+    const missing = getUnmetChoiceRequirements(choice, player.inventory, player)
       .map(describeChoiceRequirement)
       .join(", ");
 
@@ -72,9 +75,15 @@ export function advanceEventSession({
   }
 
   const result = random
-    ? resolveChoice(choice, player.stats, random)
-    : resolveChoice(choice, player.stats);
-  const applied = applyEventEffects(player, result.effects);
+    ? resolveChoice(choice, getEffectiveStats(player), random)
+    : resolveChoice(choice, getEffectiveStats(player));
+  // Validate the destination before spending items or granting rewards.
+  if (result.next && !choice.endEvent && !choice.returnToHub && !event.nodes[result.next]) {
+    return { kind: "invalid-target", player, session, message: `The event targets a missing node named "${result.next}".` };
+  }
+  const claimed = choice.rewardId && player.character.claimedRewards.includes(choice.rewardId);
+  const applied = applyEventEffects(advanceCharacterTurn(player), claimed ? [] : result.effects);
+  if (choice.rewardId && !claimed) applied.player = { ...applied.player, character: { ...applied.player.character, claimedRewards: [...applied.player.character.claimedRewards, choice.rewardId] } };
   const resolution: NodeResolution = {
     checks: result.checks,
     ...(result.flavourText ? { flavourText: result.flavourText } : {}),
@@ -129,4 +138,18 @@ export function advanceEventSession({
       canReturn: false,
     },
   };
+}
+
+export function savePassage(session: PassageSession): import("../types/session").SavedPassage {
+  return { nodeId: session.node.id, lastKnownImage: session.lastKnownImage,
+    resolution: structuredClone(session.resolution), appliedEffects: structuredClone(session.appliedEffects),
+    isComplete: session.isComplete, canReturn: session.canReturn };
+}
+
+export function restorePassage(event: GameEvent, saved: import("../types/session").SavedPassage): PassageSession | null {
+  const node = event.nodes[saved.nodeId];
+  if (!node) return null;
+  return { node, lastKnownImage: saved.lastKnownImage ?? node.image ?? null,
+    resolution: saved.resolution, appliedEffects: saved.appliedEffects,
+    isComplete: saved.isComplete, canReturn: saved.canReturn };
 }

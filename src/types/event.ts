@@ -1,3 +1,4 @@
+import type { CharacterCondition, CharacterEffect } from "./character";
 export type StatCheck = {
   stat: string;
   difficulty: number;
@@ -9,7 +10,7 @@ export type ItemChoiceRequirement = {
   quantity?: number;
 };
 
-export type ChoiceRequirement = ItemChoiceRequirement;
+export type ChoiceRequirement = ItemChoiceRequirement | { type: "condition"; condition: CharacterCondition };
 
 export type ResourceEventEffect = {
   type: "resource";
@@ -23,7 +24,7 @@ export type ItemEventEffect = {
   amount: number;
 };
 
-export type EventEffect = ResourceEventEffect | ItemEventEffect;
+export type EventEffect = ResourceEventEffect | ItemEventEffect | CharacterEffect;
 
 export type OutcomeBucket = {
   id: string;
@@ -39,6 +40,7 @@ export type ThresholdOutcome = {
 
 type BaseEventChoice = {
   text: string;
+  rewardId?: string;
   flavourText?: string;
   returnToHub?: boolean;
   endEvent?: boolean;
